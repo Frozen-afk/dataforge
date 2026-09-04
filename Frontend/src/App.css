@@ -314,3 +314,196 @@ input[type="range"] {
     font-size: 32px;
   }
 }
+
+/* ---- Navigation ---- */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: #0f172a;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  flex-wrap: wrap;
+}
+
+.brand {
+  color: white;
+  font-weight: 900;
+  margin-right: 14px;
+  letter-spacing: 0.02em;
+}
+
+.navbtn {
+  border: 1px solid #334155;
+  background: transparent;
+  color: #cbd5e1;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.navbtn:hover {
+  background: #1e293b;
+}
+
+.navbtn.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: white;
+}
+
+/* ---- Pages ---- */
+.page {
+  max-width: 1450px;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.page-header h1 {
+  font-size: 34px;
+  margin: 8px 0 6px;
+}
+
+.key-sentence {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: inline-block;
+}
+
+.badge-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge.live {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge.precomputed {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.badge.shared {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.other {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.control-row.three {
+  grid-template-columns: 1fr 1fr auto;
+}
+
+label.check {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+}
+
+.bridge-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.truth-grid.small {
+  grid-template-columns: 1fr 1fr;
+  margin-top: 12px;
+}
+
+/* ---- Charts ---- */
+.chart {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #334155;
+  font-weight: 700;
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 4px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* ---- Example cards ---- */
+.example-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 10px;
+  background: #f8fafc;
+}
+
+.example-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.placeholder ul {
+  line-height: 1.7;
+}
+
+@media (max-width: 1000px) {
+  .bridge-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .control-row.three {
+    grid-template-columns: 1fr;
+  }
+}
