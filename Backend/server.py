@@ -25,6 +25,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from learned_api import router as learned_router
+
+app.include_router(learned_router)
 
 class ExactRunRequest(BaseModel):
     """
