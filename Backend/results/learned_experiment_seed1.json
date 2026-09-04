@@ -1,0 +1,618 @@
+{
+  "modelId": "shared-gnn-seed1",
+  "checkpointHash": "ef34ba5c17a79a1f",
+  "trainingMaxPathLength": 4,
+  "seed": 1,
+  "inference_depth_results": [
+    {
+      "R": 1,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999121,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999263,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999264,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999117,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999118,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999117,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999118,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999912,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999117,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999118,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999116,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 2,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999336,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999396,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999396,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999928,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 3,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999327,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999386,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999385,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999271,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999268,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999268,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999268,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999267,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999268,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999268,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999271,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 4,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999325,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999364,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999364,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999924,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999924,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999241,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999924,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999241,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999241,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999924,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999924,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 5,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999286,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999357,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999357,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999234,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999234,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999233,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999234,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999233,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999233,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999234,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999234,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 6,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999285,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999334,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999335,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999203,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999204,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999203,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999204,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999205,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999203,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999204,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999202,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 7,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999275,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999324,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999324,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999194,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999193,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 8,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999273,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999301,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999301,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999161,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999163,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999162,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999162,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999164,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999162,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999162,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999916,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 9,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999123,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999929,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.999999999999929,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999152,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    },
+    {
+      "R": 10,
+      "accuracy": 1.0,
+      "confidence": 0.9999999999999123,
+      "total_samples": 596,
+      "per_path_length": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999278,
+          "samples": 50
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999275,
+          "samples": 50
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999143,
+          "samples": 62
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999141,
+          "samples": 62
+        },
+        "5": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999141,
+          "samples": 62
+        },
+        "6": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999141,
+          "samples": 62
+        },
+        "7": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999138,
+          "samples": 62
+        },
+        "8": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999141,
+          "samples": 62
+        },
+        "9": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999141,
+          "samples": 62
+        },
+        "10": {
+          "accuracy": 1.0,
+          "confidence": 0.9999999999999143,
+          "samples": 62
+        }
+      },
+      "seed": 1,
+      "checkpoint_hash": "ef34ba5c17a79a1f",
+      "training_max_path_length": 4
+    }
+  ]
+}

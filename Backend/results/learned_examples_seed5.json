@@ -1,0 +1,318 @@
+[
+  {
+    "exampleId": "seed5_len5_R5",
+    "pathLength": 5,
+    "R": 5,
+    "label": 1.0,
+    "prediction": 1.0,
+    "confidence": 1.0,
+    "correct": true,
+    "numNodes": 6,
+    "edgeIndex": [
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    ],
+    "trajectoryNorms": [
+      10.044512748718262,
+      8.568893432617188,
+      8.565635681152344,
+      8.555891036987305,
+      8.54503059387207,
+      8.534113883972168
+    ]
+  },
+  {
+    "exampleId": "seed5_len5_R5",
+    "pathLength": 5,
+    "R": 5,
+    "label": 0.0,
+    "prediction": 0.0,
+    "confidence": 1.0036775284581051e-13,
+    "correct": true,
+    "numNodes": 6,
+    "edgeIndex": [
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        2
+      ]
+    ],
+    "trajectoryNorms": [
+      10.044512748718262,
+      9.725048065185547,
+      9.734336853027344,
+      9.709757804870605,
+      9.679276466369629,
+      9.648261070251465
+    ]
+  },
+  {
+    "exampleId": "seed5_len3_R3",
+    "pathLength": 3,
+    "R": 3,
+    "label": 1.0,
+    "prediction": 1.0,
+    "confidence": 1.0,
+    "correct": true,
+    "numNodes": 4,
+    "edgeIndex": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ]
+    ],
+    "trajectoryNorms": [
+      10.814743041992188,
+      9.096834182739258,
+      9.091070175170898,
+      9.07697868347168
+    ]
+  },
+  {
+    "exampleId": "seed5_len5_R5",
+    "pathLength": 5,
+    "R": 5,
+    "label": 0.0,
+    "prediction": 0.0,
+    "confidence": 1.0036775284581051e-13,
+    "correct": true,
+    "numNodes": 6,
+    "edgeIndex": [
+      [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    ],
+    "trajectoryNorms": [
+      10.044512748718262,
+      9.003934860229492,
+      9.001973152160645,
+      8.999113082885742,
+      8.996241569519043,
+      8.993398666381836
+    ]
+  },
+  {
+    "exampleId": "seed5_len5_R5",
+    "pathLength": 5,
+    "R": 5,
+    "label": 0.0,
+    "prediction": 0.0,
+    "confidence": 1.0036775284581051e-13,
+    "correct": true,
+    "numNodes": 6,
+    "edgeIndex": [
+      [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    ],
+    "trajectoryNorms": [
+      10.044512748718262,
+      9.003934860229492,
+      9.001973152160645,
+      8.999113082885742,
+      8.996241569519043,
+      8.993398666381836
+    ]
+  },
+  {
+    "exampleId": "seed5_len5_R5",
+    "pathLength": 5,
+    "R": 5,
+    "label": 0.0,
+    "prediction": 0.0,
+    "confidence": 1.0036775284581051e-13,
+    "correct": true,
+    "numNodes": 6,
+    "edgeIndex": [
+      [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    ],
+    "trajectoryNorms": [
+      10.044512748718262,
+      9.003934860229492,
+      9.001973152160645,
+      8.999113082885742,
+      8.996241569519043,
+      8.993398666381836
+    ]
+  },
+  {
+    "exampleId": "seed5_len3_R3",
+    "pathLength": 3,
+    "R": 3,
+    "label": 1.0,
+    "prediction": 1.0,
+    "confidence": 1.0,
+    "correct": true,
+    "numNodes": 4,
+    "edgeIndex": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ]
+    ],
+    "trajectoryNorms": [
+      10.814743041992188,
+      9.096834182739258,
+      9.091070175170898,
+      9.07697868347168
+    ]
+  },
+  {
+    "exampleId": "seed5_len3_R3",
+    "pathLength": 3,
+    "R": 3,
+    "label": 0.0,
+    "prediction": 0.0,
+    "confidence": 9.797357017468297e-14,
+    "correct": true,
+    "numNodes": 4,
+    "edgeIndex": [
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        1,
+        2
+      ]
+    ],
+    "trajectoryNorms": [
+      10.814743041992188,
+      9.749395370483398,
+      9.745574951171875,
+      9.741813659667969
+    ]
+  },
+  {
+    "exampleId": "seed5_len7_R7",
+    "pathLength": 7,
+    "R": 7,
+    "label": 0.0,
+    "prediction": 0.0,
+    "confidence": 1.027890676763045e-13,
+    "correct": true,
+    "numNodes": 8,
+    "edgeIndex": [
+      [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    ],
+    "trajectoryNorms": [
+      9.65939712524414,
+      8.631203651428223,
+      8.630171775817871,
+      8.627763748168945,
+      8.625345230102539,
+      8.622949600219727,
+      8.620573043823242,
+      8.618213653564453
+    ]
+  },
+  {
+    "exampleId": "seed5_len3_R3",
+    "pathLength": 3,
+    "R": 3,
+    "label": 1.0,
+    "prediction": 1.0,
+    "confidence": 1.0,
+    "correct": true,
+    "numNodes": 4,
+    "edgeIndex": [
+      [
+        0,
+        1,
+        2
+      ],
+      [
+        1,
+        2,
+        3
+      ]
+    ],
+    "trajectoryNorms": [
+      10.814743041992188,
+      9.096834182739258,
+      9.091070175170898,
+      9.07697868347168
+    ]
+  }
+]
