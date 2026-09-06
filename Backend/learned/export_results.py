@@ -202,6 +202,32 @@ def main() -> None:
     if ablation:
         print(f"Loaded {len(ablation)} unshared-weight ablation run(s)")
 
+    # Aggregation ablation. The default aggregator is max because reachability
+    # is a logical OR over incoming neighbours, and max is its differentiable
+    # analogue -- the same role the noisy-OR plays in the exact layer. That is
+    # a claim, so it is measured: sum and mean are trained identically and
+    # their depth curves are exported beside the default's.
+    aggregation_runs: Dict[str, List[dict]] = {}
+    for name in ("sum", "mean"):
+        runs = [
+            run for run in (
+                load(results_dir / f"learned_experiment_seed{seed}_agg{name}.json")
+                for seed in args.seeds
+            ) if run
+        ]
+        if runs:
+            aggregation_runs[name] = runs
+            print(f"Loaded {len(runs)} '{name}'-aggregation run(s)")
+
+    # Restrict the default's curve to the seeds the variants actually have, so
+    # the comparison varies the aggregator and nothing else.
+    ablation_seeds = sorted({
+        run.get("seed")
+        for runs in aggregation_runs.values()
+        for run in runs
+    })
+    matched_max = [e for e in experiments if e.get("seed") in ablation_seeds]
+
     reference = experiments[0]
     depth_curve = aggregate_depth_curve(experiments)
     ceiling = max((entry["R"] for entry in depth_curve), default=0)
@@ -252,6 +278,37 @@ def main() -> None:
                 else None
             ),
         },
+        "aggregationAblation": (
+            {
+                "description": (
+                    "Same architecture, same data, same seeds; only the "
+                    "neighbour aggregator changes. Max is the default because "
+                    "reachability is a logical OR over incoming neighbours, "
+                    "and max is its differentiable analogue."
+                ),
+                "default": "max",
+                # The variants are trained on fewer seeds than the headline
+                # model, so the max curve here is recomputed over exactly the
+                # seeds the variants have. Comparing a five-seed mean against a
+                # two-seed mean would put the seed count inside the difference
+                # the table is supposed to be about.
+                "comparedOnSeeds": ablation_seeds,
+                "variants": [
+                    {
+                        "aggregation": name,
+                        "seeds": [run.get("seed") for run in runs],
+                        "numParameters": runs[0].get("config", {}).get("numParameters"),
+                        "depthCurve": aggregate_depth_curve(runs),
+                    }
+                    for name, runs in [
+                        ("max", matched_max),
+                        *sorted(aggregation_runs.items()),
+                    ]
+                ],
+            }
+            if aggregation_runs and matched_max
+            else None
+        ),
         "evidence": {
             "evidenceType": "Precomputed result",
             "source": (

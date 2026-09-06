@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Recurrent depth as an inference-time compute axis — Latent Loop Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+@page { size: A4; margin: 12mm 13mm; }
+:root { --ink: #14202b; --soft: #5a6b79; --rule: #ccd5dd; --mark: #0b6d7d; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--ink); background: #fff;
+  font: 8.5pt/1.30 "Source Serif 4", Georgia, "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+}
+.sheet { max-width: 184mm; margin: 0 auto; }
+h1 {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15pt; line-height: 1.1; letter-spacing: -0.02em;
+  margin: 0 0 2pt; font-weight: 700;
+}
+h2 {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 9.2pt; font-weight: 600; margin: 6pt 0 2pt;
+  padding-top: 3pt; border-top: 0.6pt solid var(--rule);
+  break-after: avoid;
+}
+p { margin: 0 0 3.6pt; }
+strong { font-weight: 600; }
+code {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 7.9pt; background: #f0f3f5; padding: 0 1.5px;
+}
+blockquote {
+  margin: 5pt 0; padding: 3.5pt 0 3.5pt 8pt;
+  border-left: 2pt solid var(--mark); font-size: 9.1pt; line-height: 1.32;
+}
+blockquote p { margin: 0; }
+table {
+  border-collapse: collapse; width: 100%; margin: 3.5pt 0 5pt;
+  font-size: 7.6pt; break-inside: avoid;
+}
+th, td { text-align: left; padding: 1.8pt 5pt 1.8pt 0; border-bottom: 0.5pt solid var(--rule); }
+th {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600; font-size: 7.1pt; color: var(--soft);
+  border-bottom: 0.8pt solid var(--ink);
+}
+td:not(:first-child), th:not(:first-child) {
+  text-align: right;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+table.words td:not(:first-child), table.words th:not(:first-child) {
+  text-align: left; font-family: inherit;
+}
+.lede {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 8pt; color: var(--soft); margin: 0 0 7pt;
+  padding-bottom: 3.5pt; border-bottom: 1.2pt solid var(--ink);
+}
+.cols { column-count: 2; column-gap: 7.5mm; column-rule: 0.4pt solid var(--rule); }
+.cols > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+blockquote, table { break-inside: avoid; }
+</style>
+</head>
+<body>
+<div class="sheet">
+<h1>Recurrent depth as an inference-time compute axis</h1>
+<p class="lede"><strong>Latent Loop Lab — one-page concept summary.</strong> DataForge 2026, Pathway Track.</p>
+<div class="cols">
+
+<h2>The design pressure</h2>
+<p>A Transformer that reasons harder mostly reasons <em>longer in text</em>. Chain of thought buys accuracy by emitting intermediate tokens; each costs a forward pass, a slot in a key-value cache that grows with the sequence, and un-parallelisable latency. The trace is legible, a real benefit, but the cost scales with how much thinking you want.</p>
+<p>Recurrent latent computation takes the other route. One fixed-shape state is updated by the same parameters repeatedly and nothing is emitted until the end, so the budget is an iteration count <code>R</code> chosen at inference time. Memory stops growing with the amount of thinking, and the thinking stops being readable.</p>
+<h2>The claim</h2>
+<blockquote><p>Repeated application of a <strong>shared</strong> state-update rule increases effective computational depth without generating intermediate language tokens — within the learned dynamics&#x27; capacity and stability limits.</p></blockquote>
+<p><em>Shared</em> carries the argument. One block reused every step makes depth a loop bound at constant parameter count; a distinct block per step fixes depth when training ends. The artifact measures both: 11,169 parameters at any depth, against 39,585 with a hard ceiling at the trained depth of 4.</p>
+<h2>Mechanism, small enough to see</h2>
+<p>The task is directed-graph reachability. A learner moves <code>R</code> and watches a noisy-OR recurrence <code>h(r+1)[v] = max(h(r)[v], 1 − ∏(1 − α·h(r)[u]))</code> spread activation one edge per step. The invariant <code>h(R)[q] &gt; ε ⟺ d(s,q) ≤ R</code> is checked against an independent breadth-first search and holds on 10,000 seeded stratified cases, so <code>R</code> has an exact meaning: edges information can travel.</p>
+<p>The same shape is then learned. A shared-weight recurrent graph network trains on distances 1–4 only, with <code>R</code> resampled from {1..4} per batch, then runs at depths to 10 on distances to 10. Five seeds, frozen weights, only <code>R</code> varies:</p>
+<table><thead><tr><th><code>R</code></th><th>learned</th><th>95% CI</th><th>distances ≤ 4</th><th>distances ≥ 5</th><th>exact</th></tr></thead><tbody><tr><td>1</td><td>0.552</td><td>[0.546, 0.558]</td><td>0.621</td><td>0.506</td><td>0.550</td></tr><tr><td>4</td><td>0.700</td><td>[0.700, 0.700]</td><td>1.000</td><td>0.500</td><td>0.700</td></tr><tr><td>10</td><td>0.991</td><td>[0.972, 1.000]</td><td>0.994</td><td>0.988</td><td>1.000</td></tr></tbody></table>
+<p>Distances ≥ 5 sit at chance until <code>R</code> exceeds 4 — correct, since the answer is not yet knowable at the target — then climb to 0.988, solving paths longer than anything trained on by applying the same weights more times. Distances ≤ 4 peak at 1.000 near <code>R = 5</code> and erode to 0.994 by <code>R = 10</code> as the state norm saturates. Depth is not free.</p>
+<p>Making this measure anything required fixing the data. An earlier generator built negatives as reversed chains, leaving the target with no incoming edges, so reachability collapsed to a one-hop lookup and accuracy was 1.000 everywhere. Each negative is now cut from a specific positive, matching node and edge counts exactly; two smaller gaps remain and are reported, not hidden.</p>
+<h2>Where BDH and BDH-CQ sit</h2>
+<p>BDH (Kosowski et al., arXiv:2509.26507) is a post-Transformer architecture of high-dimensional positive activations, low-rank communication and a recurrent associative state, with attention reformulated as synaptic memory; reported to rival GPT-2 at matched parameters from 10M to 1B, with sparse activations and synapse-level monosemanticity. Its GPU formulation combines ReLU low-rank transformations with linear attention and is not a Mamba-style state-space model.</p>
+<p>BDH-CQ (Engdahl et al., arXiv:2608.09888) contains <strong>two</strong> recurrences that are routinely conflated. <code>S_t = U_θ(S_{t−1}, D_t)</code> is contextual memory advancing once per demonstration, driven by new input, with additive special case <code>S_t = S_{t−1} + U_θ(D_t)</code>. <code>H_{r+1} = F_θ(H_r, S_K)</code> is a query-time workspace advancing with no new input and <code>S_K</code> held fixed. Only the second is a reasoning step, and only the second is what this artifact models — the lab has no contextual recurrence at all. A live toy lets a learner drive each and produce the distinguishing failure: withhold a demonstration and no latent budget recovers the missing association.</p>
+<table class="words"><thead><tr><th></th><th>Chain of thought</th><th>Recurrent depth</th><th>BDH-CQ</th></tr></thead><tbody><tr><td>Compute knob</td><td>tokens emitted</td><td>iterations <code>R</code></td><td>latent effort level</td></tr><tr><td>State growth</td><td>KV cache grows</td><td>fixed shape</td><td>fixed-shape recurrent memory</td></tr><tr><td>Observability</td><td>readable trace</td><td>none</td><td>none</td></tr></tbody></table>
+<h2>Evidence, labelled</h2>
+<p>BDH-CQ reports LOW 21%, MEDIUM 27%, HIGH 29.5% pass@2 on public ARC-AGI-1, at 22%, 11% and 0% cost reduction relative to HIGH; the headline is 29.5% at a computed $0.00070 per task for 150M parameters, claimed to break the previously reported cost–accuracy Pareto frontier.</p>
+<p>That is a <strong>benchmark reported by the developers</strong>, not a deployment. The report describes a black-box audit reproducing 29.5%, but by <strong>co-authors</strong> from Bielik and New York University — stronger than a self-report, weaker than an independent reproduction. Cost comparisons set measured hardware time for BDH-CQ against leaderboard costs for others that may be API prices, so they are not like-for-like. Dimensions and update rules are proprietary, so the mechanism is not externally auditable.</p>
+<p>The most important open limitation is general: recurrent depth is reported to degrade past some depth in looped language models (Yang et al., arXiv:2605.26733), the same erosion this lab measures at toy scale. How far latent depth scales before that ceiling binds is unresolved.</p>
+<h2>Scope</h2>
+<p>Both models here are independent reimplementations written for teaching; neither is BDH or BDH-CQ, and no checkpoint of either was run. Every BDH and BDH-CQ figure is quoted and labelled <em>paper-reported</em>, never shown beside a measurement of ours. The learned model has ~11,000 parameters on one synthetic task, and graph reachability demonstrates computational depth, not semantic reasoning.</p>
+<p><strong>Continue with:</strong> the Dragon Hatchling paper; the BDH-CQ report; Geiping et al. (arXiv:2502.05171) on recurrent depth in a language model.</p>
+</div>
+</div>
+</body>
+</html>

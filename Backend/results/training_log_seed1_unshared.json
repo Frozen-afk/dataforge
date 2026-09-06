@@ -21,7 +21,7 @@
   ],
   "trainingMaxPathLength": 4,
   "epochs": 40,
-  "trainingSeconds": 7.3,
+  "trainingSeconds": 18.0,
   "trainingLog": [
     {
       "epoch": 1,
