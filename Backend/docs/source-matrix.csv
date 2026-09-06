@@ -19,3 +19,9 @@ page,claim,source_type,source,evidence_label,verifiable_by
 6,Latent effort Low/Medium/High = 21/27/29.5 pct pass@2,paper,arXiv:2608.09888,Paper-reported result,cited paper
 7,Latent coordinates here are interpretable by design only,own code,core/recurrent.py,Live computation,read the source
 7,This artifact is not BDH or BDH-CQ,scope statement,this repository,n/a,read the source
+4,The browser forward pass reproduces the PyTorch forward pass over the same weights,own measurement,tests/test_js_parity.py,Synthetic data,agreement to 2e-7 relative on seeded cases
+5,Aggregation choice (max vs sum vs mean) is not separated at two seeds,own measurement,learned/export_results.py aggregationAblation,Precomputed result,overlapping 95% intervals in the table
+6,BDH-CQ reaches 29.5% pass@2 on public ARC-AGI-1 at a computed $0.00070 per task,paper,arXiv:2608.09888 section 5,Paper-reported result,cited report
+6,The black-box audit reproducing 29.5% was conducted by co-authors,paper,arXiv:2608.09888 section 5 Independent evaluation,Paper-reported result,cited report
+6,BDH-CQ dimensions and update rules are proprietary,paper,arXiv:2608.09888 section 3.3,Paper-reported result,cited report
+6,A missing association cannot be repaired by more latent steps,own measurement,engine/assoc.js,Live computation,cut K short in the section 6 toy

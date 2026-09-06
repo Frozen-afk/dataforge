@@ -2,13 +2,12 @@ import React, { useEffect, useMemo, useState } from "react";
 import GraphView from "../components/GraphView.jsx";
 import { EvidenceNote } from "../components/Evidence.jsx";
 import {
-  Equation, ErrorBanner, Loading, PageHeader, Panel, Pill, Slider, Takeaway,
+  DepthAxis, Equation, ErrorBanner, Loading, NextButton, PageHeader, Panel,
+  Stat, Takeaway, Verdict,
 } from "../components/Common.jsx";
-import { api } from "../lib/api.js";
+import { exactPreset, presetList, MAX_R } from "../lib/lab.js";
 
-const MAX_R = 12;
-
-const PRESET_LABELS = {
+const LABELS = {
   line: "Four-hop line",
   line_short: "Two-hop line",
   branch: "Branching graph",
@@ -18,15 +17,21 @@ const PRESET_LABELS = {
 };
 
 export default function Mechanism({ onNext }) {
+  const [presets, setPresets] = useState([]);
   const [preset, setPreset] = useState("branch");
   const [data, setData] = useState(null);
-  const [R, setR] = useState(3);
+  const [R, setR] = useState(0);
   const [error, setError] = useState("");
 
   // The learner commits to a prediction before the answer is revealed. Without
-  // this, the page would only ever confirm what the slider already showed.
+  // that, the page can only ever confirm what the control already showed, and
+  // a confirmation is not a test.
   const [guess, setGuess] = useState("");
   const [submitted, setSubmitted] = useState(null);
+
+  useEffect(() => {
+    presetList().then(setPresets).catch(() => {});
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -34,8 +39,7 @@ export default function Mechanism({ onNext }) {
     setSubmitted(null);
     setGuess("");
 
-    api
-      .exactPreset(preset, MAX_R)
+    exactPreset(preset)
       .then((result) => {
         if (cancelled) return;
         setData(result);
@@ -43,9 +47,7 @@ export default function Mechanism({ onNext }) {
       })
       .catch((err) => !cancelled && setError(err.message));
 
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [preset]);
 
   const state = data?.trajectory?.[R];
@@ -55,93 +57,88 @@ export default function Mechanism({ onNext }) {
     () => (state ? state.filter((v) => v > (data?.epsilon ?? 0)).length : 0),
     [state, data]
   );
-  const activationMass = useMemo(
-    () => (state ? state.reduce((a, b) => a + b, 0) : 0),
-    [state]
-  );
 
   if (error) return <div className="page"><ErrorBanner message={error} /></div>;
   if (!data) return <div className="page"><Loading /></div>;
 
-  const guessCorrect =
+  const correct =
     submitted !== null &&
-    ((distance === null && submitted === "never") ||
-      Number(submitted) === distance);
+    ((distance === null && submitted === "never") || Number(submitted) === distance);
 
   return (
     <div className="page">
       <PageHeader
-        step="2"
+        step="Section 2 of 8"
         question="What is the latent state doing?"
-        goal="Make the recurrence mathematically visible: a real vector, one coordinate per node, updated by a rule that never changes."
+        goal="Make the recurrence visible: a real vector, one coordinate per node, updated by a rule that never changes."
       />
 
-      <div className="control-card row">
+      <div className="controls">
         <label>
           Graph
-          <select value={preset} onChange={(e) => setPreset(e.target.value)}>
-            {Object.entries(PRESET_LABELS).map(([key, label]) => (
-              <option key={key} value={key}>{label}</option>
-            ))}
+          <select value={preset} onChange={(event) => setPreset(event.target.value)}>
+            {(presets.length ? presets.map((p) => p.name) : Object.keys(LABELS)).map(
+              (name) => (
+                <option key={name} value={name}>{LABELS[name] || name}</option>
+              )
+            )}
           </select>
         </label>
-
-        <Slider
-          id="mechanism-depth"
-          label="Recurrent depth R"
-          value={R}
-          min={0}
-          max={MAX_R}
-          onChange={setR}
-        />
+        <div className="grow">
+          <DepthAxis
+            id="mechanism-depth"
+            value={R}
+            min={0}
+            max={MAX_R}
+            onChange={setR}
+            threshold={submitted !== null ? distance : null}
+            hint={
+              submitted === null
+                ? "The distance marker appears once you have committed to a prediction."
+                : undefined
+            }
+          />
+        </div>
       </div>
 
-      {submitted === null && (
+      {submitted === null ? (
         <Panel
-          className="predict"
-          title="Before you move the slider: predict"
-          subtitle="At what depth R will the target first become active? Commit to an answer, then check it."
+          title="Before you move anything: predict"
+          subtitle="At what depth R does the target first become active? Count the columns in the picture below, then commit."
         >
-          <div className="predict-row">
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             {[0, 1, 2, 3, 4, 5, 6].map((value) => (
               <button
                 key={value}
-                className={guess === String(value) ? "chip active" : "chip"}
+                className="chip"
+                aria-pressed={guess === String(value)}
                 onClick={() => setGuess(String(value))}
               >
                 {value}
               </button>
             ))}
             <button
-              className={guess === "never" ? "chip active" : "chip"}
+              className="chip"
+              aria-pressed={guess === "never"}
               onClick={() => setGuess("never")}
             >
               never
             </button>
-            <button
-              className="primary"
-              disabled={!guess}
-              onClick={() => setSubmitted(guess)}
-            >
-              Lock in
+            <button className="btn" disabled={!guess} onClick={() => setSubmitted(guess)}>
+              Lock it in
             </button>
           </div>
         </Panel>
-      )}
-
-      {submitted !== null && (
-        <div className={`predict-result ${guessCorrect ? "right" : "wrong"}`}>
-          <strong>
-            You predicted {submitted === "never" ? "never" : `R = ${submitted}`}.{" "}
-            {guessCorrect ? "Correct." : "Not quite."}
-          </strong>
-          <p>
-            The shortest path from source to target is{" "}
-            {distance === null ? "infinite: no path exists" : distance}. The
-            target activates exactly when R reaches that number, because each
-            update moves activation along exactly one edge.
-          </p>
-        </div>
+      ) : (
+        <Verdict
+          tone={correct ? "good" : "bad"}
+          title={`You predicted ${submitted === "never" ? "never" : `R = ${submitted}`}. ${correct ? "Correct." : "Not quite."}`}
+        >
+          The shortest path from source to target is{" "}
+          {distance === null ? "infinite: no path exists" : `${distance} edges`}.
+          The target activates exactly when R reaches that number, because each
+          update moves activation along exactly one edge.
+        </Verdict>
       )}
 
       <div className="split">
@@ -151,115 +148,104 @@ export default function Mechanism({ onNext }) {
           target={data.target}
           state={state}
           epsilon={data.epsilon}
-          caption={`h(${R}): nodes with non-zero activation are those reachable from the source within ${R} hops.`}
+          highlightPath={submitted !== null}
+          caption={`h(${R}). A node is non-zero exactly when it is reachable from the source within ${R} hops.`}
         />
 
         <div className="stack">
           <Panel title="The update rule, locked">
-            <Equation label="initial state: one-hot at the source">
-              h(0) = e_source
-            </Equation>
-            <Equation label="applied identically at every depth">
-              {`h(r+1)[v] = max( h(r)[v],  1 - ∏ (1 - α · h(r)[u]) )`}
+            <Equation caption="one-hot at the source">h(0) = e_s</Equation>
+            <Equation caption="applied identically at every depth">
+              {`h(r+1)[v] = max( h(r)[v],  1 − ∏ (1 − α·h(r)[u]) )`}
             </Equation>
             <p className="muted">
-              The product runs over every node u with an edge u &rarr; v. This is
-              a noisy-OR: a node becomes active when activation arrives from any
-              incoming neighbour. With &alpha; = 1 it is exact reachability
-              spreading one edge per update.
+              The product runs over every node u with an edge u → v. This is a
+              noisy-OR: a node becomes active when activation arrives from any
+              incoming neighbour. With α = 1 it is exact reachability spreading
+              one edge per update.
             </p>
             <p className="muted">
-              Nothing in this equation depends on r. That is what makes R a pure
-              compute dial rather than a different model.
+              Nothing in that equation depends on r. There is no step index, no
+              per-layer weight, and no schedule.
             </p>
           </Panel>
 
-          <Panel title="State vector h(r)">
-            <div className="vector-list">
-              {state.map((value, index) => (
-                <div className="vector-row" key={index}>
-                  <div className="vector-label">
-                    h[{index}]
-                    {index === data.source && <span className="tag-mini src">s</span>}
-                    {index === data.target && <span className="tag-mini tgt">q</span>}
-                  </div>
-                  <div className="bar-bg">
-                    <div className="bar-fill" style={{ width: `${Math.min(100, value * 100)}%` }} />
-                  </div>
-                  <div className="vector-value">{value.toFixed(2)}</div>
+          <Panel title={`State vector h(${R})`}>
+            <div className="vector">
+              {state.map((value, node) => (
+                <div
+                  className={`vector-row ${node === data.target ? "is-target" : ""}`}
+                  key={node}
+                >
+                  <span className="key">
+                    h[{node}]
+                    {node === data.source && <span className="tag-mini src">s</span>}
+                    {node === data.target && <span className="tag-mini tgt">q</span>}
+                  </span>
+                  <span className="track">
+                    <span className="fill" style={{ width: `${Math.min(100, value * 100)}%` }} />
+                  </span>
+                  <span className="val">{value.toFixed(2)}</span>
                 </div>
               ))}
             </div>
-            <div className="readout tight">
-              <div>
-                <span className="small-label">Active nodes</span>
-                <span className="big-value">{activeCount}</span>
-              </div>
-              <div>
-                <span className="small-label">Activation mass</span>
-                <span className="big-value">{activationMass.toFixed(2)}</span>
-              </div>
-              <div>
-                <span className="small-label">Shortest path</span>
-                <span className="big-value">{distance === null ? "∞" : distance}</span>
-              </div>
+
+            <div className="readout plain" style={{ marginTop: 16 }}>
+              <Stat label="Active nodes" value={activeCount} />
+              <Stat
+                label="Shortest path"
+                value={distance === null ? "∞" : distance}
+                note="d(s, q)"
+              />
+              <Stat
+                label="State width"
+                value={data.graph.n}
+                note="fixed at every depth"
+              />
             </div>
           </Panel>
         </div>
       </div>
 
-      <Panel title="Iteration timeline" subtitle="Every state the recurrence passed through. Click one to inspect it.">
-        <div className="timeline">
-          {data.trajectory.map((step, index) => {
-            const active = step[data.target] > data.epsilon;
+      <Panel
+        title="Every state the recurrence passed through"
+        subtitle="Click one to inspect it. The boundary between dark and lit is the shortest-path distance."
+      >
+        <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+          {data.trajectory.map((step, r) => {
+            const lit = step[data.target] > data.epsilon;
             return (
               <button
-                key={index}
-                className={`time ${index === R ? "active-time" : ""} ${active ? "reached" : ""}`}
-                onClick={() => setR(index)}
+                key={r}
+                className="chip"
+                aria-pressed={r === R}
+                onClick={() => setR(r)}
                 title={`${step.filter((v) => v > data.epsilon).length} active nodes`}
+                style={lit ? { borderColor: "var(--charge)", color: "var(--charge)" } : undefined}
               >
-                h({index})
+                h({r})
               </button>
             );
           })}
         </div>
-        <p className="muted">
-          Steps shaded green are those where the target is active. The boundary
-          between grey and green is the shortest-path distance.
-        </p>
       </Panel>
 
-      <div className="why-ai">
-        <h3>Why this is a question about AI, not just about graphs</h3>
-        <p>
-          A transformer that reasons in text has to write each intermediate step
-          into its output before it can use it. The state above is the opposite
-          case: the intermediate work lives in a fixed-size vector that gets
-          rewritten in place, and nothing is emitted until the end. Recurrent
-          latent reasoning is that idea applied to real models, where the
-          coordinates are learned rather than standing for graph nodes.
-        </p>
-        <p>
-          This page uses a hand-designed rule so the coordinates mean something
-          you can check. Page 4 replaces that rule with a learned one and asks
-          whether the same story survives.
-        </p>
+      <div className="keyline">
+        The state has a fixed width. Depth 12 uses exactly as much memory as
+        depth 1. That is the property a growing key-value cache does not have,
+        and it is why recurrent depth is a different resource from context
+        length.
       </div>
 
       <EvidenceNote evidence={data.evidence} />
 
       <Takeaway>
-        Recurrent depth R has a precise mechanical meaning: it is the number of
-        edges information can travel. The target cannot activate before R reaches
-        the shortest-path distance.
+        Recurrent depth R has a precise mechanical meaning. It is the number of
+        edges information can travel, so the target cannot activate before R
+        reaches the shortest-path distance.
       </Takeaway>
 
-      <div className="page-nav">
-        <button className="primary" onClick={onNext}>
-          Next: is this effect real, or just animation?
-        </button>
-      </div>
+      <NextButton onNext={onNext}>Next: is this real, or just animation?</NextButton>
     </div>
   );
 }

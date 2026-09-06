@@ -11,8 +11,11 @@ Stages:
     3. unit tests
     4. train the shared-weight model on five seeds
     5. train the unshared-weight ablation
-    6. inference-depth sweep for every checkpoint
-    7. aggregate into results/learned_experiment.json and learned_examples.json
+    6. train the sum and mean aggregation variants
+    7. inference-depth sweep for every checkpoint
+    8. aggregate into results/learned_experiment.json and learned_examples.json
+    9. export the browser bundle into Frontend/public/data
+   10. check the browser engine against PyTorch
 
 Everything is seeded. Rerunning on the same machine reproduces the same
 checkpoint hashes and the same curves.
@@ -54,6 +57,8 @@ def main() -> None:
                         help="Run validation suites and stop")
     parser.add_argument("--skip-tests", action="store_true",
                         help="Go straight to training")
+    parser.add_argument("--skip-aggregation", action="store_true",
+                        help="Skip the sum/mean aggregation ablation")
     args = parser.parse_args()
 
     python = sys.executable
@@ -103,6 +108,22 @@ def main() -> None:
              "--unshared"],
         )
 
+    # Aggregation ablation. "Max because reachability is an OR" is a claim
+    # about the architecture, so it is trained against its alternatives rather
+    # than asserted in a docstring. Two seeds are enough to show the ordering.
+    if not args.skip_aggregation:
+        for aggregation in ("sum", "mean"):
+            for seed in seeds[:2]:
+                run(
+                    f"Train {aggregation}-aggregation variant, seed {seed}",
+                    [python, "-m", "learned.train",
+                     "--seed", str(seed),
+                     "--epochs", str(epochs),
+                     "--pairs-per-distance", str(train_pairs),
+                     "--aggregation", aggregation,
+                     "--tag", f"agg{aggregation}"],
+                )
+
     for seed in seeds:
         run(
             f"Inference-depth sweep, seed {seed}",
@@ -122,14 +143,40 @@ def main() -> None:
              "--tag", "unshared"],
         )
 
+    if not args.skip_aggregation:
+        for aggregation in ("sum", "mean"):
+            for seed in seeds[:2]:
+                run(
+                    f"Inference-depth sweep, {aggregation} aggregation, seed {seed}",
+                    [python, "-m", "learned.evaluate",
+                     "--seed", str(seed),
+                     "--checkpoint", f"results/model_seed{seed}_agg{aggregation}.pt",
+                     "--pairs-per-distance", str(eval_pairs),
+                     "--tag", f"agg{aggregation}"],
+                )
+
     run(
-        "Aggregate seeds into frontend JSON",
+        "Aggregate seeds into one results file",
         [python, "-m", "learned.export_results", "--seeds", *[str(s) for s in seeds]],
+    )
+
+    # The interface reads none of results/ directly. It reads the bundle in
+    # Frontend/public/data, so the export is part of the pipeline rather than a
+    # step someone has to remember.
+    run(
+        "Export the browser bundle",
+        [python, "export_web.py"] + (["--quick"] if args.quick else []),
+    )
+
+    run(
+        "Browser engine against PyTorch",
+        [python, "-m", "tests.test_js_parity"],
     )
 
     print(f"\n{'=' * 70}")
     print(f"  Pipeline complete in {time.time() - started:.1f}s")
     print(f"  Results in {BACKEND / 'results'}")
+    print(f"  Browser bundle in {BACKEND.parent / 'Frontend' / 'public' / 'data'}")
     print("=" * 70)
 
 

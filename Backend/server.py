@@ -13,10 +13,18 @@ from core.recurrent import run_exact
 app = FastAPI(
     title="Latent Loop Lab Backend",
     description=(
-        "Backend for Latent Loop Lab. The /exact routes are the mechanism "
-        "layer: live noisy-OR graph recurrence with an independent BFS oracle. "
-        "The /learned routes are the AI layer: a small shared-weight recurrent "
-        "GNN used as an experimental bridge. The two are never the same model."
+        "Reference implementation for Latent Loop Lab.\n\n"
+        "The published artifact does not use this server. Both computational "
+        "layers run in the visitor's browser from the bundle built by "
+        "export_web.py, so the lab opens from a static URL with nothing "
+        "running behind it.\n\n"
+        "This API stays for two reasons. It is the implementation the browser "
+        "engine is checked against by tests/test_js_parity.py, and it is a "
+        "convenient way to exercise the mechanism from a terminal.\n\n"
+        "The /exact routes are the mechanism layer: live noisy-OR graph "
+        "recurrence with an independent BFS oracle. The /learned routes are "
+        "the AI layer: a small shared-weight recurrent GNN used as an "
+        "experimental bridge. The two are never the same model."
     ),
     version="1.0.0",
 )

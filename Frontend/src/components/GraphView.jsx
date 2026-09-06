@@ -1,68 +1,98 @@
 import React, { useMemo } from "react";
+import { bfsLayers, shortestPath, outgoing } from "../engine/graph.js";
 
-// Layout is deterministic: the same graph always draws the same way, so moving
-// the depth slider changes colour and nothing else. A layout that jittered
-// between renders would make the propagation impossible to follow.
-function layout(n, width, height, edges) {
+// The graph is drawn in columns by breadth-first layer from the source, so
+// horizontal position *is* distance. That one decision does most of the
+// teaching: the depth ruler under the picture shares this axis, so "R passed
+// the tick" and "the wavefront reached the target" are the same event seen
+// twice, and a learner can count columns to predict the answer before moving
+// anything.
+//
+// A ring layout, which this replaced, hid exactly the variable the lesson is
+// about. Nodes the source cannot reach have no layer at all and are parked in a
+// final column marked with an infinity sign, which makes a disconnected graph
+// legible at a glance instead of looking like a graph that merely needs more
+// depth.
+//
+// Layout is deterministic. The same graph always draws the same way, so moving
+// the depth slider changes colour and nothing else.
+
+const NODE_R = 15;
+const COL_MIN = 74;
+const ROW = 46;
+const PAD_X = 30;
+const PAD_TOP = 34;
+const PAD_BOTTOM = 26;
+
+function buildLayout(graph, source, target) {
+  const { n, edges } = graph;
+  const layers = bfsLayers(n, edges, source);
+
+  const reachableDepths = layers.filter((value) => value !== null);
+  const maxLayer = reachableDepths.length ? Math.max(...reachableDepths) : 0;
+
+  // One column per layer, plus a parking column for anything unreachable.
+  const columns = [];
+  for (let depth = 0; depth <= maxLayer; depth++) {
+    columns.push({ depth, nodes: [] });
+  }
+  const stranded = [];
+
+  for (let v = 0; v < n; v++) {
+    if (layers[v] === null) stranded.push(v);
+    else columns[layers[v]].nodes.push(v);
+  }
+  if (stranded.length) columns.push({ depth: null, nodes: stranded });
+
+  // Keep the target at the vertical centre of its own column so the eye has a
+  // fixed place to watch.
+  for (const column of columns) {
+    column.nodes.sort((a, b) => {
+      if (a === target) return -1;
+      if (b === target) return 1;
+      return a - b;
+    });
+  }
+
+  const tallest = Math.max(1, ...columns.map((column) => column.nodes.length));
+  const colWidth = Math.max(COL_MIN, 640 / Math.max(1, columns.length));
+  const width = PAD_X * 2 + colWidth * columns.length;
+  const height = PAD_TOP + PAD_BOTTOM + Math.max(2, tallest) * ROW;
+
   const positions = {};
-
-  // A pure ring hides the path structure once graphs get dense, so nodes are
-  // placed on a ring but ordered by BFS layer from node 0 where possible.
-  const order = bfsOrder(n, edges);
-
-  const cx = width / 2;
-  const cy = height / 2;
-  const radius = Math.min(width, height) * 0.36;
-
-  order.forEach((node, index) => {
-    const angle = -Math.PI / 2 + (2 * Math.PI * index) / n;
-    positions[node] = {
-      x: cx + radius * Math.cos(angle),
-      y: cy + radius * Math.sin(angle),
-    };
+  columns.forEach((column, index) => {
+    const x = PAD_X + colWidth * index + colWidth / 2;
+    const span = column.nodes.length;
+    const top = PAD_TOP + (height - PAD_TOP - PAD_BOTTOM - span * ROW) / 2 + ROW / 2;
+    column.nodes.forEach((node, row) => {
+      positions[node] = { x, y: top + row * ROW };
+    });
+    column.x = x;
+    column.halfWidth = colWidth / 2;
   });
 
-  return positions;
+  return { positions, columns, width, height, layers, maxLayer };
 }
 
-function bfsOrder(n, edges) {
-  const outgoing = Array.from({ length: n }, () => []);
-  edges.forEach(([u, v]) => outgoing[u]?.push(v));
+/** Edges that skip more than one column need a visible arc, or they overlap. */
+function edgePath(from, to, sameColumn) {
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const length = Math.hypot(dx, dy) || 1;
 
-  const seen = new Set([0]);
-  const order = [0];
-  const queue = [0];
+  const startX = from.x + (dx / length) * NODE_R;
+  const startY = from.y + (dy / length) * NODE_R;
+  const endX = to.x - (dx / length) * (NODE_R + 6);
+  const endY = to.y - (dy / length) * (NODE_R + 6);
 
-  while (queue.length) {
-    const u = queue.shift();
-    for (const v of outgoing[u] || []) {
-      if (!seen.has(v)) {
-        seen.add(v);
-        order.push(v);
-        queue.push(v);
-      }
-    }
+  if (sameColumn || Math.abs(dx) < 1) {
+    const bulge = 26 * (dy >= 0 ? 1 : -1);
+    return `M ${startX} ${startY} C ${startX + bulge} ${startY}, ${endX + bulge} ${endY}, ${endX} ${endY}`;
   }
 
-  for (let node = 0; node < n; node++) {
-    if (!seen.has(node)) order.push(node);
-  }
-
-  return order;
-}
-
-function nodeFill(value, isSource, isTarget, epsilon) {
-  if (isSource) return "#16a34a";
-  if (value > epsilon) {
-    // Warmer as activation approaches 1.
-    const intensity = Math.min(1, value);
-    return isTarget
-      ? "#ea580c"
-      : `rgb(${Math.round(96 + intensity * 40)}, ${Math.round(
-          150 - intensity * 40
-        )}, ${Math.round(235 - intensity * 40)})`;
-  }
-  return isTarget ? "#fed7aa" : "#e2e8f0";
+  const midX = (startX + endX) / 2;
+  const lift = Math.min(30, Math.abs(dx) * 0.18);
+  return `M ${startX} ${startY} C ${midX} ${startY - lift}, ${midX} ${endY - lift}, ${endX} ${endY}`;
 }
 
 export default function GraphView({
@@ -71,143 +101,207 @@ export default function GraphView({
   target,
   state,
   epsilon = 1e-12,
-  height = 420,
-  showValues = true,
   caption,
+  showValues = true,
+  highlightPath = true,
+  showLayerStrip = true,
 }) {
-  const width = 640;
-  const edges = graph?.edges || [];
-  const n = graph?.n || 0;
-
-  const positions = useMemo(
-    () => layout(n, width, height, edges),
-    [n, height, JSON.stringify(edges)]
+  const layout = useMemo(
+    () => (graph ? buildLayout(graph, source, target) : null),
+    [graph?.n, JSON.stringify(graph?.edges), source, target]
   );
 
-  if (!graph) return null;
+  const path = useMemo(
+    () =>
+      graph && highlightPath
+        ? shortestPath(graph.n, graph.edges, source, target)
+        : null,
+    [graph?.n, JSON.stringify(graph?.edges), source, target, highlightPath]
+  );
 
-  const radius = n > 16 ? 15 : n > 10 ? 19 : 23;
+  if (!graph || !layout) return null;
+
+  const { positions, columns, width, height, layers } = layout;
+  const pathEdges = new Set();
+  if (path) {
+    for (let i = 0; i < path.length - 1; i++) pathEdges.add(`${path[i]}>${path[i + 1]}`);
+  }
+
+  const isActive = (node) => (state?.[node] ?? 0) > epsilon;
+  const frontier = state
+    ? Math.max(-1, ...layers.map((depth, node) => (isActive(node) ? depth ?? -1 : -1)))
+    : -1;
 
   return (
-    <figure className="graph-card">
+    <figure className="plate">
       <svg
         viewBox={`0 0 ${width} ${height}`}
         role="img"
-        aria-label={`Directed graph with ${n} nodes. Source is node ${source}, target is node ${target}.`}
+        aria-label={
+          `Directed graph, ${graph.n} nodes, drawn in columns by distance from ` +
+          `the source. Node ${source} is the source, node ${target} is the ` +
+          `target. ${state ? `${state.filter((v) => v > epsilon).length} nodes are currently active.` : ""}`
+        }
       >
         <defs>
-          <marker
-            id="arrowhead"
-            markerWidth="9"
-            markerHeight="9"
-            refX="8"
-            refY="3"
-            orient="auto"
-          >
-            <path d="M0,0 L0,6 L9,3 z" fill="#94a3b8" />
+          <marker id="tip" markerWidth="7" markerHeight="7" refX="6" refY="2.4" orient="auto">
+            <path d="M0,0 L0,4.8 L7,2.4 z" fill="var(--rule)" />
           </marker>
-          <marker
-            id="arrowhead-active"
-            markerWidth="9"
-            markerHeight="9"
-            refX="8"
-            refY="3"
-            orient="auto"
-          >
-            <path d="M0,0 L0,6 L9,3 z" fill="#2563eb" />
+          <marker id="tip-live" markerWidth="7" markerHeight="7" refX="6" refY="2.4" orient="auto">
+            <path d="M0,0 L0,4.8 L7,2.4 z" fill="var(--signal)" />
+          </marker>
+          <marker id="tip-path" markerWidth="7" markerHeight="7" refX="6" refY="2.4" orient="auto">
+            <path d="M0,0 L0,4.8 L7,2.4 z" fill="var(--charge)" />
           </marker>
         </defs>
 
-        {edges.map(([u, v], index) => {
+        {/* Column guides. These are the same ticks as the depth ruler. */}
+        {columns.map((column, index) => (
+          <g key={`col-${index}`}>
+            {column.depth !== null && state && column.depth <= frontier && (
+              <rect
+                x={column.x - column.halfWidth}
+                y={PAD_TOP - 12}
+                width={column.halfWidth * 2}
+                height={height - PAD_TOP - PAD_BOTTOM + 18}
+                fill="var(--signal)"
+                opacity="0.06"
+              />
+            )}
+            <text
+              x={column.x}
+              y={17}
+              textAnchor="middle"
+              fontSize="10.5"
+              fontFamily="var(--mono)"
+              fill={
+                column.depth !== null && column.depth <= frontier
+                  ? "var(--signal)"
+                  : "var(--ink-3)"
+              }
+            >
+              {column.depth === null ? "unreachable" : `layer ${column.depth}`}
+            </text>
+          </g>
+        ))}
+
+        {graph.edges.map(([u, v], index) => {
           const from = positions[u];
           const to = positions[v];
           if (!from || !to) return null;
 
-          const dx = to.x - from.x;
-          const dy = to.y - from.y;
-          const length = Math.hypot(dx, dy) || 1;
-
-          // An edge is "carrying" activation when its sender is already active.
-          const carrying = (state?.[u] ?? 0) > epsilon;
+          const onPath = pathEdges.has(`${u}>${v}`);
+          const carrying = isActive(u);
 
           return (
-            <line
+            <path
               key={index}
-              x1={from.x + (dx / length) * radius}
-              y1={from.y + (dy / length) * radius}
-              x2={to.x - (dx / length) * radius}
-              y2={to.y - (dy / length) * radius}
-              stroke={carrying ? "#2563eb" : "#cbd5e1"}
-              strokeWidth={carrying ? 2.2 : 1.2}
-              opacity={carrying ? 0.9 : 0.5}
+              d={edgePath(from, to, Math.abs(to.x - from.x) < 1)}
+              fill="none"
+              stroke={
+                onPath ? "var(--charge)" : carrying ? "var(--signal)" : "var(--rule)"
+              }
+              strokeWidth={onPath ? 2 : carrying ? 1.7 : 1}
+              opacity={onPath ? 0.95 : carrying ? 0.85 : 0.5}
               markerEnd={
-                carrying ? "url(#arrowhead-active)" : "url(#arrowhead)"
+                onPath ? "url(#tip-path)" : carrying ? "url(#tip-live)" : "url(#tip)"
               }
             />
           );
         })}
 
-        {Array.from({ length: n }).map((_, node) => {
+        {Array.from({ length: graph.n }).map((_, node) => {
           const position = positions[node];
           if (!position) return null;
 
           const value = state?.[node] ?? 0;
+          const active = value > epsilon;
           const isSource = node === source;
           const isTarget = node === target;
-          const active = value > epsilon;
+
+          // Role is carried by shape, activation by fill. Adding a third and a
+          // fourth colour for source and target would compete with the one
+          // colour that has to mean "activation arrived".
+          const fill = active
+            ? isTarget
+              ? "var(--charge)"
+              : "var(--signal)"
+            : "var(--surface)";
+          const stroke = isTarget
+            ? "var(--charge)"
+            : isSource
+            ? "var(--ink)"
+            : active
+            ? "var(--signal)"
+            : "var(--rule)";
 
           return (
             <g key={node}>
-              <circle
-                cx={position.x}
-                cy={position.y}
-                r={radius}
-                fill={nodeFill(value, isSource, isTarget, epsilon)}
-                stroke={active ? "#0f172a" : "#94a3b8"}
-                strokeWidth={active ? 2.5 : 1.2}
-              />
+              {isTarget && (
+                <circle
+                  cx={position.x}
+                  cy={position.y}
+                  r={NODE_R + 4}
+                  fill="none"
+                  stroke={stroke}
+                  strokeWidth={active ? 1.6 : 1}
+                  opacity={active ? 1 : 0.55}
+                />
+              )}
+              {isSource ? (
+                <rect
+                  x={position.x - NODE_R}
+                  y={position.y - NODE_R}
+                  width={NODE_R * 2}
+                  height={NODE_R * 2}
+                  fill={fill}
+                  stroke={stroke}
+                  strokeWidth="2"
+                />
+              ) : (
+                <circle
+                  cx={position.x}
+                  cy={position.y}
+                  r={NODE_R}
+                  fill={fill}
+                  stroke={stroke}
+                  strokeWidth={active ? 2 : 1.2}
+                />
+              )}
               <text
                 x={position.x}
                 y={position.y + 4}
                 textAnchor="middle"
-                fontSize={radius > 18 ? 13 : 11}
-                fontWeight="700"
-                fill={active || isSource ? "#ffffff" : "#475569"}
+                fontSize="11.5"
+                fontFamily="var(--mono)"
+                fontWeight="500"
+                fill={active ? "var(--surface)" : "var(--ink-2)"}
               >
                 {node}
               </text>
 
-              {isSource && (
+              {(isSource || isTarget) && (
                 <text
                   x={position.x}
-                  y={position.y - radius - 8}
+                  y={position.y + NODE_R + (isTarget ? 18 : 15)}
                   textAnchor="middle"
-                  fontSize="11"
-                  fontWeight="700"
-                  fill="#16a34a"
+                  fontSize="9.5"
+                  fontFamily="var(--display)"
+                  fontWeight="600"
+                  fill={isTarget ? "var(--charge)" : "var(--ink-2)"}
                 >
-                  SOURCE
+                  {isSource ? "source s" : "target q"}
                 </text>
               )}
-              {isTarget && (
+
+              {showValues && graph.n <= 14 && !isSource && !isTarget && (
                 <text
                   x={position.x}
-                  y={position.y - radius - 8}
+                  y={position.y + NODE_R + 13}
                   textAnchor="middle"
-                  fontSize="11"
-                  fontWeight="700"
-                  fill="#ea580c"
-                >
-                  TARGET
-                </text>
-              )}
-              {showValues && n <= 14 && (
-                <text
-                  x={position.x}
-                  y={position.y + radius + 14}
-                  textAnchor="middle"
-                  fontSize="10"
-                  fill="#64748b"
+                  fontSize="9"
+                  fontFamily="var(--mono)"
+                  fill="var(--ink-3)"
                 >
                   {value.toFixed(2)}
                 </text>
@@ -216,7 +310,29 @@ export default function GraphView({
           );
         })}
       </svg>
+
+      {showLayerStrip && state && (
+        <div className="layer-strip" aria-hidden="true">
+          {columns.map((column, index) => (
+            <span
+              key={index}
+              className={column.depth !== null && column.depth <= frontier ? "lit" : ""}
+            >
+              {column.depth === null ? "∞" : column.depth}
+            </span>
+          ))}
+        </div>
+      )}
+
       {caption && <figcaption>{caption}</figcaption>}
     </figure>
   );
 }
+
+/** Nodes reachable within r hops, used by pages that quote the frontier. */
+export function frontierSize(graph, source, r) {
+  const layers = bfsLayers(graph.n, graph.edges, source);
+  return layers.filter((depth) => depth !== null && depth <= r).length;
+}
+
+export { outgoing };

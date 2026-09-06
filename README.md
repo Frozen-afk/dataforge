@@ -2,14 +2,22 @@
 
 **Can a model think longer without saying more?**
 
-An interactive educational laboratory for understanding **recurrent latent
-computation as an inference-time compute axis**, built for the DataForge 2026
-Pathway Track.
+An interactive lab for **recurrent latent computation as an inference-time
+compute axis**, built for the DataForge 2026 Pathway Track.
+
+Everything computes in the browser. There is no server, no install, and no
+sign-in: open the URL and the mechanism is already running.
+
+- **Artifact:** _add the public URL here after deploying (see §7)._
+- **One-page concept summary:** [`docs/concept-summary.pdf`](docs/concept-summary.pdf)
+- **Claim sheet:** [`Backend/docs/claim-sheet.md`](Backend/docs/claim-sheet.md)
+- **Citation ledger:** [`Backend/docs/citation-ledger.md`](Backend/docs/citation-ledger.md)
 
 The lab has two computational layers that are never conflated: an exact,
 interpretable graph recurrence that acts as a scientific control, and a small
-learned shared-weight recurrent GNN that tests whether the same idea survives
-when the transition rule is learned from data rather than designed by hand.
+learned shared-weight recurrent network that tests whether the same idea
+survives when the transition rule is learned from data rather than designed by
+hand.
 
 ---
 
@@ -22,12 +30,11 @@ when the transition rule is learned from data rather than designed by hand.
 > iteration budget `R` can improve extrapolation to longer reasoning paths, but
 > only within the learned dynamics' capacity and stability limits.
 
-The learner can reproduce, test, or challenge this by moving `R`, choosing path
-lengths outside the training range, and comparing the learned model against both
-the exact mechanism and an independent BFS oracle.
+A learner can reproduce, test, or challenge this by moving `R`, choosing path
+lengths outside the training range, and comparing the learned model against
+both the exact mechanism and an independent breadth-first search.
 
-Full breakdown, including what is deliberately *not* claimed:
-[`Backend/docs/claim-sheet.md`](Backend/docs/claim-sheet.md).
+What is deliberately **not** claimed is in the claim sheet.
 
 ---
 
@@ -67,10 +74,10 @@ A single-graph version of the same effect, at a distance never trained on:
 $ python -m learned.infer --checkpoint results/model_seed1.pt --distance 6 --nodes 16 --sweep
 
   R   learned p      predicts         exact   correct
-  1      0.5042     reachable   unreachable       yes
-  4      0.0011   unreachable   unreachable        NO
-  5      0.0001   unreachable   unreachable        NO
-  6      1.0000     reachable     reachable       yes
+  1      0.5038     reachable   unreachable       yes
+  4      0.0000   unreachable   unreachable        NO
+  5      0.0000   unreachable   unreachable        NO
+  6      0.9995     reachable     reachable       yes
  10      1.0000     reachable     reachable       yes
 ```
 
@@ -81,19 +88,24 @@ requires.
 
 ## 3. Intended learner
 
-A student or engineer who knows basic ML and graphs, but has not read the
-latent-reasoning or post-Transformer literature. Prerequisites: basic Python,
+A student or engineer who knows basic machine learning and graphs, but has not
+read the latent-reasoning or post-Transformer literature.
+
+**Prerequisites:** basic Python (only to reproduce; the artifact needs none),
 what a directed graph is, roughly what a recurrent update is.
 
-After using the artifact a learner can:
+**After using the artifact a learner can:**
 
-1. Explain what recurrent depth `R` means mechanically.
-2. Predict the minimum `R` at which a target activates, before moving the slider.
-3. Distinguish token generation from latent state updates.
-4. Interpret "same weights, more computation" in a shared-weight recurrent GNN.
-5. Distinguish insufficient computation from learned-generalisation limits.
-6. Distinguish BDH-CQ contextual recurrence `S_t` from query-time recurrence `H_r`.
+1. Say what recurrent depth `R` means mechanically, in one sentence.
+2. Predict the minimum `R` at which a target activates, before moving the control.
+3. Tell apart generating tokens and updating a latent state.
+4. Read "same weights, more computation" off a shared-weight recurrent model.
+5. Tell apart insufficient computation and a limit of what was learned.
+6. Keep BDH-CQ's contextual state `S_t` distinct from its query-time workspace `H_r`.
 7. Name at least one limitation or failure case.
+
+Section 8 of the artifact asks the learner to do exactly these seven and marks
+their own answers against the lab's.
 
 ---
 
@@ -127,34 +139,59 @@ signal is global connectivity, which the target cannot observe until `R` reaches
 the source. That is exactly the property the experiment is meant to measure.
 
 Two smaller asymmetries remain and are reported rather than hidden: negatives
-average a slightly lower target in-degree (1.63 against 1.78) and source
-out-degree (1.84 against 1.99). Neither is visible from the target before the
-recurrence reaches the source.
+average a slightly lower target in-degree (1.55 against 1.82) and source
+out-degree (2.10 against 2.31) in the shipped case bank. Neither is visible from
+the target before the recurrence reaches the source. Section 7 of the artifact
+computes these from the bundle actually being served, so the figure on screen
+cannot drift away from the data behind it.
 
 ---
 
 ## 5. Architecture
 
 ```
-Learner interaction (React, 7 guided pages)
-        |
-Graph + exact noisy-OR recurrence  ->  BFS oracle      [LIVE COMPUTATION]
-        |
-Shared-weight learned recurrent GNN                    [LIVE or PRECOMPUTED]
-        |
-Inference-depth experiment + shared/unshared ablation  [PRECOMPUTED RESULT]
-        |
-BDH-CQ architectural connection                        [PAPER-REPORTED RESULT]
-        |
-Limitations + evidence discipline
+Browser (React, 9 guided sections)
+  |
+  |-- engine/graph.js    BFS oracle                          [LIVE, in browser]
+  |-- engine/exact.js    noisy-OR graph recurrence           [LIVE, in browser]
+  |-- engine/gnn.js      learned shared-weight recurrent GNN [LIVE, in browser]
+  |-- engine/assoc.js    two-recurrence associative toy      [LIVE, in browser]
+  |
+  `-- public/data/       built by Backend/export_web.py
+        model.json         frozen checkpoint weights
+        cases.json         seeded graph instances            [SYNTHETIC DATA]
+        experiment.json    multi-seed depth sweep            [PRECOMPUTED]
+        examples.json      categorised successes/failures    [PRECOMPUTED]
+        manifest.json      hashes, build revision, sizes
+
+Backend (Python) — the reference implementation and the training pipeline.
+Not required to view the artifact.
+  core/       exact recurrence, BFS, generator
+  learned/    model, dataset, training, evaluation, export
+  tests/      invariant suite, generator guarantees, browser-vs-PyTorch parity
+  server.py   optional FastAPI mirror of the same computation
 ```
+
+**Why the compute moved into the browser.** The lab used to require a local
+FastAPI process. That is fine on a laptop and useless as a public artifact: a
+visitor saw a red banner instead of the mechanism, and there was a network round
+trip between the depth control and the picture — the one interaction the whole
+lesson rests on. Both computational layers now run client-side from the same
+frozen weights, and `Backend/tests/test_js_parity.py` checks the JavaScript
+against PyTorch on seeded cases, agreeing to about **2 × 10⁻⁷ relative**.
+
+Graph instances are the one thing shipped as data rather than recomputed.
+Reproducing `core/generator.py` in JavaScript would mean maintaining two copies
+of 500 lines of subtle rejection sampling, and any drift between them would
+silently change what the experiment measures. They are labelled *Synthetic data*
+in the interface, which is what they always were.
 
 Three objects, never conflated:
 
-| Object | What it does | Evidence |
+| Object | What it does | Evidence label |
 |---|---|---|
 | Exact recurrence `h^(r)` | Hand-designed propagation, one coordinate per node | Live computation |
-| Learned GNN `z^(r)` | Learned shared-weight updates, opaque coordinates | Live / precomputed |
+| Learned GNN `z^(r)` | Learned shared-weight updates, opaque coordinates | Live computation |
 | BDH-CQ workspace `H_r` | Published system-level example | Paper-reported result |
 
 ### Exact mechanism
@@ -179,7 +216,10 @@ z_v^(r+1) = F_θ(z_v^r, m_v^r)                     gated (GRU) update
 
 with `θ_0 = θ_1 = … = θ_{R-1}`. 11,169 parameters at any depth. Max aggregation
 is the default because reachability is a logical OR over incoming neighbours,
-the same role the noisy-OR plays in the exact layer.
+the same role the noisy-OR plays in the exact layer. That is an argument, not a
+measurement, so `sum` and `mean` are trained too — and on the two seeds
+available the intervals overlap, so **the ablation does not separate them.** The
+artifact says so rather than reading the small gap as a result.
 
 `R` is resampled uniformly from `{1..4}` every batch during training, so the same
 weights must work at every depth and the model cannot specialise to one fixed
@@ -193,8 +233,9 @@ iteration count.
 Backend/
 ├── requirements.txt
 ├── reproduce.py                # one-command full pipeline
-├── server.py                   # FastAPI: /exact/* routes
-├── learned_api.py              # /learned/* routes
+├── export_web.py               # build the browser bundle
+├── server.py                   # optional FastAPI mirror: /exact/* routes
+├── learned_api.py              # optional: /learned/* routes
 ├── core/
 │   ├── graph.py                # graph schema + presets (n ≤ 24)
 │   ├── bfs.py                  # independent BFS oracle
@@ -208,71 +249,111 @@ Backend/
 │   ├── export_results.py       # multi-seed aggregation with CIs
 │   └── infer.py                # deterministic inference script
 ├── experiments/generate.py     # stratified case suite
-├── tests/test_exact_invariant.py
+├── tests/
+│   ├── test_exact_invariant.py # 10,000-case invariant + generator guarantees
+│   ├── test_js_parity.py       # browser engine vs PyTorch
+│   └── js_parity_runner.mjs    # runs the browser engine under Node
 ├── docs/                       # claim-sheet, citation-ledger, source-matrix
 └── results/                    # checkpoints + JSON outputs
 
 Frontend/
+├── vite.config.js              # BASE_PATH for subpath deployments
+├── scripts/smoke.mjs           # renders every page + exercises the engine
 └── src/
-    ├── App.jsx                 # 7-page lesson shell
-    ├── lib/api.js
-    ├── components/             # GraphView, Chart, Evidence, Common
-    └── pages/                  # Hook, Mechanism, Verification,
-                                # LearnedBridge, Generalisation, BDHCQ, Evidence
+    ├── App.jsx                 # 9-section lesson shell
+    ├── App.css                 # design tokens, light and dark
+    ├── engine/                 # graph.js, exact.js, gnn.js, assoc.js
+    ├── lib/lab.js              # data loading + compute layer
+    ├── components/             # GraphView, Chart, TwoRecurrences, Common
+    └── pages/                  # Start, Hook, Mechanism, Verification,
+                                # LearnedBridge, Generalisation, BDHCQ,
+                                # Evidence, Recap
+
+docs/
+├── concept-summary.md          # source text for the one-page summary
+├── concept-summary.pdf         # the submitted PDF
+└── build-summary-pdf.py        # md -> print-ready HTML -> PDF
 ```
 
 ---
 
 ## 7. Setup
 
-### Backend
+### Just view the artifact
+
+```bash
+./run.sh
+```
+
+Starts the lab and the reference API and opens a browser.
+See [`RUNNING.md`](RUNNING.md) for the options.
+
+Or by hand, with no backend at all:
+
+```bash
+cd Frontend
+npm install
+npm run dev            # http://127.0.0.1:5173
+```
+
+No Python, no backend, no checkpoint download. The data bundle is committed
+under `Frontend/public/data`.
+
+### Build for deployment
+
+```bash
+cd Frontend
+npm run build                        # served from the domain root
+BASE_PATH=/your-repo/ npm run build  # served from a subpath, e.g. GitHub Pages
+```
+
+`dist/` is a plain static directory. Any static host serves it: GitHub Pages,
+Netlify, Vercel, Cloudflare Pages, S3. Nothing needs to run server-side.
+
+### Reproduce every number
 
 ```bash
 cd Backend
 python -m venv .venv && source .venv/bin/activate
 pip install --index-url https://download.pytorch.org/whl/cpu torch
 pip install -r requirements.txt
-uvicorn server:app --reload
-```
 
-Runs at `http://127.0.0.1:8000`; interactive docs at `/docs`.
-
-### Frontend
-
-```bash
-cd Frontend
-npm install
-npm run dev
-```
-
-Runs at `http://127.0.0.1:5173`. Point it elsewhere with `VITE_API_BASE`.
-
-### Reproduce every number
-
-```bash
-cd Backend
-python reproduce.py              # tests, 5 seeds, ablation, sweeps, export  (~2 min)
+python reproduce.py              # tests, 5 seeds, ablations, sweeps, export  (~4 min)
 python reproduce.py --quick      # smaller sweep, smoke check
 python reproduce.py --tests-only # validation suites only
 ```
 
-Everything is seeded. The same machine reproduces the same checkpoint hashes.
+`reproduce.py` finishes by rebuilding `Frontend/public/data` and running the
+browser-versus-PyTorch parity check, so a trained result and the artifact cannot
+fall out of step.
+
+### Optional: the FastAPI reference server
+
+```bash
+cd Backend && uvicorn server:app --reload   # http://127.0.0.1:8000, docs at /docs
+```
+
+The frontend no longer uses it. It stays because it is the reference
+implementation the browser engine is checked against, and because `/docs` is a
+convenient way to poke at the mechanism from a terminal.
 
 ---
 
-## 8. The seven pages
+## 8. The nine sections
 
-| Page | Question | Learner action |
-|---|---|---|
-| 1 Hook | Can a model think longer without saying more? | Move `R` until the target activates |
-| 2 Mechanism | What is the latent state doing? | Predict the minimum `R` before moving the slider |
-| 3 Verification | Is the effect real or just animation? | Try to break the invariant |
-| 4 AI bridge | What if the rule is learned? | Push inference depth past training depth |
-| 5 Generalisation | More computation or more memorisation? | Choose a path length outside the training range |
-| 6 BDH-CQ | Where does this appear in real AI? | Compare the two recurrences |
-| 7 Evidence | What counts as evidence here? | Audit the provenance of every number |
+| # | Section | Question | Learner action |
+|---|---|---|---|
+| 0 | Start here | What is this and who is it for? | Watch the wavefront advance before touching anything |
+| 1 | The dial | Can a model think longer without saying more? | Move `R` until the target activates |
+| 2 | The state | What is the latent state doing? | Predict the minimum `R` before the marker appears |
+| 3 | The check | Is the effect real or just animation? | Try to break the invariant, with two one-click setups |
+| 4 | Learned rule | What if the rule is learned? | Push inference depth past training depth |
+| 5 | The limits | More computation or more memorisation? | Choose a path length outside the training range |
+| 6 | BDH-CQ | Where does this appear in a real system? | Drive two recurrences separately and break one |
+| 7 | Evidence | What counts as evidence here? | Audit the provenance of every number |
+| 8 | Explain it back | Can you say it in your own words? | Answer seven prompts, then check and self-mark |
 
-Pages 1 to 3 work with no trained checkpoint. Pages 4 and 5 degrade with an
+Sections 0 to 3 need no trained checkpoint. Sections 4 and 5 degrade with an
 explicit message rather than inventing numbers.
 
 ---
@@ -286,35 +367,41 @@ explicit message rather than inventing numbers.
 | Unit tests | `python -m tests.test_exact_invariant` | `OK` (10 tests) |
 | 10,000-case invariant | `python -m tests.test_exact_invariant --large` | `OK: 10000 cases passed.` + per-stratum table |
 | Generator guarantees | `python -m tests.test_exact_invariant --generator` | every case has the distance it claims |
+| Browser vs PyTorch | `python -m tests.test_js_parity --verbose` | `OK` (5 tests) + per-field deviations under 1e-6 |
 | R too small | `python -m experiments.run_exact --preset line --R 3` | `estimate: false`, `bfsDistance: 4`, `invariantPass: true` |
 | R sufficient | `python -m experiments.run_exact --preset line --R 4` | `estimate: true` |
-| Health | `curl localhost:8000/health` | `{"status":"ok"}` |
-| Generated graph | `POST /exact/generate {"distance":7,"nodes":16,"R":7}` | `estimate: true`, `bfsDistance: 7` |
-| Learned status | `GET /learned/status` | checkpoint hash, live-inference flag |
-| Depth sweep | `POST /learned/sweep {"distance":6,"nodes":16}` | `flipDepthsAgree: true` |
-| Missing model honesty | same call with no checkpoint | 503 with an actionable message |
+| Bundle export | `python export_web.py` | 132 matched pairs, 0 dropped, checkpoint hash printed |
 
 ### Frontend
 
-- **Page 1** opens with the mechanism already running and stops at `R = 4`. Grab
-  the slider to take over.
-- **Page 2** blocks the reveal until you commit to a prediction. Predict 2 on the
-  branching graph and it tells you the answer is 3.
-- **Page 3** switch to `disconnected` and push `R` to 12. The target must never
-  activate and the invariant must stay `PASS`.
-- **Page 4** set path length 6 and sweep `R`. Both models should flip at 6, and
-  the badge should read "same depth".
-- **Page 5** every plot carries `Precomputed result`. The negative findings
-  (erosion at large `R`, chance-level performance below `R = d`) are shown, not
-  hidden.
-- **Page 6** the two recurrences are separately coloured and separately labelled.
-- **Page 7** the ledger auto-detects whether this deployment runs live inference.
+| Test | Command | Expected |
+|---|---|---|
+| Every page renders, engine agrees with BFS | `npm run smoke` | `All checks passed.` |
+| Production build | `npm run build` | `dist/` with `data/` copied in |
+
+### By hand
+
+- **Section 1** opens with the mechanism already running and stops at `R = 4`.
+  Grab the control to take over.
+- **Section 2** hides the distance marker until you commit to a prediction.
+  Predict 2 on the branching graph and it tells you the answer is 3.
+- **Section 3** click "No path exists" and push `R` to 12. The target must never
+  activate and the invariant must hold at all 13 depths.
+- **Section 4** set path length 6 and sweep `R`. Both models should commit at 6,
+  and the badge should read "same depth". Try 9 or 10 and watch it fail.
+- **Section 5** every plot carries `Precomputed result`. The negative findings
+  are shown, not hidden — including an ablation that came out inconclusive.
+- **Section 6** cut the demonstrations to 3 and raise the latent budget. The
+  answer does not improve, because the missing association is not a compute
+  problem.
+- **Section 7** the matched-statistics table is computed from the bundle you are
+  actually browsing.
 
 ### The sixty-second test
 
-Open the app, see the preset already running, move `R`, watch the target
-activate at `R = 4`, read the truth panel. If that fails, fix it before anything
-else.
+Open the artifact, see the preset already running, move `R`, watch the target
+activate at `R = 4`, read the truth panel beside it. If that fails, fix it before
+anything else.
 
 ---
 
@@ -322,11 +409,10 @@ else.
 
 | Element | Label |
 |---|---|
-| Exact graph recurrence, BFS oracle | Live computation |
-| 10,000-case invariant suite | Synthetic data |
-| Learned depth curves, ablation | Precomputed result |
-| Single-graph learned sweep (page 4) | Live computation when a checkpoint is deployed |
-| BDH-CQ effort scores, ARC-AGI numbers, literature claims | Paper-reported result |
+| Exact graph recurrence, BFS oracle, learned forward pass, section 6 toy | Live computation |
+| Graph instances, 10,000-case invariant suite, parity suite | Synthetic data |
+| Learned depth curves, aggregation and sharing ablations | Precomputed result |
+| BDH-CQ effort scores, ARC-AGI-1 numbers, architecture claims | Paper-reported result |
 
 No paper-reported number appears on the same visual footing as a live
 measurement. Mapping of every claim to its primary source:
@@ -345,6 +431,8 @@ measurement. Mapping of every claim to its primary source:
 | Learned model, long unseen path | More compute does not guarantee extrapolation |
 | Very large `R` | Recurrence has stability and capacity limits |
 | Unshared weights past depth 4 | Not a worse result — not a possible one |
+| Aggregation ablation | Inconclusive at two seeds, and reported as inconclusive |
+| Section 6 toy, demonstrations withheld | A context failure that no latent budget can repair |
 
 ---
 
@@ -354,8 +442,13 @@ measurement. Mapping of every claim to its primary source:
 - Learned experiment: distances 1–10, `R ≤ 10`, hidden dim 32, five seeds.
 - Training saw distances 1–4 only.
 - Negatives match positives on node and edge count exactly; target in-degree
-  still differs slightly (1.63 vs 1.78).
+  still differs slightly (1.55 vs 1.82 in the shipped bank).
 - Confidence intervals use a Student *t* critical value, appropriate for `n = 5`.
+  The aggregation ablation has `n = 2`, and its intervals are correspondingly
+  wide.
+- The browser runs the checkpoint in float64 and the Python pipeline in float32.
+  They agree to about 2 × 10⁻⁷ relative — float32 noise, three orders of
+  magnitude finer than anything displayed.
 - Exact-layer coordinates are interpretable **by design**. Production latent
   states are not generally human-readable.
 - No wall-clock comparison is made against any real system. None was measured.
@@ -366,37 +459,72 @@ measurement. Mapping of every claim to its primary source:
 
 The graph recurrence is an educational mechanism-level model. The learned GNN is
 a small experimental bridge, an **independent reimplementation** written for this
-lab. Neither is BDH or BDH-CQ. The BDH-CQ equations shown describe the published
-conceptual decomposition; exact production dimensions and update rules remain
-outside this project. No BDH or BDH-CQ checkpoint was run.
+lab. The associative toy in section 6 is a hand-built illustration with no
+trained parameter. None of them is BDH or BDH-CQ. The BDH-CQ equations shown
+describe the published conceptual decomposition; that report states its exact
+dimensions and update rules are proprietary, so they are outside this project
+and outside anyone else's. No BDH or BDH-CQ checkpoint was run.
 
 ---
 
 ## 14. References
 
-1. Hao et al. *Training LLMs to Reason in a Continuous Latent Space.* arXiv:2412.06769, 2024.
-2. Geiping et al. *Scaling up Test-Time Compute with Latent Reasoning.* arXiv:2502.05171, 2025.
+1. Hao et al. *Training Large Language Models to Reason in a Continuous Latent Space.* arXiv:2412.06769, 2024.
+2. Geiping et al. *Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach.* arXiv:2502.05171, 2025.
 3. Saunshi et al. *Reasoning with Latent Thoughts: On the Power of Looped Transformers.* ICLR 2025.
-4. Zhu et al. *Reasoning by Superposition.* arXiv:2505.12514, 2025.
-5. Kosowski et al. *The Dragon Hatchling.* arXiv:2509.26507, 2025.
-6. Ben-Kish et al. *Overflow Prevention Enhances Long-Context Recurrent LLMs.* COLM 2025.
-7. Wei et al. *Stabilizing Recurrent Dynamics for Test-Time Scalable Reasoning.* arXiv:2605.26733, 2026.
+4. Zhu et al. *Reasoning by Superposition: A Theoretical Perspective on Chain of Continuous Thought.* arXiv:2505.12514, 2025.
+5. Kosowski et al. *The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain.* arXiv:2509.26507, 2025.
+6. Ben-Kish et al. *Overflow Prevention Enhances Long-Context Recurrent LLMs.* COLM 2025; arXiv:2505.07793.
+7. Yang et al. *Stabilizing Recurrent Dynamics for Test-Time Scalable Latent Reasoning in Looped Language Models.* arXiv:2605.26733, 2026.
 8. Engdahl et al. *BDH-CQ: In-Context Learning with Recurrent Latent Reasoning.* arXiv:2608.09888, 2026.
 
 ---
 
 ## 15. Credits, licenses, provenance
 
-- Code: written by [team names], [license, e.g. MIT].
-- Third-party libraries: FastAPI, PyTorch, React, Vite (their respective licenses).
-- No external datasets. All graph data is synthetic and seeded.
-- Graphics: inline SVG, system fonts only. No external assets.
+- **Code:** written by the Latent Loop Lab team for DataForge 2026. Licensed
+  under the MIT License; see [`LICENSE`](LICENSE).
+  _Team members: add your names here before submission._
+- **Third-party libraries:** React and React DOM (MIT), Vite and
+  `@vitejs/plugin-react` (MIT), `vite-node` (MIT), FastAPI (MIT), Uvicorn (BSD
+  3-Clause), Pydantic (MIT), PyTorch (BSD 3-Clause), NumPy (BSD 3-Clause),
+  WeasyPrint (BSD 3-Clause, used only to build the summary PDF).
+- **Fonts:** Space Grotesk (SIL Open Font License 1.1), Source Serif 4 (SIL OFL
+  1.1), IBM Plex Mono (SIL OFL 1.1), served from Google Fonts. Every face has a
+  system fallback, so the artifact renders correctly if the font host is
+  unreachable.
+- **Graphics:** all inline SVG, generated by this project. No external image,
+  icon set, or illustration is used.
+- **Data:** no external dataset. Every graph is synthetic and seeded, generated
+  by `Backend/core/generator.py`.
+- **Model weights:** trained from scratch by this project on the synthetic task
+  above. No pretrained weights of any kind are used, downloaded, or fine-tuned.
+- **Quoted results:** all BDH and BDH-CQ figures are quoted from references 5
+  and 8 above under fair-use citation, labelled *Paper-reported result*, and
+  never presented as measurements of this project.
+
+---
 
 ## 16. AI assistance disclosure
 
-[Describe exactly how AI tools were used. Every equation, experiment design,
-result, and claim must be reviewed, run, and verified by the team, and every
-component must be traceable and explainable by a team member.]
+_The team must complete this section honestly before submission. The track rules
+require that AI-generated, reused, or forked work is disclosed, and that every
+component can be explained and defended by a team member._
+
+Fill in, at minimum:
+
+- Which AI tools were used, and for what: code generation, refactoring, prose
+  drafting, design, literature search, or review.
+- Which files or components were substantially AI-drafted, and which were written
+  by hand.
+- How each equation, experiment design, result, and claim was reviewed and
+  verified by the team — not merely accepted.
+- Which claims were checked against primary sources by a person reading the
+  source, and which sources were read in full.
+
+Every number in this repository is reproducible with `python reproduce.py`, and
+every external claim is mapped to a primary source in the citation ledger. Those
+two facts make the disclosure checkable rather than a formality.
 
 ---
 
@@ -404,9 +532,10 @@ component must be traceable and explainable by a team member.]
 
 | Symptom | Fix |
 |---|---|
-| `ModuleNotFoundError: core` | Run commands from the `Backend/` root |
+| Artifact shows "The data bundle did not load" | Run `python export_web.py` in `Backend`, then rebuild the frontend |
+| Sections 4–5 say no checkpoint | `python reproduce.py`, then `python export_web.py` |
+| Blank page after deploying to a subpath | Rebuild with `BASE_PATH=/your-repo/ npm run build` |
+| `ModuleNotFoundError: core` | Run Python commands from the `Backend/` root |
+| `test_js_parity` skips | Install Node, or run `python export_web.py` first |
 | `uvicorn: command not found` | Activate the venv, `pip install -r requirements.txt` |
-| Port 8000 in use | `uvicorn server:app --port 8001` and set `VITE_API_BASE` |
-| Frontend banner: backend not responding | Start the backend; check `/health` |
-| Pages 4–5 empty | `python reproduce.py` to train and export |
-| `/learned/run` returns 503 | Expected with no checkpoint. Train one, or use the precomputed sweep |
+| Fonts look wrong offline | Expected; the system fallback stack takes over |

@@ -4309,6 +4309,3930 @@
       ]
     }
   },
+  "aggregationAblation": {
+    "description": "Same architecture, same data, same seeds; only the neighbour aggregator changes. Max is the default because reachability is a logical OR over incoming neighbours, and max is its differentiable analogue.",
+    "default": "max",
+    "comparedOnSeeds": [
+      1,
+      2
+    ],
+    "variants": [
+      {
+        "aggregation": "max",
+        "seeds": [
+          1,
+          2
+        ],
+        "numParameters": 11169,
+        "depthCurve": [
+          {
+            "R": 1,
+            "accuracy": {
+              "mean": 0.555,
+              "low": 0.49147,
+              "high": 0.6185300000000001,
+              "std": 0.007071067811865481,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.6140625,
+              "low": 0.4750906250000001,
+              "high": 0.7530343749999998,
+              "std": 0.01546796083845571,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.515625,
+              "low": 0.31709375,
+              "high": 0.71415625,
+              "std": 0.02209708691207961,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.5663395758502884,
+              "low": 0.46439033106841754,
+              "high": 0.6682888206321592,
+              "std": 0.011347237891092106,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 2.879690472896282,
+              "low": 0.0,
+              "high": 1.0,
+              "std": 0.40312608585917176,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.85,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.21213203435596428,
+                "n": 2
+              },
+              "2": {
+                "mean": 0.55,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.07071067811865474,
+                "n": 2
+              },
+              "3": {
+                "mean": 0.54375,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.061871843353822925,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5125,
+                "low": 0.35367499999999985,
+                "high": 0.6713250000000001,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.51875,
+                "low": 0.2805125000000002,
+                "high": 0.7569874999999999,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5125,
+                "low": 0.35367499999999985,
+                "high": 0.6713250000000001,
+                "std": 0.017677669529663705,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "false-positive": 352,
+              "correct": 648,
+              "correct-extrapolation": 240,
+              "insufficient-depth": 360
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.56,
+                "accuracySeenDistances": 0.603125,
+                "accuracyUnseenDistances": 0.53125
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.55,
+                "accuracySeenDistances": 0.625,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 2,
+            "accuracy": {
+              "mean": 0.6,
+              "low": 0.6,
+              "high": 0.6,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.75,
+              "low": 0.75,
+              "high": 0.75,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.6444500974322557,
+              "low": 0.47697545862411383,
+              "high": 0.8119247362403975,
+              "std": 0.018640398674327853,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 3.628997876093938,
+              "low": 0.0,
+              "high": 1.0,
+              "std": 0.4453466848708294,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 960,
+              "insufficient-depth": 640
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.6,
+                "accuracySeenDistances": 0.75,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.6,
+                "accuracySeenDistances": 0.75,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 3,
+            "accuracy": {
+              "mean": 0.65,
+              "low": 0.65,
+              "high": 0.65,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.875,
+              "low": 0.875,
+              "high": 0.875,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.7543656547374535,
+              "low": 0.42262077599476,
+              "high": 1.0,
+              "std": 0.03692413873490753,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.090150392972506,
+              "low": 1.0495986073567316,
+              "high": 1.0,
+              "std": 0.33842197169176447,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1040,
+              "insufficient-depth": 560
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.65,
+                "accuracySeenDistances": 0.875,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.65,
+                "accuracySeenDistances": 0.875,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 4,
+            "accuracy": {
+              "mean": 0.7,
+              "low": 0.7,
+              "high": 0.7,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999663514857019,
+              "low": 0.9998961838313049,
+              "high": 1.0,
+              "std": 7.809857428629414e-06,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.631179662851187,
+              "low": 2.8308371938558707,
+              "high": 1.0,
+              "std": 0.20038318405237204,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 480
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.7,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.7,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 5,
+            "accuracy": {
+              "mean": 0.75,
+              "low": 0.75,
+              "high": 0.75,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5833333333333334,
+              "low": 0.5833333333333334,
+              "high": 0.5833333333333334,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999769192196709,
+              "low": 0.9998850158915709,
+              "high": 1.0,
+              "std": 1.022909908912132e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.840308776268592,
+              "low": 3.6333868507238534,
+              "high": 1.0,
+              "std": 0.13433380732180233,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 400,
+              "correct-extrapolation": 80
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.75,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5833333333333334
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.75,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5833333333333334
+              }
+            ]
+          },
+          {
+            "R": 6,
+            "accuracy": {
+              "mean": 0.8,
+              "low": 0.8,
+              "high": 0.8,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.6666666666666666,
+              "low": 0.6666666666666666,
+              "high": 0.6666666666666666,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999712344137467,
+              "low": 0.9998489962275664,
+              "high": 1.0,
+              "std": 1.3605454174096177e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.9375458497267495,
+              "low": 3.9827620231921843,
+              "high": 1.0,
+              "std": 0.10627012723277685,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 320,
+              "correct-extrapolation": 160
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.8,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.6666666666666666
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.8,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.6666666666666666
+              }
+            ]
+          },
+          {
+            "R": 7,
+            "accuracy": {
+              "mean": 0.85,
+              "low": 0.85,
+              "high": 0.85,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.75,
+              "low": 0.75,
+              "high": 0.75,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999306854326904,
+              "low": 0.9997338629135105,
+              "high": 1.0,
+              "std": 2.190690036240013e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.997840019372793,
+              "low": 4.0917683170391985,
+              "high": 1.0,
+              "std": 0.10084833070381294,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 240,
+              "correct-extrapolation": 240
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.85,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.75
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.85,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.75
+              }
+            ]
+          },
+          {
+            "R": 8,
+            "accuracy": {
+              "mean": 0.8987499999999999,
+              "low": 0.8828674999999996,
+              "high": 0.9146325000000003,
+              "std": 0.0017677669529664096,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.996875,
+              "low": 0.9571687500000001,
+              "high": 1.0,
+              "std": 0.004419417382415906,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.8333333333333334,
+              "low": 0.8333333333333334,
+              "high": 0.8333333333333334,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9991171687613388,
+              "low": 0.9895628418471675,
+              "high": 1.0,
+              "std": 0.0010634234772050506,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.040022134780884,
+              "low": 4.141145363330841,
+              "high": 1.0,
+              "std": 0.10004751464558408,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1118,
+              "correct-extrapolation": 320,
+              "insufficient-depth": 160,
+              "in-distribution-error": 2
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.9,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.8333333333333334
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.8975,
+                "accuracySeenDistances": 0.99375,
+                "accuracyUnseenDistances": 0.8333333333333334
+              }
+            ]
+          },
+          {
+            "R": 9,
+            "accuracy": {
+              "mean": 0.9456249999999999,
+              "low": 0.9059187500000001,
+              "high": 0.9853312499999998,
+              "std": 0.004419417382415906,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.990625,
+              "low": 0.8715062499999997,
+              "high": 1.0,
+              "std": 0.013258252147247797,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.9156249999999999,
+              "low": 0.9023895833333333,
+              "high": 0.9288604166666665,
+              "std": 0.0014731391274719688,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9983512868395581,
+              "low": 0.987875604763813,
+              "high": 1.0,
+              "std": 0.001165972899939202,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.071633870785053,
+              "low": 4.164341574852283,
+              "high": 1.0,
+              "std": 0.10098418620689019,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.9625,
+                "low": 0.4860250000000004,
+                "high": 1.0,
+                "std": 0.053033008588991036,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.99375,
+                "low": 0.9143375000000002,
+                "high": 1.0,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1114,
+              "correct-extrapolation": 399,
+              "insufficient-depth": 80,
+              "extrapolation-failure": 1,
+              "in-distribution-error": 6
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.94875,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9145833333333333
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.9425,
+                "accuracySeenDistances": 0.98125,
+                "accuracyUnseenDistances": 0.9166666666666666
+              }
+            ]
+          },
+          {
+            "R": 10,
+            "accuracy": {
+              "mean": 0.97875,
+              "low": 0.8040424999999995,
+              "high": 1.0,
+              "std": 0.019445436482630113,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.990625,
+              "low": 0.8715062499999997,
+              "high": 1.0,
+              "std": 0.013258252147247797,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.9708333333333333,
+              "low": 0.6002416666666667,
+              "high": 1.0,
+              "std": 0.04124789556921528,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.997637765207059,
+              "low": 0.9688692744302154,
+              "high": 1.0,
+              "std": 0.003202013995405134,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.095971749379085,
+              "low": 4.15231238214786,
+              "high": 1.0,
+              "std": 0.10503194360135458,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.9625,
+                "low": 0.4860250000000004,
+                "high": 1.0,
+                "std": 0.053033008588991036,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.825,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.24748737341529162,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1114,
+              "correct-extrapolation": 452,
+              "extrapolation-failure": 28,
+              "in-distribution-error": 6
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.965,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9416666666666667
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.9925,
+                "accuracySeenDistances": 0.98125,
+                "accuracyUnseenDistances": 1.0
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "aggregation": "mean",
+        "seeds": [
+          1,
+          2
+        ],
+        "numParameters": 11169,
+        "depthCurve": [
+          {
+            "R": 1,
+            "accuracy": {
+              "mean": 0.555,
+              "low": 0.49147,
+              "high": 0.6185300000000001,
+              "std": 0.007071067811865481,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.6140625,
+              "low": 0.4750906250000001,
+              "high": 0.7530343749999998,
+              "std": 0.01546796083845571,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.515625,
+              "low": 0.31709375,
+              "high": 0.71415625,
+              "std": 0.02209708691207961,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.565425867965032,
+              "low": 0.4388720285019033,
+              "high": 0.6919797074281607,
+              "std": 0.014085798531335117,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 3.274455024645879,
+              "low": 2.7521114547619447,
+              "high": 1.0,
+              "std": 0.058138309518986186,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.85,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.21213203435596428,
+                "n": 2
+              },
+              "2": {
+                "mean": 0.55,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.07071067811865474,
+                "n": 2
+              },
+              "3": {
+                "mean": 0.54375,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.061871843353822925,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5125,
+                "low": 0.35367499999999985,
+                "high": 0.6713250000000001,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.51875,
+                "low": 0.2805125000000002,
+                "high": 0.7569874999999999,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5125,
+                "low": 0.35367499999999985,
+                "high": 0.6713250000000001,
+                "std": 0.017677669529663705,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "false-positive": 352,
+              "correct": 648,
+              "correct-extrapolation": 240,
+              "insufficient-depth": 360
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.56,
+                "accuracySeenDistances": 0.603125,
+                "accuracyUnseenDistances": 0.53125
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.55,
+                "accuracySeenDistances": 0.625,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 2,
+            "accuracy": {
+              "mean": 0.608125,
+              "low": 0.5048887500000001,
+              "high": 0.71136125,
+              "std": 0.011490485194281388,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.7265625,
+              "low": 0.42876562500000004,
+              "high": 1.0,
+              "std": 0.03314563036811941,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5291666666666667,
+              "low": 0.15857500000000002,
+              "high": 0.8997583333333333,
+              "std": 0.04124789556921528,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.6433538754390884,
+              "low": 0.35685655878473194,
+              "high": 0.9298511920934449,
+              "std": 0.03188795772045413,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 3.8780104838884792,
+              "low": 2.4851471557433773,
+              "high": 1.0,
+              "std": 0.155029608782853,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.9,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.14142135623730948,
+                "n": 2
+              },
+              "2": {
+                "mean": 0.90625,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.13258252147247765,
+                "n": 2
+              },
+              "3": {
+                "mean": 0.55625,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.07954951288348662,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.54375,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.061871843353822925,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.55625,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.07954951288348662,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.51875,
+                "low": 0.2805125000000002,
+                "high": 0.7569874999999999,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.53125,
+                "low": 0.13418750000000002,
+                "high": 0.9283125,
+                "std": 0.04419417382415922,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.51875,
+                "low": 0.2805125000000002,
+                "high": 0.7569874999999999,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 816,
+              "false-positive": 197,
+              "correct-extrapolation": 157,
+              "insufficient-depth": 430
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.61625,
+                "accuracySeenDistances": 0.703125,
+                "accuracyUnseenDistances": 0.5583333333333333
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.6,
+                "accuracySeenDistances": 0.75,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 3,
+            "accuracy": {
+              "mean": 0.65,
+              "low": 0.65,
+              "high": 0.65,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.875,
+              "low": 0.875,
+              "high": 0.875,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.7397402525400663,
+              "low": 0.33225589308998404,
+              "high": 1.0,
+              "std": 0.045354156114372705,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.273709352199848,
+              "low": 4.15110960347836,
+              "high": 1.0,
+              "std": 0.0136456971025864,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1040,
+              "insufficient-depth": 560
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.65,
+                "accuracySeenDistances": 0.875,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.65,
+                "accuracySeenDistances": 0.875,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 4,
+            "accuracy": {
+              "mean": 0.7,
+              "low": 0.7,
+              "high": 0.7,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9590784304229942,
+              "low": 0.4498998636726651,
+              "high": 1.0,
+              "std": 0.05667300761593026,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.489426814592802,
+              "low": 3.7077069883713363,
+              "high": 1.0,
+              "std": 0.08700761689110155,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 480
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.7,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.7,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 5,
+            "accuracy": {
+              "mean": 0.743125,
+              "low": 0.6716537500000002,
+              "high": 0.8145962499999999,
+              "std": 0.007954951288348647,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.571875,
+              "low": 0.45275624999999975,
+              "high": 0.6909937500000003,
+              "std": 0.013258252147247797,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.999593110405417,
+              "low": 0.995654840538944,
+              "high": 1.0,
+              "std": 0.00043834052081310115,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.692743448110727,
+              "low": 4.220376521550691,
+              "high": 1.0,
+              "std": 0.05257576845251839,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.93125,
+                "low": 0.21653749999999994,
+                "high": 1.0,
+                "std": 0.07954951288348662,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 400,
+              "correct-extrapolation": 69,
+              "extrapolation-failure": 11
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.7375,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5625
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.74875,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.58125
+              }
+            ]
+          },
+          {
+            "R": 6,
+            "accuracy": {
+              "mean": 0.794375,
+              "low": 0.7546687500000002,
+              "high": 0.8340812499999999,
+              "std": 0.004419417382415906,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.6572916666666666,
+              "low": 0.5911145833333336,
+              "high": 0.7234687499999997,
+              "std": 0.007365695637359844,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999075312550645,
+              "low": 0.9997907261495965,
+              "high": 1.0,
+              "std": 1.3000736998835354e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.787487268447876,
+              "low": 4.530798858019019,
+              "high": 1.0,
+              "std": 0.028570142557254888,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.95625,
+                "low": 0.7180125000000002,
+                "high": 1.0,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 320,
+              "correct-extrapolation": 151,
+              "extrapolation-failure": 9
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.79125,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.6520833333333333
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.7975,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.6625
+              }
+            ]
+          },
+          {
+            "R": 7,
+            "accuracy": {
+              "mean": 0.838125,
+              "low": 0.7666537500000001,
+              "high": 0.9095962499999999,
+              "std": 0.007954951288348647,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.7302083333333333,
+              "low": 0.6110895833333331,
+              "high": 0.8493270833333336,
+              "std": 0.013258252147247797,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.999244981326949,
+              "low": 0.9907420377337064,
+              "high": 1.0,
+              "std": 0.0009464015543567736,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.8558795268719015,
+              "low": 4.652073951647835,
+              "high": 1.0,
+              "std": 0.022684134154661213,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.9875,
+                "low": 0.9875,
+                "high": 0.9875,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.89375,
+                "low": 0.17903750000000063,
+                "high": 1.0,
+                "std": 0.07954951288348655,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 240,
+              "correct-extrapolation": 221,
+              "extrapolation-failure": 19
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.8325,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.7208333333333333
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.84375,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.7395833333333334
+              }
+            ]
+          },
+          {
+            "R": 8,
+            "accuracy": {
+              "mean": 0.8775,
+              "low": 0.8139700000000006,
+              "high": 0.9410299999999993,
+              "std": 0.007071067811865403,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.7958333333333334,
+              "low": 0.6899499999999997,
+              "high": 0.901716666666667,
+              "std": 0.011785113019775828,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.999809303602039,
+              "low": 0.9985591932197774,
+              "high": 1.0,
+              "std": 0.00013914080411284556,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.901748400468092,
+              "low": 4.732652610998889,
+              "high": 1.0,
+              "std": 0.01882083730580299,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.9625,
+                "low": 0.9625,
+                "high": 0.9625,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.8125,
+                "low": 0.17719999999999947,
+                "high": 1.0,
+                "std": 0.07071067811865482,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "correct-extrapolation": 284,
+              "insufficient-depth": 160,
+              "extrapolation-failure": 36
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.8725,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.7875
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.8825,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.8041666666666667
+              }
+            ]
+          },
+          {
+            "R": 9,
+            "accuracy": {
+              "mean": 0.9275,
+              "low": 0.895735,
+              "high": 0.959265,
+              "std": 0.0035355339059327407,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.8791666666666667,
+              "low": 0.8262250000000002,
+              "high": 0.9321083333333331,
+              "std": 0.005892556509887875,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9997883196736018,
+              "low": 0.9984698322453784,
+              "high": 1.0,
+              "std": 0.0001467513617827722,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.933795910615188,
+              "low": 4.831818088421454,
+              "high": 1.0,
+              "std": 0.011350418637466546,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.99375,
+                "low": 0.9143375000000002,
+                "high": 1.0,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.9125,
+                "low": 0.9125,
+                "high": 0.9125,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.86875,
+                "low": 0.47168750000000004,
+                "high": 1.0,
+                "std": 0.04419417382415922,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "correct-extrapolation": 364,
+              "insufficient-depth": 80,
+              "extrapolation-failure": 36
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.925,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.875
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.93,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.8833333333333333
+              }
+            ]
+          },
+          {
+            "R": 10,
+            "accuracy": {
+              "mean": 0.97,
+              "low": 0.8905875000000003,
+              "high": 1.0,
+              "std": 0.008838834764831813,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.95,
+              "low": 0.8176458333333331,
+              "high": 1.0,
+              "std": 0.014731391274719766,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9996563930911793,
+              "low": 0.996148173177793,
+              "high": 1.0,
+              "std": 0.0003904747506137361,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.948439983221201,
+              "low": 4.921741886762472,
+              "high": 1.0,
+              "std": 0.0029715732804564423,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.99375,
+                "low": 0.9143375000000002,
+                "high": 1.0,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.99375,
+                "low": 0.9143375000000002,
+                "high": 1.0,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.95625,
+                "low": 0.7180125000000002,
+                "high": 1.0,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.93125,
+                "low": 0.8518375000000002,
+                "high": 1.0,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.825,
+                "low": 0.3485249999999996,
+                "high": 1.0,
+                "std": 0.05303300858899111,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1118,
+              "correct-extrapolation": 434,
+              "extrapolation-failure": 46,
+              "false-positive": 2
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.96375,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9395833333333333
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.97625,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9604166666666667
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "aggregation": "sum",
+        "seeds": [
+          1,
+          2
+        ],
+        "numParameters": 11169,
+        "depthCurve": [
+          {
+            "R": 1,
+            "accuracy": {
+              "mean": 0.555,
+              "low": 0.49147,
+              "high": 0.6185300000000001,
+              "std": 0.007071067811865481,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.6140625,
+              "low": 0.4750906250000001,
+              "high": 0.7530343749999998,
+              "std": 0.01546796083845571,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.515625,
+              "low": 0.31709375,
+              "high": 0.71415625,
+              "std": 0.02209708691207961,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.572913139964703,
+              "low": 0.5648597216162677,
+              "high": 0.5809665583131384,
+              "std": 0.0008963681293736431,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 3.5845620998969445,
+              "low": 0.0,
+              "high": 1.0,
+              "std": 0.5854359620791907,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 0.85,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.21213203435596428,
+                "n": 2
+              },
+              "2": {
+                "mean": 0.55,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.07071067811865474,
+                "n": 2
+              },
+              "3": {
+                "mean": 0.54375,
+                "low": 0.0,
+                "high": 1.0,
+                "std": 0.061871843353822925,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5125,
+                "low": 0.35367499999999985,
+                "high": 0.6713250000000001,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.525,
+                "low": 0.20734999999999976,
+                "high": 0.8426500000000003,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.51875,
+                "low": 0.2805125000000002,
+                "high": 0.7569874999999999,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5125,
+                "low": 0.35367499999999985,
+                "high": 0.6713250000000001,
+                "std": 0.017677669529663705,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "false-positive": 352,
+              "correct": 648,
+              "correct-extrapolation": 240,
+              "insufficient-depth": 360
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.56,
+                "accuracySeenDistances": 0.603125,
+                "accuracyUnseenDistances": 0.53125
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.55,
+                "accuracySeenDistances": 0.625,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 2,
+            "accuracy": {
+              "mean": 0.6,
+              "low": 0.6,
+              "high": 0.6,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.75,
+              "low": 0.75,
+              "high": 0.75,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.6291697267625114,
+              "low": 0.5562391370074697,
+              "high": 0.702100316517553,
+              "std": 0.008117379910549987,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.267611824549162,
+              "low": 0.0,
+              "high": 1.0,
+              "std": 0.48855077086629256,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 960,
+              "insufficient-depth": 640
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.6,
+                "accuracySeenDistances": 0.75,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.6,
+                "accuracySeenDistances": 0.75,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 3,
+            "accuracy": {
+              "mean": 0.65,
+              "low": 0.65,
+              "high": 0.65,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 0.875,
+              "low": 0.875,
+              "high": 0.875,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.7516944208436507,
+              "low": 0.587139644998273,
+              "high": 0.9162491966890284,
+              "std": 0.018315409708310852,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.8235602378845215,
+              "low": 4.2199648187343906,
+              "high": 1.0,
+              "std": 0.0671818690341876,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1040,
+              "insufficient-depth": 560
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.65,
+                "accuracySeenDistances": 0.875,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.65,
+                "accuracySeenDistances": 0.875,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 4,
+            "accuracy": {
+              "mean": 0.7,
+              "low": 0.7,
+              "high": 0.7,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5,
+              "low": 0.5,
+              "high": 0.5,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9998554975725029,
+              "low": 0.998834559761404,
+              "high": 1.0,
+              "std": 0.00011363325191213094,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.860715847748976,
+              "low": 3.694070481630473,
+              "high": 1.0,
+              "std": 0.12985091289505052,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 480
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.7,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.7,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5
+              }
+            ]
+          },
+          {
+            "R": 5,
+            "accuracy": {
+              "mean": 0.75,
+              "low": 0.75,
+              "high": 0.75,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.5833333333333334,
+              "low": 0.5833333333333334,
+              "high": 0.5833333333333334,
+              "std": 0.0,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999098012886964,
+              "low": 0.9994992090963125,
+              "high": 1.0,
+              "std": 4.57000666672362e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 4.986628679128794,
+              "low": 4.06426072399433,
+              "high": 1.0,
+              "std": 0.10266214950806685,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "6": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1120,
+              "insufficient-depth": 400,
+              "correct-extrapolation": 80
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.75,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5833333333333334
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.75,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.5833333333333334
+              }
+            ]
+          },
+          {
+            "R": 6,
+            "accuracy": {
+              "mean": 0.7987500000000001,
+              "low": 0.7828674999999997,
+              "high": 0.8146325000000004,
+              "std": 0.0017677669529664096,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.6645833333333333,
+              "low": 0.6381125000000001,
+              "high": 0.6910541666666665,
+              "std": 0.0029462782549439376,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9996178950217472,
+              "low": 0.9960398152487557,
+              "high": 1.0,
+              "std": 0.0003982503496157239,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.085485825171837,
+              "low": 4.268710168618419,
+              "high": 1.0,
+              "std": 0.09090942947536858,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.99375,
+                "low": 0.9143375000000002,
+                "high": 1.0,
+                "std": 0.008838834764831813,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.49375,
+                "low": 0.41433749999999997,
+                "high": 0.5731625000000001,
+                "std": 0.008838834764831853,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1118,
+              "insufficient-depth": 320,
+              "correct-extrapolation": 160,
+              "false-positive": 2
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.8,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.6666666666666666
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.7975,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.6625
+              }
+            ]
+          },
+          {
+            "R": 7,
+            "accuracy": {
+              "mean": 0.845,
+              "low": 0.7973525000000002,
+              "high": 0.8926474999999997,
+              "std": 0.005303300858899072,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.7416666666666667,
+              "low": 0.662254166666667,
+              "high": 0.8210791666666664,
+              "std": 0.008838834764831813,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999359094765226,
+              "low": 0.9995630657856829,
+              "high": 1.0,
+              "std": 4.1498552198224525e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.153729787239662,
+              "low": 4.4061959028610795,
+              "high": 1.0,
+              "std": 0.08320262534406053,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.96875,
+                "low": 0.7305124999999995,
+                "high": 1.0,
+                "std": 0.026516504294495594,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.49375,
+                "low": 0.41433749999999997,
+                "high": 0.5731625000000001,
+                "std": 0.008838834764831853,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1115,
+              "insufficient-depth": 240,
+              "correct-extrapolation": 237,
+              "extrapolation-failure": 3,
+              "false-positive": 5
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.84875,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.7479166666666667
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.84125,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.7354166666666667
+              }
+            ]
+          },
+          {
+            "R": 8,
+            "accuracy": {
+              "mean": 0.8925000000000001,
+              "low": 0.8766174999999997,
+              "high": 0.9083825000000004,
+              "std": 0.0017677669529664096,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.8208333333333333,
+              "low": 0.7943625000000001,
+              "high": 0.8473041666666665,
+              "std": 0.0029462782549439376,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999201418589547,
+              "low": 0.9997785501953297,
+              "high": 1.0,
+              "std": 1.5759550686090596e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.195679444533128,
+              "low": 4.471389735588663,
+              "high": 1.0,
+              "std": 0.08061548319506719,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.98125,
+                "low": 0.7430125000000001,
+                "high": 1.0,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.9625,
+                "low": 0.6448499999999997,
+                "high": 1.0,
+                "std": 0.03535533905932741,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.49375,
+                "low": 0.41433749999999997,
+                "high": 0.5731625000000001,
+                "std": 0.008838834764831853,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.5,
+                "low": 0.5,
+                "high": 0.5,
+                "std": 0.0,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1113,
+              "correct-extrapolation": 315,
+              "insufficient-depth": 159,
+              "extrapolation-failure": 6,
+              "false-positive": 7
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.89375,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.8229166666666666
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.89125,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.81875
+              }
+            ]
+          },
+          {
+            "R": 9,
+            "accuracy": {
+              "mean": 0.944375,
+              "low": 0.8887862499999998,
+              "high": 0.9999637500000002,
+              "std": 0.006187184335382316,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.9072916666666666,
+              "low": 0.8146437500000003,
+              "high": 0.9999395833333329,
+              "std": 0.010311973892303782,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999259057914764,
+              "low": 0.9996991315506423,
+              "high": 1.0,
+              "std": 2.524061128479555e-05,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.2201002561129055,
+              "low": 4.492614819673392,
+              "high": 1.0,
+              "std": 0.08097117665997726,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.98125,
+                "low": 0.7430125000000001,
+                "high": 1.0,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.98125,
+                "low": 0.9018374999999995,
+                "high": 1.0,
+                "std": 0.00883883476483189,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.50625,
+                "low": 0.42683750000000026,
+                "high": 0.5856624999999998,
+                "std": 0.008838834764831813,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1111,
+              "correct-extrapolation": 400,
+              "insufficient-depth": 79,
+              "extrapolation-failure": 1,
+              "false-positive": 9
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.94875,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9145833333333333
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.94,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9
+              }
+            ]
+          },
+          {
+            "R": 10,
+            "accuracy": {
+              "mean": 0.9906250000000001,
+              "low": 0.9509187500000003,
+              "high": 1.0,
+              "std": 0.004419417382415906,
+              "n": 2
+            },
+            "accuracySeenDistances": {
+              "mean": 1.0,
+              "low": 1.0,
+              "high": 1.0,
+              "std": 0.0,
+              "n": 2
+            },
+            "accuracyUnseenDistances": {
+              "mean": 0.984375,
+              "low": 0.9181979166666662,
+              "high": 1.0,
+              "std": 0.007365695637359922,
+              "n": 2
+            },
+            "confidence": {
+              "mean": 0.9999080435315875,
+              "low": 0.9998862775914971,
+              "high": 0.9999298094716779,
+              "std": 2.422610394583443e-06,
+              "n": 2
+            },
+            "meanStateNorm": {
+              "mean": 5.234196112706112,
+              "low": 4.4871769842001115,
+              "high": 1.0,
+              "std": 0.0831453315666076,
+              "n": 2
+            },
+            "perDistance": {
+              "1": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "2": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "3": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "4": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "5": {
+                "mean": 0.98125,
+                "low": 0.7430125000000001,
+                "high": 1.0,
+                "std": 0.026516504294495515,
+                "n": 2
+              },
+              "6": {
+                "mean": 1.0,
+                "low": 1.0,
+                "high": 1.0,
+                "std": 0.0,
+                "n": 2
+              },
+              "7": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "8": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "9": {
+                "mean": 0.9875,
+                "low": 0.8286749999999999,
+                "high": 1.0,
+                "std": 0.017677669529663705,
+                "n": 2
+              },
+              "10": {
+                "mean": 0.9625,
+                "low": 0.6448499999999997,
+                "high": 1.0,
+                "std": 0.03535533905932741,
+                "n": 2
+              }
+            },
+            "failureCategories": {
+              "correct": 1111,
+              "correct-extrapolation": 474,
+              "extrapolation-failure": 6,
+              "false-positive": 9
+            },
+            "perSeed": [
+              {
+                "seed": 1,
+                "accuracy": 0.99375,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9895833333333334
+              },
+              {
+                "seed": 2,
+                "accuracy": 0.9875,
+                "accuracySeenDistances": 1.0,
+                "accuracyUnseenDistances": 0.9791666666666666
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "evidence": {
     "evidenceType": "Precomputed result",
     "source": "Local sweeps over frozen toy checkpoints. These are Latent Loop Lab measurements, not BDH or BDH-CQ measurements.",
