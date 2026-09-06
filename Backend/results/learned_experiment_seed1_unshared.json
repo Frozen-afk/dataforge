@@ -1,0 +1,816 @@
+{
+  "modelId": "recurrent-gnn-seed1_unshared",
+  "checkpointHash": "388555be786d60ab",
+  "seed": 1,
+  "sharedWeights": false,
+  "maxInferenceDepth": 4,
+  "trainingMaxPathLength": 4,
+  "trainingDistances": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "trainingMaxR": 4,
+  "testDistances": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "config": {
+    "modelClass": "UnsharedRecurrentGNN",
+    "sharedWeights": false,
+    "inputDim": 2,
+    "hiddenDim": 32,
+    "messageDim": 32,
+    "aggregation": "max",
+    "numParameters": 39585,
+    "numSteps": 4
+  },
+  "trainingConfig": {
+    "epochs": 40,
+    "lr": 0.003,
+    "batchSize": 32,
+    "hiddenDim": 32,
+    "aggregation": "max",
+    "pairsPerDistance": 150,
+    "depthSchedule": "R ~ Uniform{1..max_R} per batch"
+  },
+  "inferenceDepthResults": [
+    {
+      "R": 1,
+      "accuracy": 0.52,
+      "confidence": 0.9781457655900158,
+      "totalSamples": 800,
+      "meanStateNorm": 2.2998436047480655,
+      "accuracySeenDistances": 0.55,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
+        "1": {
+          "accuracy": 0.7,
+          "confidence": 0.8030818148283287,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 0.5,
+          "confidence": 0.9976091721095145,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 0.5,
+          "confidence": 0.9976065044116694,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "confidence": 0.9975931659224443,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "confidence": 0.9975985013181343,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "confidence": 0.9975985013181343,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "confidence": 0.9975904982245993,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "confidence": 0.9975958336202894,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "confidence": 0.9975904982245993,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "confidence": 0.9975931659224443,
+          "samples": 80
+        }
+      },
+      "failureCategories": {
+        "correct": 416,
+        "insufficient-depth": 360,
+        "in-distribution-error": 24
+      },
+      "seed": 1
+    },
+    {
+      "R": 2,
+      "accuracy": 0.6,
+      "confidence": 0.9908566432836323,
+      "totalSamples": 800,
+      "meanStateNorm": 4.376805855677678,
+      "accuracySeenDistances": 0.75,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9969420932759931,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9126448930453079,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 0.5,
+          "confidence": 0.999858752675118,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "confidence": 0.9998758510768312,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "confidence": 0.9998689852326607,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "confidence": 0.9998690014866043,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "confidence": 0.9998793544154069,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "confidence": 0.9998723302082908,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "confidence": 0.9998793349082007,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "confidence": 0.9998758365119101,
+          "samples": 80
+        }
+      },
+      "failureCategories": {
+        "correct": 480,
+        "insufficient-depth": 320
+      },
+      "seed": 1
+    },
+    {
+      "R": 3,
+      "accuracy": 0.65,
+      "confidence": 0.9996233599211632,
+      "totalSamples": 800,
+      "meanStateNorm": 4.687375142024114,
+      "accuracySeenDistances": 0.875,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9986799357050131,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9991095219334738,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9985752018504399,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "confidence": 0.9999813516015138,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "confidence": 0.9999808216485689,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "confidence": 0.9999807295756,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "confidence": 0.9999819197330908,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "confidence": 0.9999809413343655,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "confidence": 0.9999817816991026,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "confidence": 0.9999813941304637,
+          "samples": 80
+        }
+      },
+      "failureCategories": {
+        "correct": 520,
+        "insufficient-depth": 280
+      },
+      "seed": 1
+    },
+    {
+      "R": 4,
+      "accuracy": 0.7,
+      "confidence": 0.9999982976781437,
+      "totalSamples": 800,
+      "meanStateNorm": 5.384442256047175,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "confidence": 0.9999959803138865,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "confidence": 0.9999960964176893,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "confidence": 0.9999961049364325,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "confidence": 0.9999960142842579,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "confidence": 0.9999997886103917,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "confidence": 0.9999997860420009,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "confidence": 0.9999998086216497,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "confidence": 0.999999791706393,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "confidence": 0.9999998062883334,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "confidence": 0.9999997995603881,
+          "samples": 80
+        }
+      },
+      "failureCategories": {
+        "correct": 560,
+        "insufficient-depth": 240
+      },
+      "seed": 1
+    },
+    {
+      "R": 5,
+      "unavailable": true,
+      "reason": "Model has only 4 update blocks. Without shared weights, inference depth cannot exceed training depth."
+    },
+    {
+      "R": 6,
+      "unavailable": true,
+      "reason": "Model has only 4 update blocks. Without shared weights, inference depth cannot exceed training depth."
+    },
+    {
+      "R": 7,
+      "unavailable": true,
+      "reason": "Model has only 4 update blocks. Without shared weights, inference depth cannot exceed training depth."
+    },
+    {
+      "R": 8,
+      "unavailable": true,
+      "reason": "Model has only 4 update blocks. Without shared weights, inference depth cannot exceed training depth."
+    },
+    {
+      "R": 9,
+      "unavailable": true,
+      "reason": "Model has only 4 update blocks. Without shared weights, inference depth cannot exceed training depth."
+    },
+    {
+      "R": 10,
+      "unavailable": true,
+      "reason": "Model has only 4 update blocks. Without shared weights, inference depth cannot exceed training depth."
+    }
+  ],
+  "exactReference": [
+    {
+      "accuracy": 0.55,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 1
+    },
+    {
+      "accuracy": 0.6,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 2
+    },
+    {
+      "accuracy": 0.65,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 3
+    },
+    {
+      "accuracy": 0.7,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 4
+    }
+  ],
+  "trainingLog": [
+    {
+      "epoch": 1,
+      "step": 38,
+      "train_loss": 0.6041879175524962,
+      "val_accuracy": 0.9875,
+      "val_loss": 0.15917051434516907
+    },
+    {
+      "epoch": 2,
+      "step": 76,
+      "train_loss": 0.02445048268418759,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0007158211315982044
+    },
+    {
+      "epoch": 3,
+      "step": 114,
+      "train_loss": 0.00043961494214416136,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00030723646050319077
+    },
+    {
+      "epoch": 4,
+      "step": 152,
+      "train_loss": 0.00025218825574388335,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00020316033042035996
+    },
+    {
+      "epoch": 5,
+      "step": 190,
+      "train_loss": 0.0001722232886286771,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00014486538129858672
+    },
+    {
+      "epoch": 6,
+      "step": 228,
+      "train_loss": 0.000127128685371166,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00011017323558917269
+    },
+    {
+      "epoch": 7,
+      "step": 266,
+      "train_loss": 9.83315189123938e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 8.676414436195045e-05
+    },
+    {
+      "epoch": 8,
+      "step": 304,
+      "train_loss": 7.857304952171704e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 7.004143990343436e-05
+    },
+    {
+      "epoch": 9,
+      "step": 342,
+      "train_loss": 6.372822530178574e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 5.7685932551976295e-05
+    },
+    {
+      "epoch": 10,
+      "step": 380,
+      "train_loss": 5.32945671837201e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 4.834497958654538e-05
+    },
+    {
+      "epoch": 11,
+      "step": 418,
+      "train_loss": 4.493193151383342e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 4.124141632928513e-05
+    },
+    {
+      "epoch": 12,
+      "step": 456,
+      "train_loss": 3.846337265138956e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 3.551085028448142e-05
+    },
+    {
+      "epoch": 13,
+      "step": 494,
+      "train_loss": 3.33184764856828e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 3.114071078016423e-05
+    },
+    {
+      "epoch": 14,
+      "step": 532,
+      "train_loss": 2.921083188611144e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 2.720894663070794e-05
+    },
+    {
+      "epoch": 15,
+      "step": 570,
+      "train_loss": 2.5828918918896786e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 2.4251599461422303e-05
+    },
+    {
+      "epoch": 16,
+      "step": 608,
+      "train_loss": 2.2898013077409767e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 2.1798975285491907e-05
+    },
+    {
+      "epoch": 17,
+      "step": 646,
+      "train_loss": 2.0625733548896325e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.9456220252322963e-05
+    },
+    {
+      "epoch": 18,
+      "step": 684,
+      "train_loss": 1.8470772063569473e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.752577027218649e-05
+    },
+    {
+      "epoch": 19,
+      "step": 722,
+      "train_loss": 1.6750749972216956e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.5889275164227002e-05
+    },
+    {
+      "epoch": 20,
+      "step": 760,
+      "train_loss": 1.519458045980795e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.4566879508493003e-05
+    },
+    {
+      "epoch": 21,
+      "step": 798,
+      "train_loss": 1.399825767198069e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.3421160110738128e-05
+    },
+    {
+      "epoch": 22,
+      "step": 836,
+      "train_loss": 1.2874554781056327e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.2285844786674715e-05
+    },
+    {
+      "epoch": 23,
+      "step": 874,
+      "train_loss": 1.1839436063765837e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.1384269055270124e-05
+    },
+    {
+      "epoch": 24,
+      "step": 912,
+      "train_loss": 1.0984675495101806e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 1.0581377682683524e-05
+    },
+    {
+      "epoch": 25,
+      "step": 950,
+      "train_loss": 1.0198505127558938e-05,
+      "val_accuracy": 1.0,
+      "val_loss": 9.856923861661926e-06
+    },
+    {
+      "epoch": 26,
+      "step": 988,
+      "train_loss": 9.54077887926312e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 9.224645327776671e-06
+    },
+    {
+      "epoch": 27,
+      "step": 1026,
+      "train_loss": 8.79385227467298e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 8.440812962362543e-06
+    },
+    {
+      "epoch": 28,
+      "step": 1064,
+      "train_loss": 8.085044196616908e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 7.839657700969838e-06
+    },
+    {
+      "epoch": 29,
+      "step": 1102,
+      "train_loss": 7.527474664177709e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 7.156621904869098e-06
+    },
+    {
+      "epoch": 30,
+      "step": 1140,
+      "train_loss": 6.941410650764929e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 6.724635022692383e-06
+    },
+    {
+      "epoch": 31,
+      "step": 1178,
+      "train_loss": 6.529858470266366e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 6.321199907688424e-06
+    },
+    {
+      "epoch": 32,
+      "step": 1216,
+      "train_loss": 6.12866462066258e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 5.960052294540219e-06
+    },
+    {
+      "epoch": 33,
+      "step": 1254,
+      "train_loss": 5.804137273164662e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 5.631137719319668e-06
+    },
+    {
+      "epoch": 34,
+      "step": 1292,
+      "train_loss": 5.493887508572171e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 5.322018841980025e-06
+    },
+    {
+      "epoch": 35,
+      "step": 1330,
+      "train_loss": 5.190343657838974e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 5.0379255299048966e-06
+    },
+    {
+      "epoch": 36,
+      "step": 1368,
+      "train_loss": 4.8944385214685765e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 4.77740541100502e-06
+    },
+    {
+      "epoch": 37,
+      "step": 1406,
+      "train_loss": 4.664368248086248e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 4.5373104512691494e-06
+    },
+    {
+      "epoch": 38,
+      "step": 1444,
+      "train_loss": 4.439615197856926e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 4.310039957999834e-06
+    },
+    {
+      "epoch": 39,
+      "step": 1482,
+      "train_loss": 4.197249681007968e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 4.099392208445352e-06
+    },
+    {
+      "epoch": 40,
+      "step": 1520,
+      "train_loss": 4.018233025099586e-06,
+      "val_accuracy": 1.0,
+      "val_loss": 3.9058935271896186e-06
+    }
+  ],
+  "evidence": {
+    "evidenceType": "Precomputed result",
+    "source": "Local inference-depth sweep over a frozen toy checkpoint. Not a BDH or BDH-CQ measurement.",
+    "experimentId": "depth-sweep-seed1_unshared"
+  }
+}

@@ -1,0 +1,15 @@
+# Backend dependencies for Latent Loop Lab.
+#
+# torch is required for the learned layer (pages 4 and 5). The exact mechanism
+# (pages 1 to 3) runs on the standard library alone, and the API degrades
+# honestly with a 503 if torch or a checkpoint is missing.
+#
+# For a CPU-only install, which is all this project needs:
+#   pip install --index-url https://download.pytorch.org/whl/cpu torch
+#   pip install -r requirements.txt
+
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.0
+torch>=2.0
+numpy>=1.24

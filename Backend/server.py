@@ -1,20 +1,24 @@
+import random
 from typing import Any, Dict, Optional
 
 from fastapi import FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from core.generator import make_case, sample_target_in_degree
 from core.graph import PRESETS, Graph, get_preset, preset_names
 from core.recurrent import run_exact
 
 
 app = FastAPI(
-    title="Latent Loop Lab Exact Backend",
+    title="Latent Loop Lab Backend",
     description=(
-        "Backend for the exact graph recurrence layer of Latent Loop Lab. "
-        "This provides exact latent-state trajectories and independent BFS truth."
+        "Backend for Latent Loop Lab. The /exact routes are the mechanism "
+        "layer: live noisy-OR graph recurrence with an independent BFS oracle. "
+        "The /learned routes are the AI layer: a small shared-weight recurrent "
+        "GNN used as an experimental bridge. The two are never the same model."
     ),
-    version="0.1.0",
+    version="1.0.0",
 )
 
 app.add_middleware(
@@ -46,13 +50,31 @@ class ExactRunRequest(BaseModel):
     alpha: float = Field(1.0, gt=0.0, le=1.0)
 
 
+class ExactGenerateRequest(BaseModel):
+    """
+    Ask for a graph with a known source-to-target distance.
+
+    This is what lets a learner set the answer first and then discover the
+    depth it costs, instead of being limited to a handful of fixed presets.
+    """
+
+    distance: Optional[int] = Field(None, ge=1, le=10,
+                                    description="None requests an unreachable pair")
+    nodes: int = Field(12, ge=2, le=24)
+    density: float = Field(0.15, gt=0.0, le=1.0)
+    caseSeed: int = 0
+    R: int = Field(4, ge=0, le=12)
+    alpha: float = Field(1.0, gt=0.0, le=1.0)
+
+
 @app.get("/")
 def root() -> Dict[str, str]:
     return {
-        "message": "Latent Loop Lab exact backend is running.",
+        "message": "Latent Loop Lab backend is running.",
         "docs": "/docs",
         "presets": "/presets",
         "example": "/exact/preset/line/4",
+        "learnedStatus": "/learned/status",
     }
 
 
@@ -187,3 +209,92 @@ def exact_run(request: ExactRunRequest) -> Dict[str, Any]:
     result["description"] = description
 
     return result
+
+
+@app.post("/exact/generate")
+def exact_generate(request: ExactGenerateRequest) -> Dict[str, Any]:
+    """
+    Generate a graph with a requested distance, then run the exact recurrence.
+
+    The same generator feeds the learned model's training and test sets, so a
+    graph produced here is drawn from exactly the distribution the learned
+    layer was measured on. That is what makes the two layers comparable rather
+    than merely adjacent.
+    """
+    rng = random.Random(request.caseSeed)
+
+    case = make_case(
+        rng,
+        n=request.nodes,
+        distance=request.distance,
+        density=request.density,
+        target_in_degree=sample_target_in_degree(rng),
+    )
+
+    if case is None:
+        raise HTTPException(
+            400,
+            f"Could not build a graph with distance "
+            f"{request.distance if request.distance is not None else 'unreachable'} "
+            f"on {request.nodes} nodes. Try more nodes or a shorter distance.",
+        )
+
+    result = run_exact(
+        graph=case["graph"],
+        source=int(case["source"]),
+        target=int(case["target"]),
+        R=request.R,
+        alpha=request.alpha,
+    )
+
+    result["description"] = (
+        f"Generated graph, {request.nodes} nodes, "
+        + (
+            f"shortest path {case['distance']}"
+            if case["distance"] is not None
+            else "target unreachable"
+        )
+    )
+    result["requestedDistance"] = request.distance
+    result["caseSeed"] = request.caseSeed
+
+    return result
+
+
+@app.get("/exact/trajectory/summary")
+def trajectory_summary(
+    preset: str = Query("line"),
+    R: int = Query(4, ge=0, le=12),
+    alpha: float = Query(1.0, gt=0.0, le=1.0),
+) -> Dict[str, Any]:
+    """
+    Per-step activation statistics for one preset.
+
+    Reports the active-node count and total activation mass after each update,
+    which are the two metrics the architecture asks the interface to show for
+    the exact model.
+    """
+    try:
+        graph, source, target, description = get_preset(preset)
+    except KeyError:
+        raise HTTPException(404, f"Unknown preset: {preset}")
+
+    result = run_exact(graph, source, target, R=R, alpha=alpha)
+    epsilon = result["epsilon"]
+
+    return {
+        "preset": preset,
+        "description": description,
+        "R": R,
+        "bfsDistance": result["bfsDistance"],
+        "steps": [
+            {
+                "r": step,
+                "activeNodeCount": sum(1 for value in state if value > epsilon),
+                "activationMass": sum(state),
+                "targetActivation": state[target],
+            }
+            for step, state in enumerate(result["trajectory"])
+        ],
+        "evidence": result["evidence"],
+    }

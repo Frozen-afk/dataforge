@@ -1,231 +1,216 @@
 import React, { useState } from "react";
+import { EvidenceBadge, EvidenceNote } from "../components/Evidence.jsx";
+import { Equation, PageHeader, Panel, Takeaway } from "../components/Common.jsx";
+
+// Every figure on this page is quoted from published sources. None of it is
+// measured by Latent Loop Lab, and the badges say so on each block.
+const EFFORT_TABLE = [
+  { effort: "Low", arc: "21%", cost: "22%" },
+  { effort: "Medium", arc: "27%", cost: "11%" },
+  { effort: "High", arc: "29.5%", cost: "0%" },
+];
 
 const LINEAGE = [
   {
     name: "BDH",
-    desc: "The underlying Dragon Hatchling architectural family: high-dimensional positive activations, low-rank communication, and recurrent associative state.",
-    cite: "[5]",
+    full: "Dragon Hatchling",
+    description:
+      "The underlying brain-inspired post-Transformer family: high-dimensional positive activations, low-rank communication, and a recurrent associative state in which attention is reformulated as synaptic memory.",
   },
   {
     name: "BDH-GPU",
-    desc: "A GPU-efficient formulation of the underlying dynamics.",
-    cite: "[5]",
+    full: "GPU-efficient formulation",
+    description:
+      "A GPU-friendly formulation of the same dynamics, built from ReLU low-rank transformations with linear attention. It is not a state-space model in the Mamba sense.",
   },
   {
     name: "BDH-CQ",
-    desc: "Combines inference-time in-context learning through evolving recurrent memory with iterative computation in a latent workspace.",
-    cite: "[8]",
+    full: "In-context learning with recurrent latent reasoning",
+    description:
+      "Combines inference-time in-context learning through an evolving recurrent memory with iterative computation in a latent workspace. This is the system this page connects to.",
   },
 ];
 
-const POSITIONING = [
-  {
-    system: "Token CoT",
-    obj: "Generated token sequence",
-    role: "Baseline: computation expressed as tokens.",
-    cite: "—",
-  },
-  {
-    system: "Coconut",
-    obj: "Continuous hidden state",
-    role: "Reasoning without verbalising every intermediate step.",
-    cite: "[1]",
-  },
-  {
-    system: "Recurrent-depth models",
-    obj: "Shared latent block",
-    role: "Test-time compute through repeated application.",
-    cite: "[2]",
-  },
-  {
-    system: "Looped Transformer",
-    obj: "Reused block",
-    role: "Effective depth without distinct parameters per layer.",
-    cite: "[3]",
-  },
-  {
-    system: "BDH-CQ",
-    obj: "S_t and H_r",
-    role: "Real system combining contextual recurrence and latent query computation.",
-    cite: "[8]",
-  },
-  {
-    system: "Latent Loop Lab",
-    obj: "h(r) and z(r)",
-    role: "Transparent mechanism plus learned experimental bridge.",
-    cite: "this artifact",
-  },
-];
-
-const REFERENCES = [
-  { id: 1, text: "S. Hao, S. Sukhbaatar, D. Su, et al. Training Large Language Models to Reason in a Continuous Latent Space. arXiv:2412.06769, 2024.", url: "https://arxiv.org/abs/2412.06769" },
-  { id: 2, text: "J. Geiping, S. McLeish, N. Jain, et al. Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach. arXiv:2502.05171, 2025.", url: "https://arxiv.org/abs/2502.05171" },
-  { id: 3, text: "N. Saunshi, N. Dikkala, Z. Li, S. Kumar, S. J. Reddi. Reasoning with Latent Thoughts: On the Power of Looped Transformers. ICLR, 2025.", url: "https://openreview.net/forum?id=din0lGfZFd" },
-  { id: 5, text: "A. Kosowski, P. Uznański, J. Chorowski, Z. Stamirowska, M. Bartoszkiewicz. The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain. arXiv:2509.26507, 2025.", url: "https://arxiv.org/abs/2509.26507" },
-  { id: 8, text: "B. Engdahl, A. Kosowski, J. Chorowski, et al. BDH-CQ: In-Context Learning with Recurrent Latent Reasoning. arXiv:2608.09888, 2026.", url: "https://arxiv.org/abs/2608.09888" },
-];
-
-function Arrow() {
-  return <span className="flow-arrow">→</span>;
-}
-
-export default function BDHCQ() {
-  const [focus, setFocus] = useState(null); // "context" | "query" | null
+export default function BDHCQ({ onNext }) {
+  const [selected, setSelected] = useState("context");
 
   return (
     <div className="page">
-      <header className="page-header">
-        <div className="tag">Page 6 — BDH-CQ</div>
-        <h1>Where does this appear in real AI?</h1>
-        <p className="muted">
-          This page connects the lab mechanism to BDH-CQ as a conceptual correspondence.
-          It does not claim equivalence and does not infer unpublished internals.
-        </p>
-      </header>
+      <PageHeader
+        step="6"
+        question="Where does this appear in real AI?"
+        goal="Connect the mechanism to a published system without claiming the two are the same thing."
+      />
 
-      {/* Lineage */}
-      <section className="panel">
-        <h3>Conceptual lineage</h3>
+      <div className="scope-warning">
+        <strong>Read this before the diagrams.</strong>
+        <p>
+          Everything on this page describes the published conceptual
+          decomposition of BDH-CQ. Exact production dimensions and update rules
+          are outside this project. The toy model in pages 1 to 5 is an
+          independent reimplementation written for teaching, and is not a BDH or
+          BDH-CQ checkpoint.
+        </p>
+      </div>
+
+      <Panel title="Architectural lineage">
         <div className="lineage">
-          {LINEAGE.map((item, i) => (
+          {LINEAGE.map((item, index) => (
             <React.Fragment key={item.name}>
-              <div className="lineage-card">
-                <strong>{item.name}</strong>
-                <p className="muted">{item.desc}</p>
-                <span className="cite">{item.cite}</span>
+              <div className="lineage-node">
+                <h4>{item.name}</h4>
+                <span className="lineage-full">{item.full}</span>
+                <p>{item.description}</p>
               </div>
-              {i < LINEAGE.length - 1 && <Arrow />}
+              {index < LINEAGE.length - 1 && <div className="lineage-arrow">→</div>}
             </React.Fragment>
           ))}
         </div>
-      </section>
+        <EvidenceNote evidence={{
+          evidenceType: "Paper-reported result",
+          source: "Kosowski et al., The Dragon Hatchling (arXiv:2509.26507); Engdahl et al., BDH-CQ (arXiv:2608.09888)",
+        }} />
+      </Panel>
 
-      {/* Pipeline decomposition */}
-      <section className="panel">
-        <div className="panel-head">
-          <h3>Two different processes, one architecture</h3>
-          <span className="badge other">Click a row to inspect it</span>
+      <Panel
+        title="Two different recurrences, often confused"
+        subtitle="Click a row. These are not the same process, and calling both of them 'reasoning steps' is the mistake this page exists to prevent."
+      >
+        <div className="recurrence-picker">
+          <button
+            className={`recurrence-row context ${selected === "context" ? "active" : ""}`}
+            onClick={() => setSelected("context")}
+          >
+            <span className="rr-label">Contextual recurrence</span>
+            <code>S_t = U_θ(S_t₋₁, D_t)</code>
+            <span className="rr-note">recurrence over demonstrations / context</span>
+          </button>
+
+          <button
+            className={`recurrence-row query ${selected === "query" ? "active" : ""}`}
+            onClick={() => setSelected("query")}
+          >
+            <span className="rr-label">Query-time recurrence</span>
+            <code>H_r₊₁ = F_θ(H_r, S_K)</code>
+            <span className="rr-note">recurrence over query-time latent computation</span>
+          </button>
         </div>
 
-        <div
-          className={
-            "flow-row green " +
-            (focus === "context" ? "focused" : focus === "query" ? "dimmed" : "")
-          }
-          onClick={() => setFocus(focus === "context" ? null : "context")}
-        >
-          <span className="flow-title">Context acquisition</span>
-          <div className="flow-nodes">
-            <span className="flow-node">D1</span>
-            <Arrow />
-            <span className="flow-node">D2</span>
-            <Arrow />
-            <span className="flow-node">…</span>
-            <Arrow />
-            <span className="flow-node">DK</span>
-            <Arrow />
-            <span className="flow-node strong-green">S_K</span>
-          </div>
-        </div>
-
-        <div
-          className={
-            "flow-row blue " +
-            (focus === "query" ? "focused" : focus === "context" ? "dimmed" : "")
-          }
-          onClick={() => setFocus(focus === "query" ? null : "query")}
-        >
-          <span className="flow-title">Query-time latent reasoning</span>
-          <div className="flow-nodes">
-            <span className="flow-node">x*</span>
-            <Arrow />
-            <span className="flow-node">H0</span>
-            <Arrow />
-            <span className="flow-node">H1</span>
-            <Arrow />
-            <span className="flow-node">…</span>
-            <Arrow />
-            <span className="flow-node">HR</span>
-            <Arrow />
-            <span className="flow-node strong-blue">ŷ</span>
-          </div>
-        </div>
-
-        {focus === "context" && (
-          <div className="focus-card green-border">
-            <h4>Contextual recurrence</h4>
-            <pre className="equation">{"S_t = U(S_{t-1}, D_t)"}</pre>
+        {selected === "context" ? (
+          <div className="recurrence-detail context">
+            <h4>Recurrence over demonstrations</h4>
+            <Equation label="one demonstration absorbed per step">
+              S_t = U_θ(S_t₋₁, D_t)
+            </Equation>
+            <div className="flow">
+              <span className="flow-item">D₁</span><span className="flow-arrow">→</span>
+              <span className="flow-item">D₂</span><span className="flow-arrow">→</span>
+              <span className="flow-item">⋯</span><span className="flow-arrow">→</span>
+              <span className="flow-item">D_K</span><span className="flow-arrow">⇒</span>
+              <span className="flow-item state">S_K</span>
+            </div>
             <p>
-              This state accumulates task-specific associations from demonstrations.
-              It is recurrence <strong>over demonstrations/context</strong>. It is not
-              query-time reasoning.
+              This state accumulates task-specific associations from the
+              demonstrations. It advances once per demonstration, and what drives
+              it is <strong>new input</strong>. When the demonstrations run out,
+              this recurrence stops.
+            </p>
+            <p className="contrast">
+              Nothing in pages 1 to 5 corresponds to this. The lab has no
+              demonstrations and no in-context learning.
+            </p>
+          </div>
+        ) : (
+          <div className="recurrence-detail query">
+            <h4>Recurrence over query-time latent computation</h4>
+            <Equation label="workspace initialised from the query and the context state">
+              H₀ = E_θ(x*, S_K)
+            </Equation>
+            <Equation label="refined repeatedly, with the context state held fixed">
+              H_r₊₁ = F_θ(H_r, S_K)
+            </Equation>
+            <Equation label="decoded once, at the end">
+              ŷ = G_θ(H_R)
+            </Equation>
+            <div className="flow">
+              <span className="flow-item state">H₀</span><span className="flow-arrow">→</span>
+              <span className="flow-item state">H₁</span><span className="flow-arrow">→</span>
+              <span className="flow-item">⋯</span><span className="flow-arrow">→</span>
+              <span className="flow-item state">H_R</span><span className="flow-arrow">⇒</span>
+              <span className="flow-item">ŷ</span>
+            </div>
+            <p>
+              This state carries computation for the <strong>current query</strong>.
+              It advances without consuming any new input, and R is a budget that
+              can be chosen at inference time. This is the recurrence the lab is
+              an analogue of.
+            </p>
+            <p className="contrast">
+              Note that S_K appears in every step but never changes during this
+              loop. Context acquisition has finished; only latent refinement is
+              running.
             </p>
           </div>
         )}
 
-        {focus === "query" && (
-          <div className="focus-card blue-border">
-            <h4>Query-time recurrence</h4>
-            <pre className="equation">
-              {"H_0 = E(x*, S_K)\nH_{r+1} = F(H_r, S_K)\ny_hat = G(H_R)"}
-            </pre>
-            <p>
-              This state carries computation for the current query. It is recurrence{" "}
-              <strong>over query-time latent computation</strong> — the process that
-              corresponds conceptually to the lab&apos;s h(r) and z(r).
-            </p>
-          </div>
-        )}
+        <div className="learner-rule">
+          <strong>The rule to remember:</strong> the first is recurrence over
+          demonstrations and context. The second is recurrence over query-time
+          latent computation. Do not call both of them &ldquo;reasoning
+          steps&rdquo;.
+        </div>
+      </Panel>
 
-        <p className="key-sentence">
-          Learner rule: do not call both processes “reasoning steps.” The first is
-          recurrence over demonstrations; the second is recurrence over query-time
-          latent computation.
-        </p>
-      </section>
-
-      {/* Analogy mapping */}
-      <section className="panel">
-        <h3>The analogy, stated precisely</h3>
-
-        <div className="bridge-grid three-col">
-          <div className="analogy-card">
-            <strong>h(r)</strong>
-            <p className="muted">Exact graph recurrence. Interpretable coordinates, BFS truth. This lab.</p>
-            <span className="badge live">Live computation</span>
+      <Panel title="What maps onto what">
+        <div className="mapping">
+          <div className="mapping-side">
+            <span className="mapping-head">Latent Loop Lab</span>
+            <code>h⁽⁰⁾ → h⁽¹⁾ → ⋯ → h⁽ᴿ⁾ → ŷ</code>
+            <span className="mapping-note">exact mechanism, pages 1–3</span>
+            <code>z⁽⁰⁾ → z⁽¹⁾ → ⋯ → z⁽ᴿ⁾ → ŷ</code>
+            <span className="mapping-note">learned extension, pages 4–5</span>
           </div>
-          <div className="analogy-card">
-            <strong>z(r)</strong>
-            <p className="muted">Learned shared-weight recurrent GNN. This lab.</p>
-            <span className="badge precomputed">Precomputed / live</span>
-          </div>
-          <div className="analogy-card">
-            <strong>H_r</strong>
-            <p className="muted">BDH-CQ query-time latent workspace. Published system-level example [8].</p>
-            <span className="badge paper">Paper-reported</span>
+          <div className="mapping-arrow">is an abstract analogue of</div>
+          <div className="mapping-side">
+            <span className="mapping-head">BDH-CQ</span>
+            <code>H₀ → H₁ → ⋯ → H_R → ŷ</code>
+            <span className="mapping-note">query-time latent workspace</span>
           </div>
         </div>
 
-        <p className="key-sentence">
-          Latent Loop Lab h(r) is an abstract educational analogue of BDH-CQ H_r. It is
-          not the whole BDH-CQ system.
-        </p>
-
-        <ul className="muted limit-list">
-          <li>The lab has no demonstration memory S_t; BDH-CQ has one.</li>
-          <li>Production dimensions and update rules of BDH-CQ are outside this project.</li>
-          <li>The correspondence is conceptual, not an implementation claim.</li>
-        </ul>
-      </section>
-
-      {/* Paper-reported evidence */}
-      <section className="panel">
-        <div className="panel-head">
-          <h3>Reported latent-effort operating points</h3>
-          <span className="badge paper">Paper-reported result</span>
+        <div className="analogy-statement">
+          Latent Loop Lab h⁽ʳ⁾ is an abstract educational analogue of BDH-CQ H_r.
+          It is <strong>not</strong> the whole BDH-CQ system.
         </div>
 
-        <table className="evidence-table">
+        <div className="mapping-limits">
+          <h4>Where the analogy stops</h4>
+          <ul>
+            <li>
+              The lab has no contextual recurrence S_t at all, so half of BDH-CQ
+              has no counterpart here.
+            </li>
+            <li>
+              The lab&rsquo;s coordinates are interpretable by construction. A
+              production latent workspace is not generally human-readable.
+            </li>
+            <li>
+              The lab solves graph reachability. Sharing a recurrence shape with a
+              language model does not make it one.
+            </li>
+            <li>
+              Scale differs by many orders of magnitude, and behaviour at this
+              scale does not license claims about behaviour at that one.
+            </li>
+          </ul>
+        </div>
+      </Panel>
+
+      <Panel
+        title="Published latent-effort operating points"
+        subtitle="Reported for BDH-CQ. These are quoted, not measured here."
+      >
+        <table className="data-table">
           <thead>
             <tr>
               <th>Latent effort</th>
@@ -234,71 +219,44 @@ export default function BDHCQ() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Low</td>
-              <td>21%</td>
-              <td>22%</td>
-            </tr>
-            <tr>
-              <td>Medium</td>
-              <td>27%</td>
-              <td>11%</td>
-            </tr>
-            <tr>
-              <td>High</td>
-              <td>29.5%</td>
-              <td>0%</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <p className="muted">
-          Source: BDH-CQ technical report [8]. These are paper-reported results, not
-          measurements of Latent Loop Lab. They are shown on separate visual footing
-          from live measurements, as required.
-        </p>
-      </section>
-
-      {/* Positioning */}
-      <section className="panel">
-        <h3>Where the idea appears in current research</h3>
-
-        <table className="evidence-table">
-          <thead>
-            <tr>
-              <th>System</th>
-              <th>Recurrent object</th>
-              <th>Role in the lesson</th>
-              <th>Source</th>
-            </tr>
-          </thead>
-          <tbody>
-            {POSITIONING.map((row) => (
-              <tr key={row.system}>
-                <td>{row.system}</td>
-                <td>{row.obj}</td>
-                <td>{row.role}</td>
-                <td>{row.cite}</td>
+            {EFFORT_TABLE.map((row) => (
+              <tr key={row.effort}>
+                <td>{row.effort}</td>
+                <td>{row.arc}</td>
+                <td>{row.cost}</td>
               </tr>
             ))}
           </tbody>
         </table>
-      </section>
 
-      {/* References */}
-      <section className="panel">
-        <h3>Primary sources used on this page</h3>
-        <ul className="ref-list">
-          {REFERENCES.map((r) => (
-            <li key={r.id}>
-              <span className="cite">[{r.id}]</span>{" "}
-              <a href={r.url} target="_blank" rel="noreferrer">
-                {r.text}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+        <div className="provenance">
+          <EvidenceBadge type="Paper-reported result" />
+          <p>
+            Source: the BDH-CQ technical report. These numbers are not
+            measurements of Latent Loop Lab, are not reproduced here, and are not
+            on the same footing as anything on pages 1 to 5. They are shown
+            because they illustrate the same variable this lab lets you move:
+            more latent effort against accuracy and cost.
+          </p>
+          <p className="caveat">
+            A separate MIN-versus-STANDARD comparison exists in that literature
+            whose statistical result is unresolved. It is deliberately not merged
+            into this table.
+          </p>
+        </div>
+      </Panel>
+
+      <Takeaway>
+        Query-time latent recurrence is a real component of a real system, and it
+        is the component this lab models. Contextual recurrence is a separate
+        mechanism that this lab does not model at all.
+      </Takeaway>
+
+      <div className="page-nav">
+        <button className="primary" onClick={onNext}>
+          Next: evidence and limitations
+        </button>
+      </div>
     </div>
   );
 }

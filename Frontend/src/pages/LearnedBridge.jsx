@@ -1,318 +1,323 @@
 import React, { useEffect, useState } from "react";
+import GraphView from "../components/GraphView.jsx";
+import { EvidenceBadge, EvidenceNote } from "../components/Evidence.jsx";
+import {
+  Equation, ErrorBanner, Loading, PageHeader, Panel, Pill, Slider, Takeaway,
+} from "../components/Common.jsx";
+import { api } from "../lib/api.js";
 
-const API_BASE = "http://127.0.0.1:8000";
+const MAX_R = 10;
 
-function buildPathGraph(pathLength, reachable) {
-  const n = pathLength + 1;
-  const edges = [];
+function explainOutcome({ result, distance, R, trainingMax, reachable }) {
+  if (!result || result.unavailable) return null;
 
-  if (reachable) {
-    for (let i = 0; i < pathLength; i++) edges.push([i, i + 1]);
-  } else {
-    for (let i = 1; i <= pathLength; i++) edges.push([i, i - 1]);
-  }
-
-  return { n, edges };
-}
-
-function EvidenceBadge({ type }) {
-  const cls =
-    type === "Live computation"
-      ? "badge live"
-      : type === "Precomputed result"
-      ? "badge precomputed"
-      : "badge other";
-
-  return <span className={cls}>{type}</span>;
-}
-
-function NodeBars({ values, labels }) {
-  const max = Math.max(1e-8, ...values);
-
-  return (
-    <div className="vector-list">
-      {values.map((v, i) => (
-        <div className="vector-row" key={i}>
-          <div className="vector-label">{labels ? labels[i] : `n${i}`}</div>
-          <div className="bar-bg">
-            <div
-              className="bar-fill"
-              style={{ width: `${Math.min(100, (v / max) * 100)}%` }}
-            />
-          </div>
-          <div className="vector-value">{v.toFixed(2)}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function explainLearnedResult(d, pathLength, R, reachable) {
-  if (!d) return null;
-
-  if (d.correct) {
-    if (pathLength > 4) {
-      return `Correct on a path longer than training (length ${pathLength} > 4). The shared update block is being reused beyond its training depth.`;
-    }
-    return "Correct on this case.";
-  }
+  const correct = result.correct;
 
   if (!reachable) {
-    return "The model produced a prediction although no path exists. More iterations cannot create a missing path — this is a failure case.";
+    return correct
+      ? "Correct. The target genuinely is unreachable, and no number of updates can manufacture a path that does not exist."
+      : "Wrong: the model claims a path exists when none does. This is a false positive, and more iterations cannot fix it — there is nothing to propagate.";
   }
 
-  if (R < pathLength) {
-    return `R = ${R} is smaller than the path length ${pathLength}. The learned model has insufficient inference depth, exactly like the exact mechanism.`;
+  if (correct) {
+    return distance > trainingMax
+      ? `Correct at distance ${distance}, which is longer than anything in training (≤ ${trainingMax}). The same update block, applied more times, generalised past its training range.`
+      : `Correct, and this distance was inside the training range (≤ ${trainingMax}).`;
   }
 
-  if (pathLength > 4) {
-    return `Path length ${pathLength} is outside the training regime (<= 4). More compute does not guarantee algorithmic extrapolation.`;
+  if (R < distance) {
+    return `R = ${R} is smaller than the ${distance}-edge path. The target node's state cannot yet have been influenced by the source, so this is insufficient computation, not a broken model. Increase R.`;
   }
 
-  return "Learned dynamics limit: recurrence provides a computational mechanism, not guaranteed generalisation.";
+  return distance > trainingMax
+    ? `R is large enough in principle, but distance ${distance} is outside the training range (≤ ${trainingMax}). More compute does not guarantee algorithmic extrapolation — this is a learned-generalisation limit.`
+    : "Wrong even though depth and distance were both inside the training regime. A small model on a hard instance simply gets some cases wrong.";
 }
 
-export default function LearnedBridge() {
-  const [pathLength, setPathLength] = useState(6);
+export default function LearnedBridge({ onNext, status }) {
+  const [distance, setDistance] = useState(6);
   const [reachable, setReachable] = useState(true);
-  const [R, setR] = useState(4);
+  const [nodes, setNodes] = useState(16);
+  const [caseSeed, setCaseSeed] = useState(0);
+  const [R, setR] = useState(3);
 
-  const [exact, setExact] = useState(null);
-  const [learned, setLearned] = useState(null);
-  const [learnedEvidence, setLearnedEvidence] = useState("Live computation");
-  const [note, setNote] = useState("");
+  const [sweep, setSweep] = useState(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // One request returns the whole depth sweep for one fixed graph, so moving
+  // the R slider cannot accidentally change the input as well as the depth.
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
+    setError("");
 
-    async function load() {
-      setLoading(true);
+    api
+      .learnedSweep({ distance, reachable, nodes, caseSeed, maxR: MAX_R })
+      .then((result) => !cancelled && setSweep(result))
+      .catch((err) => !cancelled && setError(err.message))
+      .finally(() => !cancelled && setLoading(false));
 
-      const graph = buildPathGraph(pathLength, reachable);
+    return () => { cancelled = true; };
+  }, [distance, reachable, nodes, caseSeed]);
 
-      // Exact side (always live)
-      try {
-        const res = await fetch(`${API_BASE}/exact/run`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            graph,
-            source: 0,
-            target: pathLength,
-            R,
-          }),
-        });
-        if (res.ok && !cancelled) setExact(await res.json());
-      } catch (e) {
-        console.error(e);
-      }
+  if (error) {
+    return (
+      <div className="page">
+        <PageHeader step="4" question="Now replace the rule with a learned one"
+                    goal="Swap the hand-designed update for a trained one and ask whether the same story holds." />
+        <ErrorBanner message={error}>
+          <p>
+            Pages 1 to 3 do not depend on the learned model. To enable this page,
+            train a checkpoint: <code>python reproduce.py</code> from the Backend
+            directory.
+          </p>
+        </ErrorBanner>
+      </div>
+    );
+  }
 
-      // Learned side: try live inference first
-      try {
-        const res = await fetch(`${API_BASE}/learned/run`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pathLength, reachable, R }),
-        });
+  if (!sweep) return <div className="page"><Loading label="Running the learned model..." /></div>;
 
-        if (res.ok) {
-          const data = await res.json();
-          if (!cancelled) {
-            setLearned(data);
-            setLearnedEvidence(data.evidence?.evidenceType || "Live computation");
-            setNote("");
-          }
-        } else {
-          // Fallback to precomputed examples
-          const exRes = await fetch(`${API_BASE}/learned/examples`);
-          if (exRes.ok) {
-            const exJson = await exRes.json();
-            const wantedLabel = reachable ? 1 : 0;
+  const meta = sweep.meta || {};
+  const trainingMax = meta.trainingMaxPathLength ?? 4;
+  const result = sweep.results.find((r) => r.R === R);
+  const actualDistance = sweep.case.bfsDistance;
+  const exactState = result?.exact?.trajectory?.[R];
 
-            const match =
-              (exJson.examples || []).find(
-                (e) => e.pathLength === pathLength && e.label === wantedLabel && e.R === R
-              ) ||
-              (exJson.examples || []).find(
-                (e) => e.pathLength === pathLength && e.label === wantedLabel
-              );
-
-            if (match && !cancelled) {
-              setLearned(match);
-              setLearnedEvidence("Precomputed result");
-              setNote(
-                `Live model unavailable. Showing precomputed example at R = ${match.R}.`
-              );
-            } else if (!cancelled) {
-              setLearned(null);
-              setNote("No learned result for this setting yet. Run the learned pipeline.");
-            }
-          }
-        }
-      } catch (e) {
-        console.error(e);
-        if (!cancelled) setLearned(null);
-      }
-
-      if (!cancelled) setLoading(false);
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, [pathLength, reachable, R]);
-
-  const exactState = exact?.trajectory?.[Math.min(R, (exact?.trajectory?.length || 1) - 1)];
+  const explanation = explainOutcome({
+    result, distance: actualDistance, R, trainingMax, reachable,
+  });
 
   return (
     <div className="page">
-      <header className="page-header">
-        <div className="tag">Page 4 — AI bridge</div>
-        <h1>Now replace the rule with a learned one</h1>
-        <p className="key-sentence">
-          The model has not gained new parameters. It has only been allowed to compute longer.
-        </p>
-      </header>
+      <PageHeader
+        step="4"
+        question="Now replace the rule with a learned one"
+        goal="Hold the weights fixed and vary only how many times the learned update is applied."
+      />
 
-      <div className="badge-row">
-        <span className="badge shared">Same weights reused at every iteration</span>
-        <span className="badge other">Training: paths ≤ 4 · R ≤ 4</span>
-        <span className="badge other">Inference now: R = {R} · path length = {pathLength}</span>
-      </div>
-
-      <div className="control-card">
-        <div className="control-row three">
-          <label>
-            Path length: <strong>{pathLength}</strong>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={pathLength}
-              onChange={(e) => setPathLength(Number(e.target.value))}
-            />
-          </label>
-
-          <label>
-            Inference depth R: <strong>{R}</strong>
-            <input
-              type="range"
-              min="1"
-              max="10"
-              value={R}
-              onChange={(e) => setR(Number(e.target.value))}
-            />
-          </label>
-
-          <label className="check">
-            <input
-              type="checkbox"
-              checked={reachable}
-              onChange={(e) => setReachable(e.target.checked)}
-            />
-            Target reachable (forward path)
-          </label>
+      <div className="bridge-chain">
+        <div className="chain exact">
+          <span className="chain-label">Mechanism layer, pages 1–3</span>
+          <code>h⁽⁰⁾ → h⁽¹⁾ → h⁽²⁾ → ⋯ → h⁽ᴿ⁾ → ŷ</code>
+          <span className="chain-note">hand-designed rule, interpretable coordinates</span>
         </div>
-
-        {pathLength > 4 && (
-          <p className="muted">
-            You are now outside the training regime (length &gt; 4). Increase R and watch
-            whether extra computation helps.
-          </p>
-        )}
+        <div className="chain-arrow">same shape, learned instead of designed</div>
+        <div className="chain learned">
+          <span className="chain-label">AI layer, this page</span>
+          <code>z⁽⁰⁾ → z⁽¹⁾ → z⁽²⁾ → ⋯ → z⁽ᴿ⁾ → ŷ</code>
+          <span className="chain-note">trained update block, opaque coordinates</span>
+        </div>
       </div>
 
-      {loading && <div className="loading">Running exact + learned models...</div>}
-      {note && <div className="loading">{note}</div>}
+      <div className="control-card row wrap">
+        <label>
+          Path length
+          <select value={distance} onChange={(e) => setDistance(Number(e.target.value))}>
+            {[1,2,3,4,5,6,7,8,9,10].map((d) => (
+              <option key={d} value={d}>
+                {d} {d <= trainingMax ? "(seen in training)" : "(never trained on)"}
+              </option>
+            ))}
+          </select>
+        </label>
 
-      <div className="bridge-grid">
-        <section className="panel">
-          <div className="panel-head">
-            <h3>Exact mechanism h(r)</h3>
-            <EvidenceBadge type="Live computation" />
+        <label className="checkbox">
+          <input type="checkbox" checked={reachable}
+                 onChange={(e) => setReachable(e.target.checked)} />
+          Target is reachable
+        </label>
+
+        <label>
+          Graph size
+          <select value={nodes} onChange={(e) => setNodes(Number(e.target.value))}>
+            {[12, 16, 20, 24].map((n) => <option key={n} value={n}>{n} nodes</option>)}
+          </select>
+        </label>
+
+        <button className="secondary" onClick={() => setCaseSeed((s) => s + 1)}>
+          New graph
+        </button>
+      </div>
+
+      <div className="param-badge">
+        <div>
+          <strong>Same weights reused at every iteration.</strong>
+          <span>
+            {meta.numParameters?.toLocaleString()} parameters, one update block,
+            θ₀ = θ₁ = ⋯ = θ_R₋₁. Checkpoint {meta.checkpointHash}, frozen.
+          </span>
+        </div>
+        <div className="training-depth">
+          <span className="small-label">Trained on distances</span>
+          <span className="big-value">≤ {trainingMax}</span>
+        </div>
+      </div>
+
+      <Slider
+        id="bridge-depth"
+        label="Inference depth R"
+        value={R}
+        min={1}
+        max={MAX_R}
+        onChange={setR}
+        hint={
+          R > (meta.trainingMaxR ?? 4)
+            ? `Beyond the maximum depth used in training (${meta.trainingMaxR ?? 4}). The model has no new parameters here — only more applications of the same ones.`
+            : "Inside the depth range used during training."
+        }
+      />
+
+      {loading && <Loading label="Recomputing..." />}
+
+      <div className="split">
+        <Panel title="Exact mechanism" className="side exact-side">
+          <GraphView
+            graph={sweep.case.graph}
+            source={sweep.case.source}
+            target={sweep.case.target}
+            state={exactState}
+            height={340}
+            showValues={false}
+          />
+          <div className="readout tight">
+            <div>
+              <span className="small-label">Says</span>
+              <Pill tone={result?.exact?.estimate ? "yes" : "no"}>
+                {result?.exact?.estimate ? "reachable" : "not reachable"}
+              </Pill>
+            </div>
+            <div>
+              <span className="small-label">Active nodes</span>
+              <span className="big-value">{result?.exact?.activeNodeCount ?? "–"}</span>
+            </div>
+            <div>
+              <span className="small-label">h(R)[q]</span>
+              <span className="big-value">
+                {(result?.exact?.targetActivation ?? 0).toFixed(2)}
+              </span>
+            </div>
+          </div>
+          <EvidenceBadge type="Live computation" />
+        </Panel>
+
+        <Panel title="Learned recurrent GNN" className="side learned-side">
+          <div className="latent-strip">
+            <span className="small-label">
+              Target state magnitude ‖z⁽ʳ⁾_q‖ at each step
+            </span>
+            <div className="latent-bars">
+              {(result?.targetStateNormPerStep || []).map((norm, index) => {
+                const max = Math.max(...(result.targetStateNormPerStep || [1]));
+                return (
+                  <div className="latent-bar" key={index} title={`step ${index}: ${norm.toFixed(2)}`}>
+                    <div
+                      className="latent-fill"
+                      style={{ height: `${Math.max(3, (norm / max) * 100)}%` }}
+                    />
+                    <span>{index}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <span className="hint">
+              The learned state has no per-coordinate meaning. Its magnitude is
+              shown because that is what is honestly observable.
+            </span>
           </div>
 
-          <p className="muted">
-            Hand-designed noisy-OR rule. Every coordinate has a clear meaning.
-          </p>
-
-          {exactState && <NodeBars values={exactState} labels={exactState.map((_, i) => `h[${i}]`)} />}
-
-          {exact && (
-            <div className="truth-grid small">
-              <div>
-                <div className="small-label">Estimate</div>
-                <div className={exact.estimate ? "pill yes" : "pill no"}>
-                  {exact.estimate ? "Target active" : "Target inactive"}
-                </div>
-              </div>
-              <div>
-                <div className="small-label">BFS distance</div>
-                <div className="big-value">
-                  {exact.bfsDistance === null ? "∞" : exact.bfsDistance}
-                </div>
-              </div>
+          <div className="prob-track">
+            <span className="small-label">
+              P(reachable) read out after each step
+            </span>
+            <div className="prob-bars">
+              {(result?.probabilityPerStep || []).map((p, index) => (
+                <div
+                  key={index}
+                  className={`prob-bar ${p > 0.5 ? "yes" : "no"}`}
+                  style={{ height: `${Math.max(2, p * 100)}%` }}
+                  title={`after ${index} update${index === 1 ? "" : "s"}: ${p.toFixed(3)}`}
+                />
+              ))}
             </div>
-          )}
-        </section>
-
-        <section className="panel">
-          <div className="panel-head">
-            <h3>Learned GNN z(r)</h3>
-            <EvidenceBadge type={learnedEvidence} />
+            <span className="hint">50% line is the decision threshold.</span>
           </div>
 
-          <p className="muted">
-            Shared-weight recurrent GNN. Bars show per-node latent state norms after R steps.
-          </p>
-
-          {learned?.nodeStateNorms && (
-            <NodeBars
-              values={learned.nodeStateNorms}
-              labels={learned.nodeStateNorms.map((_, i) => `z[${i}]`)}
-            />
-          )}
-
-          {learned?.trajectoryNorms && !learned.nodeStateNorms && (
-            <NodeBars values={learned.trajectoryNorms} labels={learned.trajectoryNorms.map((_, i) => `step ${i}`)} />
-          )}
-
-          {learned?.targetNormSeries && (
-            <>
-              <div className="small-label" style={{ marginTop: 12 }}>
-                Target-node state norm per step
-              </div>
-              <div className="timeline">
-                {learned.targetNormSeries.map((v, i) => (
-                  <span className={i === R ? "time active-time" : "time"} key={i}>
-                    z({i}) {v.toFixed(2)}
-                  </span>
-                ))}
-              </div>
-            </>
-          )}
-
-          {learned && (
-            <div className="truth-grid small">
-              <div>
-                <div className="small-label">Prediction</div>
-                <div className={learned.prediction === 1 ? "pill yes" : "pill no"}>
-                  {learned.prediction === 1 ? "Reachable" : "Not reachable"}
-                </div>
-              </div>
-              <div>
-                <div className="small-label">Confidence</div>
-                <div className="big-value">{(learned.confidence ?? 0).toFixed(2)}</div>
-              </div>
+          <div className="readout tight">
+            <div>
+              <span className="small-label">Predicts</span>
+              <Pill tone={result?.prediction === 1 ? "yes" : "no"}>
+                {result?.prediction === 1 ? "reachable" : "not reachable"}
+              </Pill>
             </div>
-          )}
+            <div>
+              <span className="small-label">Confidence</span>
+              <span className="big-value">
+                {((result?.confidence ?? 0) * 100).toFixed(1)}%
+              </span>
+            </div>
+            <div>
+              <span className="small-label">Correct</span>
+              <Pill tone={result?.correct ? "yes" : "no"}>
+                {result?.correct ? "yes" : "no"}
+              </Pill>
+            </div>
+          </div>
+          <EvidenceNote evidence={sweep.evidence} />
+        </Panel>
+      </div>
 
-          <p className="explanation">
-            {explainLearnedResult(learned, pathLength, R, reachable)}
-          </p>
-        </section>
+      {explanation && (
+        <div className={`outcome ${result?.correct ? "good" : "bad"}`}>
+          <strong>{result?.correct ? "Correct" : "Wrong"}</strong>
+          <p>{explanation}</p>
+        </div>
+      )}
+
+      <Panel title="Where each model flips" subtitle="The depth at which the answer changes to 'reachable' and stays there.">
+        <div className="flip-grid">
+          <div>
+            <span className="small-label">Exact mechanism flips at</span>
+            <span className="big-value">
+              {sweep.exactFlipDepth ?? "never"}
+            </span>
+          </div>
+          <div>
+            <span className="small-label">Learned model flips at</span>
+            <span className="big-value">
+              {sweep.learnedFlipDepth ?? "never"}
+            </span>
+          </div>
+          <div>
+            <span className="small-label">Agreement</span>
+            <Pill tone={sweep.flipDepthsAgree ? "yes" : "no"}>
+              {sweep.flipDepthsAgree ? "same depth" : "different"}
+            </Pill>
+          </div>
+        </div>
+        <p className="muted">
+          When these agree on a path longer than the training range, the learned
+          update has reproduced the mechanism&rsquo;s timing without ever having
+          seen a path that long. When they disagree, the gap is the lesson.
+        </p>
+      </Panel>
+
+      <div className="key-sentence">
+        The model has not gained new parameters. It has only been allowed to
+        compute longer.
+      </div>
+
+      <Takeaway>
+        A learned update block reused across steps behaves like the exact
+        mechanism: depth buys reach. But it is an approximation, and the next
+        page measures where that approximation holds and where it breaks.
+      </Takeaway>
+
+      <div className="page-nav">
+        <button className="primary" onClick={onNext}>
+          Next: more computation, or more memorisation?
+        </button>
       </div>
     </div>
   );

@@ -1,0 +1,21 @@
+page,claim,source_type,source,evidence_label,verifiable_by
+1,Target activates only once R reaches the shortest-path distance,own measurement,core/recurrent.py + core/bfs.py,Live computation,move the R slider
+2,The update rule does not depend on the step index r,own code,core/recurrent.py one_step(),Live computation,read the source
+2,Reasoning can occur in a continuous state rather than emitted tokens,paper,arXiv:2412.06769; arXiv:2505.12514,Paper-reported result,cited papers
+3,"h(R)[q] > eps iff d(s,q) <= R",own measurement,tests/test_exact_invariant.py --large,Synthetic data,10000 seeded cases
+3,BFS oracle is an independent implementation,own code,core/bfs.py,Live computation,read the source
+4,The learned model reuses one parameter set at every step,own code,learned/model.py SharedRecurrentGNN,Live computation,11169 params at any R
+4,Learned and exact flip at the same depth on unseen path lengths,own measurement,POST /learned/sweep,Live computation,change path length
+5,Accuracy rises with inference depth R,own measurement,"learned/evaluate.py, 5 seeds",Precomputed result,results/learned_experiment.json
+5,Model extrapolates to distances never trained on,own measurement,learned/evaluate.py,Precomputed result,results/learned_experiment.json
+5,Excess depth erodes accuracy and saturates the state,own measurement,learned/evaluate.py meanStateNorm,Precomputed result,results/learned_experiment.json
+5,Unshared weights cannot run past their trained depth,own measurement,learned/train.py --unshared,Precomputed result,ablation block
+5,Test-time compute scales through recurrent depth,paper,arXiv:2502.05171,Paper-reported result,cited paper
+5,Looped transformers gain depth without per-layer parameters,paper,ICLR 2025 Saunshi et al.,Paper-reported result,cited paper
+5,Recurrent systems can destabilise with depth,paper,arXiv:2505.07793v2; arXiv:2605.26733,Paper-reported result,cited papers
+6,BDH is a post-Transformer family with recurrent associative state,paper,arXiv:2509.26507,Paper-reported result,cited paper
+6,BDH-GPU is a GPU-efficient formulation with linear attention,paper,arXiv:2509.26507,Paper-reported result,cited paper
+6,BDH-CQ separates contextual from query-time recurrence,paper,arXiv:2608.09888,Paper-reported result,cited paper
+6,Latent effort Low/Medium/High = 21/27/29.5 pct pass@2,paper,arXiv:2608.09888,Paper-reported result,cited paper
+7,Latent coordinates here are interpretable by design only,own code,core/recurrent.py,Live computation,read the source
+7,This artifact is not BDH or BDH-CQ,scope statement,this repository,n/a,read the source

@@ -1,279 +1,463 @@
 """
-Inference-depth experiment for Latent Loop Lab.
+The inference-depth experiment.
 
-Core question:
-    With model parameters fixed, what changes when the model is allowed
-    to apply its latent update more times at inference?
+Main question (architecture section 6.1):
 
-Experiment:
-    - Freeze trained checkpoint
-    - Sweep R = 1 to 10
-    - Test on path lengths 1 to 10
-    - Compare seen (<=4) vs unseen (>4) path lengths
-    - Record accuracy and confidence
+    With model parameters fixed, what changes when the model is allowed to
+    apply its latent update more times at inference?
+
+The comparison held constant is
+
+    same input + same weights + same architecture + different R
+
+so nothing but the amount of computation varies. Every checkpoint is frozen
+before this script runs; no gradient is ever taken here.
+
+What this produces
+------------------
+* accuracy versus inference depth R = 1..10;
+* the same broken down per source-to-target distance, separating distances seen
+  in training (1..4) from unseen ones (5..10);
+* the exact mechanism's accuracy on the identical test set, computed live as
+  the reference ceiling rather than assumed to be 1.0;
+* mean latent-state norm per depth, which is the evidence for the claim that
+  excessive recurrence can saturate or destabilise learned dynamics;
+* categorised successful and failed examples for the interface.
 
 Usage:
     python -m learned.evaluate --seed 1 --checkpoint results/model_seed1.pt
 """
 
+from __future__ import annotations
+
 import argparse
+import hashlib
 import json
 import random
+from collections import defaultdict
 from pathlib import Path
+from typing import Dict, List, Optional
 
 import numpy as np
 import torch
 
-from learned.model import SharedRecurrentGNN
-from learned.dataset import PathReachabilityDataset, collate_fn
+from core.graph import Graph
+from core.recurrent import run_exact
+from learned.dataset import (
+    TEST_DISTANCES,
+    TRAIN_DISTANCES,
+    build_test_set,
+    collate,
+    iterate_batches,
+)
+from learned.model import build_model
+
+TRAINING_MAX_DISTANCE = max(TRAIN_DISTANCES)
 
 
-def set_seed(seed: int):
+def _sort_key(key: str):
+    """Order per-distance buckets numerically, with non-numeric keys last."""
+    return (int(key), "") if key.isdigit() else (10**9, key)
+
+
+def set_seed(seed: int) -> None:
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
 
 
-def evaluate_at_depth(
-    model: SharedRecurrentGNN,
-    dataset: PathReachabilityDataset,
-    R: int,
-    device: torch.device,
-) -> dict:
-    """
-    Evaluate model at a fixed inference depth R.
+def file_hash(path: Path) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()[:16]
 
-    Returns accuracy, confidence, and per-path-length breakdown.
-    """
+
+def load_checkpoint(path: Path, device: torch.device):
+    """Rebuild a frozen model exactly as it was trained."""
+    checkpoint = torch.load(path, map_location=device, weights_only=False)
+
+    model = build_model(
+        shared=checkpoint.get("shared_weights", True),
+        hidden_dim=checkpoint.get("hidden_dim", 32),
+        aggregation=checkpoint.get("aggregation", "max"),
+        num_steps=checkpoint.get("max_R", 4),
+    ).to(device)
+
+    model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
 
-    results_by_length = {}
-    total_correct = 0
-    total_samples = 0
-    total_confidence = 0.0
+    return model, checkpoint
 
-    with torch.no_grad():
-        for sample in dataset:
-            node_features = sample["node_features"].to(device)
-            edge_index = sample["edge_index"].to(device)
-            target_idx = sample["target_idx"]
-            label = sample["label"]
-            path_length = sample["path_length"]
 
-            logit = model(node_features, edge_index, target_idx, R)
-            prob = torch.sigmoid(logit).item()
-            pred = 1.0 if prob > 0.5 else 0.0
+def failure_category(
+    correct: bool,
+    label: float,
+    distance: Optional[int],
+    R: int,
+) -> str:
+    """
+    Name the reason an instance was decided the way it was.
 
-            correct = abs(pred - label) < 0.5
+    The interface uses these labels directly, so that a wrong answer caused by
+    too little computation is never confused with one caused by a limit of what
+    the model learned.
+    """
+    if correct:
+        if label == 1.0 and distance is not None and distance > TRAINING_MAX_DISTANCE:
+            return "correct-extrapolation"
+        return "correct"
+
+    if label == 0.0:
+        return "false-positive"
+
+    if distance is not None and R < distance:
+        return "insufficient-depth"
+
+    if distance is not None and distance > TRAINING_MAX_DISTANCE:
+        return "extrapolation-failure"
+
+    return "in-distribution-error"
+
+
+@torch.no_grad()
+def exact_reference(samples: List[Dict[str, object]], R: int) -> Dict[str, object]:
+    """
+    Accuracy of the exact noisy-OR mechanism on the same test set at depth R.
+
+    This is deliberately measured, not asserted. The exact mechanism activates
+    the target exactly when d(s, q) <= R, so its accuracy is a sharp step: it is
+    perfect on unreachable pairs at every depth and perfect on reachable pairs
+    only once R reaches their distance. That step is the ceiling the learned
+    model is compared against.
+    """
+    correct = 0
+    per_distance: Dict[str, Dict[str, float]] = defaultdict(
+        lambda: {"correct": 0, "total": 0}
+    )
+
+    for sample in samples:
+        graph = Graph.from_dict(sample["graph"])  # type: ignore[arg-type]
+        result = run_exact(
+            graph=graph,
+            source=int(sample["source_idx"]),  # type: ignore[arg-type]
+            target=int(sample["target_idx"]),  # type: ignore[arg-type]
+            R=min(R, 12),
+        )
+
+        predicted = 1.0 if result["estimate"] else 0.0
+        is_correct = predicted == float(sample["label"])  # type: ignore[arg-type]
+
+        bucket = sample.get("bucket_distance")
+        key = str(bucket) if bucket is not None else "unbucketed"
+        per_distance[key]["correct"] += int(is_correct)
+        per_distance[key]["total"] += 1
+        correct += int(is_correct)
+
+    return {
+        "accuracy": correct / max(len(samples), 1),
+        "perDistance": {
+            key: {
+                "accuracy": value["correct"] / max(value["total"], 1),
+                "samples": value["total"],
+            }
+            for key, value in sorted(
+                per_distance.items(), key=lambda kv: (not kv[0].isdigit(), _sort_key(kv[0]))
+            )
+        },
+    }
+
+
+@torch.no_grad()
+def evaluate_at_depth(
+    model,
+    samples: List[Dict[str, object]],
+    R: int,
+    device: torch.device,
+    batch_size: int = 64,
+) -> Dict[str, object]:
+    """Run the frozen model over the whole test set at one inference depth."""
+    model.eval()
+
+    correct = 0
+    total = 0
+    confidence_sum = 0.0
+    norm_sum = 0.0
+    norm_batches = 0
+
+    per_distance: Dict[str, Dict[str, float]] = defaultdict(
+        lambda: {"correct": 0, "total": 0, "confidence": 0.0}
+    )
+    categories: Dict[str, int] = defaultdict(int)
+
+    for batch in iterate_batches(samples, batch_size):
+        batch = batch.to(device)
+
+        logits, trajectory, _ = model.forward_with_trajectory(
+            batch.x, batch.edge_index, batch.target_idx, R
+        )
+        probs = torch.sigmoid(logits)
+        preds = (probs > 0.5).float()
+
+        norm_sum += trajectory[-1].norm(dim=-1).mean().item()
+        norm_batches += 1
+
+        for i in range(batch.num_graphs):
+            label = batch.y[i].item()
+            prob = probs[i].item()
+            pred = preds[i].item()
+            is_correct = pred == label
             confidence = prob if pred == 1.0 else 1.0 - prob
+            distance = batch.distances[i]
+            bucket = batch.bucket_distances[i]
 
-            if path_length not in results_by_length:
-                results_by_length[path_length] = {
-                    "correct": 0,
-                    "total": 0,
-                    "confidence_sum": 0.0,
-                }
+            key = str(bucket) if bucket is not None else "unbucketed"
+            per_distance[key]["correct"] += int(is_correct)
+            per_distance[key]["total"] += 1
+            per_distance[key]["confidence"] += confidence
 
-            results_by_length[path_length]["correct"] += int(correct)
-            results_by_length[path_length]["total"] += 1
-            results_by_length[path_length]["confidence_sum"] += confidence
+            categories[failure_category(is_correct, label, distance, R)] += 1
 
-            total_correct += int(correct)
-            total_samples += 1
-            total_confidence += confidence
+            correct += int(is_correct)
+            confidence_sum += confidence
+            total += 1
 
-    # Compute per-length accuracy
-    per_length = {}
-    for length, data in sorted(results_by_length.items()):
-        per_length[length] = {
-            "accuracy": data["correct"] / max(data["total"], 1),
-            "confidence": data["confidence_sum"] / max(data["total"], 1),
-            "samples": data["total"],
-        }
+    # Each bucket holds one positive at that distance and its matched negative,
+    # so these splits are label-balanced and 0.5 is the chance baseline.
+    seen = {"correct": 0, "total": 0}
+    unseen = {"correct": 0, "total": 0}
+    for key, value in per_distance.items():
+        if not key.isdigit():
+            continue
+        target_bucket = seen if int(key) <= TRAINING_MAX_DISTANCE else unseen
+        target_bucket["correct"] += value["correct"]
+        target_bucket["total"] += value["total"]
 
     return {
         "R": R,
-        "accuracy": total_correct / max(total_samples, 1),
-        "confidence": total_confidence / max(total_samples, 1),
-        "total_samples": total_samples,
-        "per_path_length": per_length,
+        "accuracy": correct / max(total, 1),
+        "confidence": confidence_sum / max(total, 1),
+        "totalSamples": total,
+        "meanStateNorm": norm_sum / max(norm_batches, 1),
+        "accuracySeenDistances": seen["correct"] / max(seen["total"], 1),
+        "accuracyUnseenDistances": unseen["correct"] / max(unseen["total"], 1),
+        "perDistance": {
+            key: {
+                "accuracy": value["correct"] / max(value["total"], 1),
+                "confidence": value["confidence"] / max(value["total"], 1),
+                "samples": int(value["total"]),
+            }
+            for key, value in sorted(
+                per_distance.items(), key=lambda kv: (not kv[0].isdigit(), _sort_key(kv[0]))
+            )
+        },
+        "failureCategories": dict(categories),
     }
 
 
-def run_inference_depth_experiment(
-    model: SharedRecurrentGNN,
-    seed: int,
-    checkpoint_hash: str,
-    training_max_path_length: int,
+@torch.no_grad()
+def collect_examples(
+    model,
+    samples: List[Dict[str, object]],
     device: torch.device,
-    max_R: int = 10,
-    test_lengths: list = None,
-) -> dict:
+    per_category: int = 3,
+) -> List[Dict[str, object]]:
     """
-    Run the full inference-depth experiment.
+    Gather concrete cases the interface can show, one card per category.
 
-    Sweeps R from 1 to max_R and evaluates on all test path lengths.
+    Both successes and failures are collected on purpose: a page that only
+    shows wins would misrepresent what recurrence does.
     """
-    if test_lengths is None:
-        test_lengths = list(range(1, 11))
+    wanted = [
+        "correct",
+        "correct-extrapolation",
+        "insufficient-depth",
+        "extrapolation-failure",
+        "in-distribution-error",
+        "false-positive",
+    ]
+    found: Dict[str, List[Dict[str, object]]] = {key: [] for key in wanted}
 
-    # Create test dataset
-    test_dataset = PathReachabilityDataset(
-        path_lengths=test_lengths,
-        samples_per_length=50,
-        seed=seed + 1000,  # Different seed from training
-    )
-
-    results = []
-
-    for R in range(1, max_R + 1):
-        result = evaluate_at_depth(model, test_dataset, R, device)
-        result["seed"] = seed
-        result["checkpoint_hash"] = checkpoint_hash
-        result["training_max_path_length"] = training_max_path_length
-        results.append(result)
-
-        print(f"  R={R:2d} | Accuracy: {result['accuracy']:.3f} | "
-              f"Confidence: {result['confidence']:.3f}")
-
-    return {
-        "modelId": f"shared-gnn-seed{seed}",
-        "checkpointHash": checkpoint_hash,
-        "trainingMaxPathLength": training_max_path_length,
-        "seed": seed,
-        "inference_depth_results": results,
-    }
-
-
-def get_failure_examples(
-    model: SharedRecurrentGNN,
-    seed: int,
-    device: torch.device,
-    num_examples: int = 5,
-) -> list:
-    """
-    Collect successful and failed examples for the frontend.
-    """
-    test_dataset = PathReachabilityDataset(
-        path_lengths=[3, 5, 7],
-        samples_per_length=20,
-        seed=seed + 2000,
-    )
-
-    examples = []
     model.eval()
 
-    with torch.no_grad():
-        for sample in test_dataset:
-            if len(examples) >= num_examples * 2:
+    for sample in samples:
+        if all(len(found[key]) >= per_category for key in wanted):
+            break
+
+        distance = sample["distance"]
+        # Probe each case below, at and above its distance. The unshared
+        # ablation has no weights past its trained depth, so probes are clipped
+        # to whatever the model can actually run.
+        ceiling = model.max_inference_depth
+        probe_depths = sorted(
+            {min(depth, ceiling) for depth in (2, TRAINING_MAX_DISTANCE, 7, 10)}
+        )
+
+        for R in probe_depths:
+            if all(len(found[key]) >= per_category for key in wanted):
                 break
 
-            node_features = sample["node_features"].to(device)
-            edge_index = sample["edge_index"].to(device)
-            target_idx = sample["target_idx"]
-            label = sample["label"]
-            path_length = sample["path_length"]
-
-            # Use R = path_length
-            R = path_length
-
-            logit, trajectory = model.forward_with_trajectory(
-                node_features, edge_index, target_idx, R
+            batch = collate([sample]).to(device)
+            logits, trajectory, logits_per_step = model.forward_with_trajectory(
+                batch.x, batch.edge_index, batch.target_idx, R
             )
-            prob = torch.sigmoid(logit).item()
-            pred = 1.0 if prob > 0.5 else 0.0
-            correct = abs(pred - label) < 0.5
 
-            examples.append({
-                "exampleId": f"seed{seed}_len{path_length}_R{R}",
-                "pathLength": path_length,
+            prob = torch.sigmoid(logits)[0].item()
+            pred = 1.0 if prob > 0.5 else 0.0
+            label = float(sample["label"])  # type: ignore[arg-type]
+            is_correct = pred == label
+            category = failure_category(is_correct, label, distance, R)
+
+            if len(found[category]) >= per_category:
+                continue
+
+            found[category].append({
+                "exampleId": f"d{distance}_R{R}_n{sample['num_nodes']}",
+                "distance": distance,
                 "R": R,
+                "trainingMaxDistance": TRAINING_MAX_DISTANCE,
+                "numNodes": sample["num_nodes"],
+                "numEdges": sample["num_edges"],
+                "graph": sample["graph"],
+                "source": sample["source_idx"],
+                "target": sample["target_idx"],
                 "label": label,
                 "prediction": pred,
-                "confidence": prob,
-                "correct": correct,
-                "numNodes": node_features.size(0),
-                "edgeIndex": edge_index.cpu().tolist(),
-                "trajectoryNorms": [
-                    z.norm(dim=-1).mean().item() for z in trajectory
+                "probability": prob,
+                "confidence": prob if pred == 1.0 else 1.0 - prob,
+                "correct": is_correct,
+                "category": category,
+                "probabilityPerStep": [
+                    torch.sigmoid(step)[0].item() for step in logits_per_step
+                ],
+                "targetStateNormPerStep": [
+                    step[batch.target_idx[0]].norm().item() for step in trajectory
                 ],
             })
 
+    examples: List[Dict[str, object]] = []
+    for key in wanted:
+        examples.extend(found[key])
     return examples
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Inference-depth experiment")
     parser.add_argument("--seed", type=int, default=1)
     parser.add_argument("--checkpoint", type=str, required=True)
     parser.add_argument("--max-R", type=int, default=10)
+    parser.add_argument("--pairs-per-distance", type=int, default=40)
     parser.add_argument("--output-dir", type=str, default="results")
+    parser.add_argument("--tag", type=str, default="")
     args = parser.parse_args()
 
     set_seed(args.seed)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cpu")
 
-    print(f"Loading checkpoint: {args.checkpoint}")
-    checkpoint = torch.load(args.checkpoint, map_location=device)
+    checkpoint_path = Path(args.checkpoint)
+    model, checkpoint = load_checkpoint(checkpoint_path, device)
+    digest = file_hash(checkpoint_path)
 
-    hidden_dim = checkpoint["hidden_dim"]
-    training_max_R = checkpoint["max_R"]
+    suffix = f"_{args.tag}" if args.tag else ""
+    shared = checkpoint.get("shared_weights", True)
+    depth_ceiling = model.max_inference_depth
 
-    # Rebuild model
-    model = SharedRecurrentGNN(
-        input_dim=2,
-        hidden_dim=hidden_dim,
-        message_dim=hidden_dim,
-        num_classes=1,
-    ).to(device)
-    model.load_state_dict(checkpoint["model_state_dict"])
-    model.eval()
+    print(f"Checkpoint {checkpoint_path.name} (sha256 {digest})")
+    print(f"Shared weights: {shared} | trained at R <= {checkpoint.get('max_R')}")
+    print(f"Test distances {list(TEST_DISTANCES)} (training saw <= {TRAINING_MAX_DISTANCE})")
 
-    # Compute checkpoint hash
-    import hashlib
-    sha256 = hashlib.sha256()
-    with open(args.checkpoint, "rb") as f:
-        for chunk in iter(lambda: f.read(8192), b""):
-            sha256.update(chunk)
-    checkpoint_hash = sha256.hexdigest()[:16]
+    test_samples = build_test_set(args.seed, args.pairs_per_distance)
+    print(f"Test graphs: {len(test_samples)}\n")
 
-    print(f"Checkpoint hash: {checkpoint_hash}")
-    print(f"Hidden dim: {hidden_dim}")
-    print(f"Training max R: {training_max_R}")
-    print(f"Device: {device}")
-    print()
+    depth_results: List[Dict[str, object]] = []
+    exact_results: List[Dict[str, object]] = []
 
-    # Run inference-depth experiment
-    print("Running inference-depth sweep (R = 1 to 10)...")
-    print()
+    for R in range(1, args.max_R + 1):
+        if R > depth_ceiling:
+            # The unshared ablation genuinely has no weights for this depth.
+            depth_results.append({
+                "R": R,
+                "unavailable": True,
+                "reason": (
+                    f"Model has only {depth_ceiling} update blocks. Without shared "
+                    f"weights, inference depth cannot exceed training depth."
+                ),
+            })
+            print(f"  R={R:2d} | unavailable (no shared weights)")
+            continue
 
-    experiment = run_inference_depth_experiment(
-        model=model,
-        seed=args.seed,
-        checkpoint_hash=checkpoint_hash,
-        training_max_path_length=4,
-        device=device,
-        max_R=args.max_R,
-    )
+        result = evaluate_at_depth(model, test_samples, R, device)
+        result["seed"] = args.seed
+        depth_results.append(result)
 
-    # Get failure examples
-    print()
-    print("Collecting examples...")
-    examples = get_failure_examples(model, args.seed, device)
+        exact = exact_reference(test_samples, R)
+        exact["R"] = R
+        exact_results.append(exact)
 
-    # Save results
+        print(f"  R={R:2d} | learned {result['accuracy']:.3f} "
+              f"(seen {result['accuracySeenDistances']:.3f}, "
+              f"unseen {result['accuracyUnseenDistances']:.3f}) | "
+              f"exact {exact['accuracy']:.3f} | "
+              f"|z| {result['meanStateNorm']:.2f}")
+
+    print("\nCollecting examples...")
+    examples = collect_examples(model, test_samples, device)
+    print(f"Examples: {len(examples)}")
+
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    experiment_path = output_dir / f"learned_experiment_seed{args.seed}.json"
-    with open(experiment_path, "w") as f:
-        json.dump(experiment, f, indent=2)
-    print(f"Experiment saved: {experiment_path}")
+    experiment = {
+        "modelId": f"recurrent-gnn-seed{args.seed}{suffix}",
+        "checkpointHash": digest,
+        "seed": args.seed,
+        "sharedWeights": shared,
+        "maxInferenceDepth": depth_ceiling if shared else checkpoint.get("max_R"),
+        "trainingMaxPathLength": TRAINING_MAX_DISTANCE,
+        "trainingDistances": list(TRAIN_DISTANCES),
+        "trainingMaxR": checkpoint.get("max_R"),
+        "testDistances": list(TEST_DISTANCES),
+        "config": checkpoint.get("config", {}),
+        "trainingConfig": {
+            "epochs": checkpoint.get("epochs"),
+            "lr": checkpoint.get("lr"),
+            "batchSize": checkpoint.get("batch_size"),
+            "hiddenDim": checkpoint.get("hidden_dim"),
+            "aggregation": checkpoint.get("aggregation"),
+            "pairsPerDistance": checkpoint.get("pairs_per_distance"),
+            "depthSchedule": "R ~ Uniform{1..max_R} per batch",
+        },
+        "inferenceDepthResults": depth_results,
+        "exactReference": exact_results,
+        "trainingLog": checkpoint.get("training_log", []),
+        "evidence": {
+            "evidenceType": "Precomputed result",
+            "source": (
+                "Local inference-depth sweep over a frozen toy checkpoint. "
+                "Not a BDH or BDH-CQ measurement."
+            ),
+            "experimentId": f"depth-sweep-seed{args.seed}{suffix}",
+        },
+    }
 
-    examples_path = output_dir / f"learned_examples_seed{args.seed}.json"
-    with open(examples_path, "w") as f:
-        json.dump(examples, f, indent=2)
-    print(f"Examples saved: {examples_path}")
+    experiment_path = output_dir / f"learned_experiment_seed{args.seed}{suffix}.json"
+    experiment_path.write_text(json.dumps(experiment, indent=2))
+    print(f"Experiment: {experiment_path}")
+
+    examples_path = output_dir / f"learned_examples_seed{args.seed}{suffix}.json"
+    examples_path.write_text(json.dumps({
+        "seed": args.seed,
+        "checkpointHash": digest,
+        "trainingMaxPathLength": TRAINING_MAX_DISTANCE,
+        "examples": examples,
+        "evidence": {
+            "evidenceType": "Precomputed result",
+            "source": "Frozen toy checkpoint evaluated on held-out generated graphs",
+            "experimentId": f"examples-seed{args.seed}{suffix}",
+        },
+    }, indent=2))
+    print(f"Examples: {examples_path}")
 
 
 if __name__ == "__main__":
