@@ -1,618 +1,1464 @@
 {
-  "modelId": "shared-gnn-seed1",
-  "checkpointHash": "ef34ba5c17a79a1f",
-  "trainingMaxPathLength": 4,
+  "modelId": "recurrent-gnn-seed1",
+  "checkpointHash": "a58f090f344e3f8b",
   "seed": 1,
-  "inference_depth_results": [
+  "sharedWeights": true,
+  "maxInferenceDepth": 10000,
+  "trainingMaxPathLength": 4,
+  "trainingDistances": [
+    1,
+    2,
+    3,
+    4
+  ],
+  "trainingMaxR": 4,
+  "testDistances": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "config": {
+    "modelClass": "SharedRecurrentGNN",
+    "sharedWeights": true,
+    "inputDim": 2,
+    "hiddenDim": 32,
+    "messageDim": 32,
+    "aggregation": "max",
+    "numParameters": 11169
+  },
+  "trainingConfig": {
+    "epochs": 40,
+    "lr": 0.003,
+    "batchSize": 32,
+    "hiddenDim": 32,
+    "aggregation": "max",
+    "pairsPerDistance": 150,
+    "depthSchedule": "R ~ Uniform{1..max_R} per batch"
+  },
+  "inferenceDepthResults": [
     {
       "R": 1,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999121,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.56,
+      "confidence": 0.5583158669897602,
+      "totalSamples": 800,
+      "meanStateNorm": 3.164743661880493,
+      "accuracySeenDistances": 0.603125,
+      "accuracyUnseenDistances": 0.53125,
+      "perDistance": {
         "1": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999263,
-          "samples": 50
+          "accuracy": 0.7,
+          "confidence": 0.8509831779636443,
+          "samples": 80
         },
         "2": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999264,
-          "samples": 50
+          "accuracy": 0.6,
+          "confidence": 0.5533412155204133,
+          "samples": 80
         },
         "3": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999117,
-          "samples": 62
+          "accuracy": 0.5875,
+          "confidence": 0.5471438293287065,
+          "samples": 80
         },
         "4": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999118,
-          "samples": 62
+          "accuracy": 0.525,
+          "confidence": 0.5161568983574398,
+          "samples": 80
         },
         "5": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999117,
-          "samples": 62
+          "accuracy": 0.55,
+          "confidence": 0.5285516707459464,
+          "samples": 80
         },
         "6": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999118,
-          "samples": 62
+          "accuracy": 0.55,
+          "confidence": 0.5285516707459464,
+          "samples": 80
         },
         "7": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999912,
-          "samples": 62
+          "accuracy": 0.5125,
+          "confidence": 0.5099595121631865,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999117,
-          "samples": 62
+          "accuracy": 0.5375,
+          "confidence": 0.5223542845516931,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999118,
-          "samples": 62
+          "accuracy": 0.5125,
+          "confidence": 0.5099595121631865,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999116,
-          "samples": 62
+          "accuracy": 0.525,
+          "confidence": 0.5161568983574398,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "false-positive": 352,
+        "correct": 208,
+        "correct-extrapolation": 240
+      },
+      "seed": 1
     },
     {
       "R": 2,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999336,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.6,
+      "confidence": 0.6312693451256177,
+      "totalSamples": 800,
+      "meanStateNorm": 3.9439055369450498,
+      "accuracySeenDistances": 0.75,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999396,
-          "samples": 50
+          "confidence": 0.891252702333577,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999396,
-          "samples": 50
+          "confidence": 0.8693989137014,
+          "samples": 80
         },
         "3": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5877528595803596,
+          "samples": 80
         },
         "4": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5861748949257845,
+          "samples": 80
         },
         "5": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5591712522470061,
+          "samples": 80
         },
         "6": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5828431028514955,
+          "samples": 80
         },
         "7": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5453502299716775,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5626746782090549,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.5603318770083433,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999928,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.567742940427479,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 480,
+        "insufficient-depth": 320
+      },
+      "seed": 1
     },
     {
       "R": 3,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999327,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.65,
+      "confidence": 0.7282563458485276,
+      "totalSamples": 800,
+      "meanStateNorm": 4.329450864058274,
+      "accuracySeenDistances": 0.875,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999386,
-          "samples": 50
+          "confidence": 0.9303227840435057,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999385,
-          "samples": 50
+          "confidence": 0.9042402126728405,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999271,
-          "samples": 62
+          "confidence": 0.8796567611820365,
+          "samples": 80
         },
         "4": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999268,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.6766078560752135,
+          "samples": 80
         },
         "5": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999268,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.64855981930898,
+          "samples": 80
         },
         "6": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999268,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.6617664226566887,
+          "samples": 80
         },
         "7": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999267,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.643423071845632,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999268,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.6404625207339449,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999268,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.6518260111903146,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999271,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.6456979987761201,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 520,
+        "insufficient-depth": 280
+      },
+      "seed": 1
     },
     {
       "R": 4,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999325,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.7,
+      "confidence": 0.9999718738888498,
+      "totalSamples": 800,
+      "meanStateNorm": 4.772871971130371,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.5,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999364,
-          "samples": 50
+          "confidence": 0.9999736935763508,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999364,
-          "samples": 50
+          "confidence": 0.999977825662512,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.999999999999924,
-          "samples": 62
+          "confidence": 0.999976214185699,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.999999999999924,
-          "samples": 62
+          "confidence": 0.999968616157048,
+          "samples": 80
         },
         "5": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999241,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999685586584064,
+          "samples": 80
         },
         "6": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999924,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999706835549261,
+          "samples": 80
         },
         "7": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999241,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999697150995758,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999241,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999707610945506,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999924,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999707623811901,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999924,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999719085182391,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 560,
+        "insufficient-depth": 240
+      },
+      "seed": 1
     },
     {
       "R": 5,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999286,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.75,
+      "confidence": 0.9999696861543396,
+      "totalSamples": 800,
+      "meanStateNorm": 4.935297122368445,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.5833333333333334,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999357,
-          "samples": 50
+          "confidence": 0.9999788296700217,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999357,
-          "samples": 50
+          "confidence": 0.9999832588362552,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999234,
-          "samples": 62
+          "confidence": 0.9999824856692954,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999234,
-          "samples": 62
+          "confidence": 0.9999805950625273,
+          "samples": 80
         },
         "5": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999233,
-          "samples": 62
+          "confidence": 0.9998364561004109,
+          "samples": 80
         },
         "6": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999234,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.999987010889788,
+          "samples": 80
         },
         "7": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999233,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.999986862489402,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999233,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999868636465976,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999234,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999872564185808,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999234,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999872427605169,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 560,
+        "insufficient-depth": 200,
+        "correct-extrapolation": 40
+      },
+      "seed": 1
     },
     {
       "R": 6,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999285,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.8,
+      "confidence": 0.9999616139048391,
+      "totalSamples": 800,
+      "meanStateNorm": 5.012690177330604,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.6666666666666666,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999334,
-          "samples": 50
+          "confidence": 0.9999806260179298,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999335,
-          "samples": 50
+          "confidence": 0.9999845164269743,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999203,
-          "samples": 62
+          "confidence": 0.9999839132787998,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999204,
-          "samples": 62
+          "confidence": 0.9999826116439522,
+          "samples": 80
         },
         "5": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999203,
-          "samples": 62
+          "confidence": 0.9999589569863702,
+          "samples": 80
         },
         "6": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999204,
-          "samples": 62
+          "confidence": 0.9997670968798047,
+          "samples": 80
         },
         "7": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999205,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999894434877661,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999203,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999894672014988,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999204,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999897724716561,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999202,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999897346536386,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 560,
+        "insufficient-depth": 160,
+        "correct-extrapolation": 80
+      },
+      "seed": 1
     },
     {
       "R": 7,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999275,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.85,
+      "confidence": 0.9999461759504914,
+      "totalSamples": 800,
+      "meanStateNorm": 5.069150557884803,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.75,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999324,
-          "samples": 50
+          "confidence": 0.9999817812780577,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999324,
-          "samples": 50
+          "confidence": 0.9999851896361236,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "confidence": 0.9999846635225197,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "confidence": 0.9999836586967262,
+          "samples": 80
         },
         "5": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "confidence": 0.9999710222288172,
+          "samples": 80
         },
         "6": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "confidence": 0.9999632487418267,
+          "samples": 80
         },
         "7": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "confidence": 0.9996198072345379,
+          "samples": 80
         },
         "8": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999906441121169,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999194,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999908891414918,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999193,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999908549126957,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 560,
+        "insufficient-depth": 120,
+        "correct-extrapolation": 120
+      },
+      "seed": 1
     },
     {
       "R": 8,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999273,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.9,
+      "confidence": 0.9998691227133435,
+      "totalSamples": 800,
+      "meanStateNorm": 5.110766410827637,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.8333333333333334,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999301,
-          "samples": 50
+          "confidence": 0.9999826098900485,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999301,
-          "samples": 50
+          "confidence": 0.9999856291741167,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999161,
-          "samples": 62
+          "confidence": 0.9999851426002919,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999163,
-          "samples": 62
+          "confidence": 0.9999843391033721,
+          "samples": 80
         },
         "5": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999162,
-          "samples": 62
+          "confidence": 0.9999757535518938,
+          "samples": 80
         },
         "6": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999162,
-          "samples": 62
+          "confidence": 0.9999732146267462,
+          "samples": 80
         },
         "7": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999164,
-          "samples": 62
+          "confidence": 0.999962789152687,
+          "samples": 80
         },
         "8": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999162,
-          "samples": 62
+          "confidence": 0.9988587539519813,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999162,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999915102620662,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.999999999999916,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999914848202309,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 560,
+        "correct-extrapolation": 160,
+        "insufficient-depth": 80
+      },
+      "seed": 1
     },
     {
       "R": 9,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999123,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.94875,
+      "confidence": 0.9975268194953313,
+      "totalSamples": 800,
+      "meanStateNorm": 5.14304047364455,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.9145833333333333,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.999999999999929,
-          "samples": 50
+          "confidence": 0.9999832160023289,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.999999999999929,
-          "samples": 50
+          "confidence": 0.9999859271141446,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "confidence": 0.999985469959978,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "confidence": 0.9999848020255285,
+          "samples": 80
         },
         "5": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "confidence": 0.9999784026595251,
+          "samples": 80
         },
         "6": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "confidence": 0.999977344256098,
+          "samples": 80
         },
         "7": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "confidence": 0.9999731707998933,
+          "samples": 80
         },
         "8": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "confidence": 0.9999594119702294,
+          "samples": 80
         },
         "9": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "accuracy": 0.9875,
+          "confidence": 0.9754485694543803,
+          "samples": 80
         },
         "10": {
-          "accuracy": 1.0,
-          "confidence": 0.9999999999999152,
-          "samples": 62
+          "accuracy": 0.5,
+          "confidence": 0.9999918807112067,
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "failureCategories": {
+        "correct": 560,
+        "correct-extrapolation": 199,
+        "insufficient-depth": 40,
+        "extrapolation-failure": 1
+      },
+      "seed": 1
     },
     {
       "R": 10,
-      "accuracy": 1.0,
-      "confidence": 0.9999999999999123,
-      "total_samples": 596,
-      "per_path_length": {
+      "accuracy": 0.965,
+      "confidence": 0.9953735993974538,
+      "totalSamples": 800,
+      "meanStateNorm": 5.170240548940805,
+      "accuracySeenDistances": 1.0,
+      "accuracyUnseenDistances": 0.9416666666666667,
+      "perDistance": {
         "1": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999278,
-          "samples": 50
+          "confidence": 0.9999836486940694,
+          "samples": 80
         },
         "2": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999275,
-          "samples": 50
+          "confidence": 0.9999861399294531,
+          "samples": 80
         },
         "3": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999143,
-          "samples": 62
+          "confidence": 0.9999857049984258,
+          "samples": 80
         },
         "4": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999141,
-          "samples": 62
+          "confidence": 0.9999851330823162,
+          "samples": 80
         },
         "5": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999141,
-          "samples": 62
+          "confidence": 0.9999800390891721,
+          "samples": 80
         },
         "6": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999141,
-          "samples": 62
+          "confidence": 0.9999796698198651,
+          "samples": 80
         },
         "7": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999138,
-          "samples": 62
+          "confidence": 0.9999772937684412,
+          "samples": 80
         },
         "8": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999141,
-          "samples": 62
+          "confidence": 0.9999720260947214,
+          "samples": 80
         },
         "9": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999141,
-          "samples": 62
+          "confidence": 0.9999533892827032,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.65,
+          "confidence": 0.9539329492153712,
+          "samples": 80
+        }
+      },
+      "failureCategories": {
+        "correct": 560,
+        "correct-extrapolation": 212,
+        "extrapolation-failure": 28
+      },
+      "seed": 1
+    }
+  ],
+  "exactReference": [
+    {
+      "accuracy": 0.55,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 1
+    },
+    {
+      "accuracy": 0.6,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 2
+    },
+    {
+      "accuracy": 0.65,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 3
+    },
+    {
+      "accuracy": 0.7,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 4
+    },
+    {
+      "accuracy": 0.75,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 5
+    },
+    {
+      "accuracy": 0.8,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 6
+    },
+    {
+      "accuracy": 0.85,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 7
+    },
+    {
+      "accuracy": 0.9,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 0.5,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 8
+    },
+    {
+      "accuracy": 0.95,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "10": {
+          "accuracy": 0.5,
+          "samples": 80
+        }
+      },
+      "R": 9
+    },
+    {
+      "accuracy": 1.0,
+      "perDistance": {
+        "1": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "2": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "3": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "4": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "5": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "6": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "7": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "8": {
+          "accuracy": 1.0,
+          "samples": 80
+        },
+        "9": {
+          "accuracy": 1.0,
+          "samples": 80
         },
         "10": {
           "accuracy": 1.0,
-          "confidence": 0.9999999999999143,
-          "samples": 62
+          "samples": 80
         }
       },
-      "seed": 1,
-      "checkpoint_hash": "ef34ba5c17a79a1f",
-      "training_max_path_length": 4
+      "R": 10
     }
-  ]
+  ],
+  "trainingLog": [
+    {
+      "epoch": 1,
+      "step": 38,
+      "train_loss": 0.6593881014146303,
+      "val_accuracy": 0.8375,
+      "val_loss": 0.4167172610759735
+    },
+    {
+      "epoch": 2,
+      "step": 76,
+      "train_loss": 0.5170692868138614,
+      "val_accuracy": 1.0,
+      "val_loss": 0.1004282847046852
+    },
+    {
+      "epoch": 3,
+      "step": 114,
+      "train_loss": 0.34091614823984473,
+      "val_accuracy": 1.0,
+      "val_loss": 0.026125644519925117
+    },
+    {
+      "epoch": 4,
+      "step": 152,
+      "train_loss": 0.3262873710084118,
+      "val_accuracy": 1.0,
+      "val_loss": 0.03072621151804924
+    },
+    {
+      "epoch": 5,
+      "step": 190,
+      "train_loss": 0.3376733085973875,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0035288862884044645
+    },
+    {
+      "epoch": 6,
+      "step": 228,
+      "train_loss": 0.30744972432914536,
+      "val_accuracy": 1.0,
+      "val_loss": 0.011627572309225797
+    },
+    {
+      "epoch": 7,
+      "step": 266,
+      "train_loss": 0.3077273191976067,
+      "val_accuracy": 1.0,
+      "val_loss": 0.002443147427402437
+    },
+    {
+      "epoch": 8,
+      "step": 304,
+      "train_loss": 0.2717177914210448,
+      "val_accuracy": 1.0,
+      "val_loss": 0.000561690772883594
+    },
+    {
+      "epoch": 9,
+      "step": 342,
+      "train_loss": 0.3243825960778754,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00033782978425733745
+    },
+    {
+      "epoch": 10,
+      "step": 380,
+      "train_loss": 0.31636399558460415,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0002497351728379726
+    },
+    {
+      "epoch": 11,
+      "step": 418,
+      "train_loss": 0.2779544060142239,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00036484349984675644
+    },
+    {
+      "epoch": 12,
+      "step": 456,
+      "train_loss": 0.27192452715519866,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0007177685329224914
+    },
+    {
+      "epoch": 13,
+      "step": 494,
+      "train_loss": 0.28903925985957213,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00014120938431005925
+    },
+    {
+      "epoch": 14,
+      "step": 532,
+      "train_loss": 0.26569981197749976,
+      "val_accuracy": 1.0,
+      "val_loss": 5.478893799590878e-05
+    },
+    {
+      "epoch": 15,
+      "step": 570,
+      "train_loss": 0.19895743052927028,
+      "val_accuracy": 1.0,
+      "val_loss": 5.927840684307739e-05
+    },
+    {
+      "epoch": 16,
+      "step": 608,
+      "train_loss": 0.29311908258195646,
+      "val_accuracy": 1.0,
+      "val_loss": 0.054623335227370264
+    },
+    {
+      "epoch": 17,
+      "step": 646,
+      "train_loss": 0.2743748553544528,
+      "val_accuracy": 1.0,
+      "val_loss": 7.151232421165332e-05
+    },
+    {
+      "epoch": 18,
+      "step": 684,
+      "train_loss": 0.30755650141892193,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0068778378888964655
+    },
+    {
+      "epoch": 19,
+      "step": 722,
+      "train_loss": 0.2446050054471638,
+      "val_accuracy": 1.0,
+      "val_loss": 0.00023024723923299463
+    },
+    {
+      "epoch": 20,
+      "step": 760,
+      "train_loss": 0.2884655590697596,
+      "val_accuracy": 1.0,
+      "val_loss": 9.463293827138841e-05
+    },
+    {
+      "epoch": 21,
+      "step": 798,
+      "train_loss": 0.27869358712977327,
+      "val_accuracy": 1.0,
+      "val_loss": 5.6481175852240996e-05
+    },
+    {
+      "epoch": 22,
+      "step": 836,
+      "train_loss": 0.22813150021063752,
+      "val_accuracy": 1.0,
+      "val_loss": 9.132878476521e-05
+    },
+    {
+      "epoch": 23,
+      "step": 874,
+      "train_loss": 0.27952936099992304,
+      "val_accuracy": 1.0,
+      "val_loss": 3.5293788823764774e-05
+    },
+    {
+      "epoch": 24,
+      "step": 912,
+      "train_loss": 0.32417643161955456,
+      "val_accuracy": 1.0,
+      "val_loss": 6.210848223417998e-05
+    },
+    {
+      "epoch": 25,
+      "step": 950,
+      "train_loss": 0.35859878912560816,
+      "val_accuracy": 1.0,
+      "val_loss": 6.973534909775481e-05
+    },
+    {
+      "epoch": 26,
+      "step": 988,
+      "train_loss": 0.2824663774469005,
+      "val_accuracy": 1.0,
+      "val_loss": 8.36986189824529e-05
+    },
+    {
+      "epoch": 27,
+      "step": 1026,
+      "train_loss": 0.22263669715836218,
+      "val_accuracy": 1.0,
+      "val_loss": 1.926178447320126e-05
+    },
+    {
+      "epoch": 28,
+      "step": 1064,
+      "train_loss": 0.2857029409425243,
+      "val_accuracy": 1.0,
+      "val_loss": 2.4155499340849927e-05
+    },
+    {
+      "epoch": 29,
+      "step": 1102,
+      "train_loss": 0.25719380648642026,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0001019697476294823
+    },
+    {
+      "epoch": 30,
+      "step": 1140,
+      "train_loss": 0.26188851334843904,
+      "val_accuracy": 1.0,
+      "val_loss": 5.7823464157991114e-05
+    },
+    {
+      "epoch": 31,
+      "step": 1178,
+      "train_loss": 0.33056138907015437,
+      "val_accuracy": 1.0,
+      "val_loss": 5.4603141325060275e-05
+    },
+    {
+      "epoch": 32,
+      "step": 1216,
+      "train_loss": 0.31861289827917827,
+      "val_accuracy": 1.0,
+      "val_loss": 3.905586927430704e-05
+    },
+    {
+      "epoch": 33,
+      "step": 1254,
+      "train_loss": 0.20577684626818823,
+      "val_accuracy": 1.0,
+      "val_loss": 4.223919386276975e-05
+    },
+    {
+      "epoch": 34,
+      "step": 1292,
+      "train_loss": 0.2636561845255959,
+      "val_accuracy": 1.0,
+      "val_loss": 3.6283236113376915e-05
+    },
+    {
+      "epoch": 35,
+      "step": 1330,
+      "train_loss": 0.23393002172585847,
+      "val_accuracy": 1.0,
+      "val_loss": 4.0759130206424744e-05
+    },
+    {
+      "epoch": 36,
+      "step": 1368,
+      "train_loss": 0.29325622272316604,
+      "val_accuracy": 1.0,
+      "val_loss": 0.0001767785521224141
+    },
+    {
+      "epoch": 37,
+      "step": 1406,
+      "train_loss": 0.2811027679927065,
+      "val_accuracy": 1.0,
+      "val_loss": 3.676907217595726e-05
+    },
+    {
+      "epoch": 38,
+      "step": 1444,
+      "train_loss": 0.27068924804562383,
+      "val_accuracy": 1.0,
+      "val_loss": 2.7600179964792915e-05
+    },
+    {
+      "epoch": 39,
+      "step": 1482,
+      "train_loss": 0.315699512115986,
+      "val_accuracy": 1.0,
+      "val_loss": 2.5837546490947717e-05
+    },
+    {
+      "epoch": 40,
+      "step": 1520,
+      "train_loss": 0.29554053515589895,
+      "val_accuracy": 1.0,
+      "val_loss": 2.4480681531713344e-05
+    }
+  ],
+  "evidence": {
+    "evidenceType": "Precomputed result",
+    "source": "Local inference-depth sweep over a frozen toy checkpoint. Not a BDH or BDH-CQ measurement.",
+    "experimentId": "depth-sweep-seed1"
+  }
 }
