@@ -10,6 +10,8 @@ sign-in: open the URL and the mechanism is already running.
 
 - **Artifact:** _add the public URL here after deploying (see §7)._
 - **One-page concept summary:** [`docs/concept-summary.pdf`](docs/concept-summary.pdf)
+- **Blog post:** [`docs/blog-post.pdf`](docs/blog-post.pdf) — topic 19,
+  demonstration coverage as a predictor of extrapolation success
 - **Claim sheet:** [`Backend/docs/claim-sheet.md`](Backend/docs/claim-sheet.md)
 - **Citation ledger:** [`Backend/docs/citation-ledger.md`](Backend/docs/citation-ledger.md)
 
@@ -59,7 +61,10 @@ Training saw distances 1 to 4 only. Read the table three ways:
 
 - **Distances ≥ 5 sit at chance until `R` exceeds 4.** That is not the model
   failing. At those depths the answer is not yet knowable from the target node,
-  so 0.5 is the correct score. Past `R = 4` the column climbs to 0.988 — the
+  so 0.5 is the correct score. Read it as an aggregate, not as a per-case
+  behaviour: the model is not reporting uncertainty below the threshold, it is
+  answering confidently and being right about half the time. The sweep below
+  shows one such case, at 0.0000 rather than near 0.5. Past `R = 4` the column climbs to 0.988 — the
   model solves paths longer than anything it trained on, purely by applying the
   same weights more times.
 - **The learned column tracks the exact column** to within 0.01 almost
@@ -205,6 +210,15 @@ h(r+1)[v] = max( h(r)[v],  1 - ∏_{u:(u,v)∈E} (1 - α·h(r)[u]) )
 Invariant, verified on 10,000 stratified seeded cases:
 `h(R)[q] > ε  ⟺  d(s,q) ≤ R`.
 
+The equivalence is exact in real arithmetic for every `α` in `(0, 1]`. The `ε`
+threshold turns it into a decision, and that decision is only well posed while
+the smallest activation the recurrence can produce stays above `ε`. A reached
+node sits at distance at most `R`, so `α^R` is the lower bound and `α^R > ε` is
+the condition. At the default `α = 1` it holds at every `R`; at `α = 1e-4` and
+`R = 4` it does not, and the target would underflow to a false negative. Both
+engines reject such inputs and name the condition rather than returning a
+quietly wrong answer.
+
 ### Learned model
 
 ```
@@ -271,8 +285,17 @@ Frontend/
 
 docs/
 ├── concept-summary.md          # source text for the one-page summary
-├── concept-summary.pdf         # the submitted PDF
-└── build-summary-pdf.py        # md -> print-ready HTML -> PDF
+├── concept-summary.pdf         # the submitted PDF, one page, 932 words
+├── blog-post.md                # source text for the blog post
+├── blog-post.pdf               # the submitted PDF, 701 words of body text
+└── build-summary-pdf.py        # md -> print-ready HTML -> PDF, both documents
+```
+
+Both PDFs are generated from their Markdown, never edited directly:
+
+```bash
+pip install weasyprint                              # or use headless Chrome
+python docs/build-summary-pdf.py --doc all --pdf    # rebuilds both
 ```
 
 ---
@@ -438,7 +461,7 @@ measurement. Mapping of every claim to its primary source:
 
 ## 12. Caps and approximations, stated rather than hidden
 
-- Exact engine: `n ≤ 24`, `R ≤ 12`, `ε = 1e-12`.
+- Exact engine: `n ≤ 24`, `R ≤ 12`, `ε = 1e-12`, and `α^R > ε` (see §5).
 - Learned experiment: distances 1–10, `R ≤ 10`, hidden dim 32, five seeds.
 - Training saw distances 1–4 only.
 - Negatives match positives on node and edge count exactly; target in-degree

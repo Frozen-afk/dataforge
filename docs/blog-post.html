@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Coverage tells you what a model has not seen — Latent Loop Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+@page { size: A4; margin: 10mm 12mm; }
+:root { --ink: #14202b; --soft: #5a6b79; --rule: #ccd5dd; --mark: #0b6d7d; }
+* { box-sizing: border-box; }
+body {
+  margin: 0; color: var(--ink); background: #fff;
+  font: 8.5pt/1.30 "Source Serif 4", Georgia, "Times New Roman", serif;
+  -webkit-font-smoothing: antialiased;
+}
+.sheet { max-width: 184mm; margin: 0 auto; }
+h1 {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 15pt; line-height: 1.1; letter-spacing: -0.02em;
+  margin: 0 0 2pt; font-weight: 700;
+}
+h2 {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 9.2pt; font-weight: 600; margin: 6pt 0 2pt;
+  padding-top: 3pt; border-top: 0.6pt solid var(--rule);
+  break-after: avoid;
+}
+p { margin: 0 0 3.2pt; }
+strong { font-weight: 600; }
+code {
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 7.9pt; background: #f0f3f5; padding: 0 1.5px;
+}
+blockquote {
+  margin: 5pt 0; padding: 3.5pt 0 3.5pt 8pt;
+  border-left: 2pt solid var(--mark); font-size: 9.1pt; line-height: 1.32;
+}
+blockquote p { margin: 0; }
+table {
+  border-collapse: collapse; width: 100%; margin: 3.5pt 0 5pt;
+  font-size: 7.6pt; break-inside: avoid;
+}
+th, td { text-align: left; padding: 1.8pt 5pt 1.8pt 0; border-bottom: 0.5pt solid var(--rule); }
+th {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600; font-size: 7.1pt; color: var(--soft);
+  border-bottom: 0.8pt solid var(--ink);
+}
+td:not(:first-child), th:not(:first-child) {
+  text-align: right;
+  font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+table.words td:not(:first-child), table.words th:not(:first-child) {
+  text-align: left; font-family: inherit;
+}
+.lede {
+  font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
+  font-size: 8pt; color: var(--soft); margin: 0 0 7pt;
+  padding-bottom: 3.5pt; border-bottom: 1.2pt solid var(--ink);
+}
+.cols { column-count: 2; column-gap: 7.5mm; column-rule: 0.4pt solid var(--rule); }
+.cols > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+ul { margin: 0 0 4pt; padding-left: 11pt; }
+li { margin: 0 0 2pt; }
+blockquote, table { break-inside: avoid; }
+
+/*
+ * The blog runs long-form rather than as a single dense sheet, so it takes one
+ * wider measure, larger type and real leading. Only the furniture changes; the
+ * palette, the type families and the table rules stay shared so the two PDFs
+ * read as one submission.
+ */
+.flow { font-size: 10pt; line-height: 1.45; }
+.flow .sheet, .sheet.flow { max-width: 152mm; }
+.flow h1 { font-size: 19pt; margin-bottom: 4pt; }
+.flow h2 { font-size: 11pt; margin: 13pt 0 4pt; padding-top: 6pt; }
+.flow p { margin: 0 0 7pt; }
+.flow ul { margin: 0 0 8pt; padding-left: 14pt; }
+.flow li { margin: 0 0 4pt; }
+.flow code { font-size: 9pt; }
+.flow table { font-size: 9pt; margin: 8pt 0 11pt; }
+.flow th { font-size: 8.4pt; }
+.flow th, .flow td { padding: 3.4pt 7pt 3.4pt 0; }
+.flow .lede { font-size: 9.6pt; margin-bottom: 12pt; padding-bottom: 6pt; }
+</style>
+</head>
+<body>
+<div class="sheet flow">
+<h1>Coverage tells you what a model has not seen. It does not tell you what it cannot do.</h1>
+<p class="lede"><strong>Blog topic 19: Demonstration Coverage as a Predictor of Extrapolation Success.</strong></p>
+
+
+<p>The falsifiable claim: for a model that iterates a shared update at inference, training coverage does not predict extrapolation accuracy unless you condition on the inference iteration budget. Report accuracy at one budget and you will misread a compute shortfall as a generalisation failure.</p>
+<p>Coverage is the usual first suspect when a model fails on instances harder than anything it trained on, and the reasoning is sound: a seven-step problem is out of distribution if training held none. But in recurrent models difficulty passes through two independent gates, and coverage is only one of them.</p>
+<h2>A toy where the two gates come apart</h2>
+<p>I trained a small shared-weight recurrent network on directed graph reachability: given a graph, a source and a target, decide whether a path exists. One update block is applied <code>R</code> times at inference. The parameter count is 11,169 at every <code>R</code>, so <code>R</code> is a dial rather than a different model. Training saw shortest-path distances of one to four only. This is a toy, not a language model. Its value is that the two gates are separable in it.</p>
+<p>Five seeds, frozen checkpoints, identical inputs. Only <code>R</code> changes.</p>
+<table><thead><tr><th>Inference budget <code>R</code></th><th>Accuracy on distances ≥ 5, never trained on</th></tr></thead><tbody><tr><td>4</td><td>0.500</td></tr><tr><td>6</td><td>0.667</td></tr><tr><td>8</td><td>0.833</td></tr><tr><td>10</td><td>0.988</td></tr></tbody></table>
+<p>Coverage is constant down that column. A coverage-based predictor evaluated at <code>R = 4</code> reports total extrapolation failure. The same weights and the same training distribution, evaluated at <code>R = 10</code>, report near-perfect extrapolation.</p>
+<p>The mechanism is one sentence: information travels at most one edge per iteration, so a distance-<code>d</code> instance is undecidable from the target&#x27;s state until <code>R ≥ d</code>. Below that line the question is not hard, it is unasked. The same structure appears at scale. Geiping et al. report accuracy rising with test-time recurrence on a 3.5B-parameter model with no weight changes (arXiv:2502.05171, 2025), and Saunshi et al. show looped transformers gaining effective reasoning depth from parameter reuse rather than parameter count (ICLR 2025).</p>
+<h2>The failure case that breaks the obvious fix</h2>
+<p>The obvious fix is to detect insufficient budget from the model&#x27;s own uncertainty. It does not work here. On a distance-7 graph the shipped checkpoint returns 0.000014 for &quot;reachable&quot; at <code>R = 5</code>, then 0.999 at <code>R = 7</code>. Below the threshold it is confidently wrong, not undecided. Aggregate accuracy near 0.5 at those depths is an average over confident answers that split evenly, not evidence that any single prediction is calibrated. So confidence cannot separate a budget shortfall from a coverage failure, and a coverage predictor built on confidence scores is reading a signal that is not there.</p>
+<h2>Budget is necessary, not sufficient</h2>
+<p>Coverage does bind eventually. At distance 10 with <code>R = 10</code> the same checkpoint fails, returning 0.000129 where 0.999 was available at distance 8. Coverage binds, but only after the budget does, so neither number is informative alone.</p>
+<h2>Where BDH fits</h2>
+<p>BDH-CQ separates these two axes architecturally rather than by convention. Its contextual state advances once per demonstration, absorbing the task&#x27;s coverage. A distinct query-time recurrence then iterates with that state held fixed and no new input, and its budget is chosen at inference with no parameter updates (BDH-CQ technical report, arXiv:2608.09888, 2026). Its published operating points move pass@2 on the public ARC-AGI-1 set from 21% to 29.5% across LOW, MEDIUM and HIGH latent effort while coverage is unchanged: the same shape as the table above, at a scale I cannot reproduce. The underlying architecture is Dragon Hatchling, a Post-Transformer family in which attention is reformulated as synaptic memory that updates as the model reads (arXiv:2509.26507, 2025). Those are quoted results, not reproductions.</p>
+<h2>How to prove me wrong</h2>
+<p>Retrain the same model with coverage extended to distance 10, then measure distance-7 cases at <code>R = 4</code>. If accuracy rises above chance, coverage predicts extrapolation independently of budget and this claim is false. My prediction, stated before the experiment, is that it will not move, because no amount of coverage puts information into a state that information has not reached. That is a judgment, not a result.</p>
+<h2>Sources</h2>
+<ul><li>Geiping, McLeish, Jain et al. <em>Scaling up Test-Time Compute with Latent Reasoning: A Recurrent Depth Approach.</em> arXiv:2502.05171, 2025.</li><li>Saunshi, Dikkala, Li, Kumar, Reddi. <em>Reasoning with Latent Thoughts: On the Power of Looped Transformers.</em> ICLR 2025.</li><li>Kosowski, Uznański, Chorowski, Stamirowska, Bartoszkiewicz. <em>The Dragon Hatchling: The Missing Link between the Transformer and Models of the Brain.</em> arXiv:2509.26507, 2025.</li><li>Engdahl, Kosowski, Chorowski et al. <em>BDH-CQ: In-Context Learning with Recurrent Latent Reasoning.</em> arXiv:2608.09888, 2026.</li></ul>
+<p>Every number attributed to the toy model is reproducible with <code>python reproduce.py</code> in the project repository.</p>
+
+</div>
+</body>
+</html>

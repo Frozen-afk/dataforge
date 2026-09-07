@@ -5,7 +5,7 @@
 <title>Recurrent depth as an inference-time compute axis — Latent Loop Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=IBM+Plex+Mono:wght@400&display=swap">
 <style>
-@page { size: A4; margin: 12mm 13mm; }
+@page { size: A4; margin: 10mm 12mm; }
 :root { --ink: #14202b; --soft: #5a6b79; --rule: #ccd5dd; --mark: #0b6d7d; }
 * { box-sizing: border-box; }
 body {
@@ -25,7 +25,7 @@ h2 {
   padding-top: 3pt; border-top: 0.6pt solid var(--rule);
   break-after: avoid;
 }
-p { margin: 0 0 3.6pt; }
+p { margin: 0 0 3.2pt; }
 strong { font-weight: 600; }
 code {
   font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -61,7 +61,28 @@ table.words td:not(:first-child), table.words th:not(:first-child) {
 }
 .cols { column-count: 2; column-gap: 7.5mm; column-rule: 0.4pt solid var(--rule); }
 .cols > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+ul { margin: 0 0 4pt; padding-left: 11pt; }
+li { margin: 0 0 2pt; }
 blockquote, table { break-inside: avoid; }
+
+/*
+ * The blog runs long-form rather than as a single dense sheet, so it takes one
+ * wider measure, larger type and real leading. Only the furniture changes; the
+ * palette, the type families and the table rules stay shared so the two PDFs
+ * read as one submission.
+ */
+.flow { font-size: 10pt; line-height: 1.45; }
+.flow .sheet, .sheet.flow { max-width: 152mm; }
+.flow h1 { font-size: 19pt; margin-bottom: 4pt; }
+.flow h2 { font-size: 11pt; margin: 13pt 0 4pt; padding-top: 6pt; }
+.flow p { margin: 0 0 7pt; }
+.flow ul { margin: 0 0 8pt; padding-left: 14pt; }
+.flow li { margin: 0 0 4pt; }
+.flow code { font-size: 9pt; }
+.flow table { font-size: 9pt; margin: 8pt 0 11pt; }
+.flow th { font-size: 8.4pt; }
+.flow th, .flow td { padding: 3.4pt 7pt 3.4pt 0; }
+.flow .lede { font-size: 9.6pt; margin-bottom: 12pt; padding-bottom: 6pt; }
 </style>
 </head>
 <body>
@@ -85,14 +106,15 @@ blockquote, table { break-inside: avoid; }
 <h2>Where BDH and BDH-CQ sit</h2>
 <p>BDH (Kosowski et al., arXiv:2509.26507) is a post-Transformer architecture of high-dimensional positive activations, low-rank communication and a recurrent associative state, with attention reformulated as synaptic memory; reported to rival GPT-2 at matched parameters from 10M to 1B, with sparse activations and synapse-level monosemanticity. Its GPU formulation combines ReLU low-rank transformations with linear attention and is not a Mamba-style state-space model.</p>
 <p>BDH-CQ (Engdahl et al., arXiv:2608.09888) contains <strong>two</strong> recurrences that are routinely conflated. <code>S_t = U_θ(S_{t−1}, D_t)</code> is contextual memory advancing once per demonstration, driven by new input, with additive special case <code>S_t = S_{t−1} + U_θ(D_t)</code>. <code>H_{r+1} = F_θ(H_r, S_K)</code> is a query-time workspace advancing with no new input and <code>S_K</code> held fixed. Only the second is a reasoning step, and only the second is what this artifact models — the lab has no contextual recurrence at all. A live toy lets a learner drive each and produce the distinguishing failure: withhold a demonstration and no latent budget recovers the missing association.</p>
-<table class="words"><thead><tr><th></th><th>Chain of thought</th><th>Recurrent depth</th><th>BDH-CQ</th></tr></thead><tbody><tr><td>Compute knob</td><td>tokens emitted</td><td>iterations <code>R</code></td><td>latent effort level</td></tr><tr><td>State growth</td><td>KV cache grows</td><td>fixed shape</td><td>fixed-shape recurrent memory</td></tr><tr><td>Observability</td><td>readable trace</td><td>none</td><td>none</td></tr></tbody></table>
+<table class="words"><thead><tr><th></th><th>Chain of thought</th><th>Recurrent depth</th><th>BDH-CQ</th></tr></thead><tbody><tr><td>Compute knob</td><td>tokens emitted</td><td>iterations <code>R</code></td><td>latent effort level</td></tr><tr><td>State growth</td><td>KV cache grows</td><td>fixed shape</td><td>fixed-shape recurrent memory</td></tr><tr><td>Observability</td><td>readable trace</td><td>state inspectable, no language trace</td><td>same, and state is proprietary</td></tr></tbody></table>
 <h2>Evidence, labelled</h2>
-<p>BDH-CQ reports LOW 21%, MEDIUM 27%, HIGH 29.5% pass@2 on public ARC-AGI-1, at 22%, 11% and 0% cost reduction relative to HIGH; the headline is 29.5% at a computed $0.00070 per task for 150M parameters, claimed to break the previously reported cost–accuracy Pareto frontier.</p>
-<p>That is a <strong>benchmark reported by the developers</strong>, not a deployment. The report describes a black-box audit reproducing 29.5%, but by <strong>co-authors</strong> from Bielik and New York University — stronger than a self-report, weaker than an independent reproduction. Cost comparisons set measured hardware time for BDH-CQ against leaderboard costs for others that may be API prices, so they are not like-for-like. Dimensions and update rules are proprietary, so the mechanism is not externally auditable.</p>
+<p>BDH-CQ reports LOW 21%, MEDIUM 27%, HIGH 29.5% pass@2 on public ARC-AGI-1, at 22%, 11% and 0% cost reduction relative to HIGH; the headline is 29.5% at a computed $0.00070 per task for 150M parameters, claimed to break the reported cost–accuracy Pareto frontier.</p>
+<p>That is a <strong>benchmark reported by the developers</strong>, not a deployment. A black-box audit reproduced 29.5%, but by <strong>co-authors</strong> from Bielik and New York University: stronger than a self-report, weaker than an independent reproduction. Cost comparisons set measured hardware time for BDH-CQ against leaderboard costs that may be API prices, so they are not like-for-like. Dimensions and update rules are proprietary, so the mechanism is not externally auditable.</p>
 <p>The most important open limitation is general: recurrent depth is reported to degrade past some depth in looped language models (Yang et al., arXiv:2605.26733), the same erosion this lab measures at toy scale. How far latent depth scales before that ceiling binds is unresolved.</p>
+<p><strong>Maturity, 4/10.</strong> One public benchmark, co-author audited, 150M parameters, proprietary internals, no released checkpoint. The gap is reproducibility and scale, not the idea.</p>
 <h2>Scope</h2>
-<p>Both models here are independent reimplementations written for teaching; neither is BDH or BDH-CQ, and no checkpoint of either was run. Every BDH and BDH-CQ figure is quoted and labelled <em>paper-reported</em>, never shown beside a measurement of ours. The learned model has ~11,000 parameters on one synthetic task, and graph reachability demonstrates computational depth, not semantic reasoning.</p>
-<p><strong>Continue with:</strong> the Dragon Hatchling paper; the BDH-CQ report; Geiping et al. (arXiv:2502.05171) on recurrent depth in a language model.</p>
+<p>Both models here are independent reimplementations written for teaching; neither is BDH or BDH-CQ, and no checkpoint of either was run. Every BDH and BDH-CQ figure is quoted and labelled <em>paper-reported</em>. The learned model has ~11,000 parameters on one synthetic task; graph reachability demonstrates computational depth, not semantic reasoning.</p>
+<p><strong>Continue with:</strong> the Dragon Hatchling paper; the BDH-CQ report; Geiping et al. (arXiv:2502.05171).</p>
 </div>
 </div>
 </body>

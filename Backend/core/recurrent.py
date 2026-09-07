@@ -60,6 +60,23 @@ def run_exact(
     if not (0.0 < alpha <= 1.0):
         raise ValueError("Alpha must satisfy 0 < alpha <= 1.")
 
+    # The invariant below is exact in real arithmetic for every alpha in (0, 1]:
+    # a node at distance d carries activation of at least alpha**d, which is
+    # positive. The threshold test turns that into a decision, so it holds only
+    # while the smallest activation the recurrence can produce stays above
+    # epsilon. A node the source reaches sits at distance at most R, so
+    # alpha**R is a lower bound on its activation and alpha**R > epsilon is the
+    # numerical condition. At the default alpha = 1 it is satisfied at every R;
+    # at alpha = 1e-4 and R = 4 it is not, and the target underflows to a
+    # false negative rather than to a wrong answer about the graph.
+    if alpha ** R <= epsilon:
+        raise ValueError(
+            f"alpha**R must exceed epsilon for the threshold test to be "
+            f"decidable: alpha={alpha}, R={R} gives {alpha ** R:.3e}, which is "
+            f"at or below epsilon={epsilon:.3e}. Raise alpha, lower R, or "
+            f"lower epsilon."
+        )
+
     incoming = graph.incoming()
     outgoing = graph.outgoing()
 

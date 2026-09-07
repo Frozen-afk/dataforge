@@ -147,7 +147,11 @@ export default function Generalisation({ onNext }) {
             The orange curve, distances of 5 and more, sits flat at chance while
             R is below 5. That is not the model failing. At those depths the
             answer is not yet knowable from the target node, so chance is the
-            correct score.
+            correct score. Read it as an average, not as a description of any
+            one prediction: the model is not reporting uncertainty at those
+            depths, it is answering confidently and being right about half the
+            time. Section 4's per-graph sweep shows a single confidently wrong
+            case.
           </li>
           <li>
             Past R = 4 the orange curve climbs to{" "}
@@ -226,10 +230,16 @@ export default function Generalisation({ onNext }) {
         />
         <p>
           The latent state grows with depth and then saturates rather than
-          diverging, which is what the gated update exists to ensure. Saturation
-          is also why accuracy on already-solved cases erodes at large R: once
-          the state stops changing meaningfully, more iterations add drift
-          rather than information.
+          diverging, which is what the gated update exists to ensure. Two
+          observations sit side by side here: the norm plateaus above R ≈ 7,
+          and accuracy on already-solved cases erodes over the same range. A
+          plausible reading is that once the state stops changing meaningfully,
+          further iterations add drift rather than information — but this
+          experiment measures the two curves, it does not establish that the
+          first causes the second. Treat the mechanism as a hypothesis. Testing
+          it would mean intervening on the norm, for example by rescaling the
+          state between steps, and checking whether the erosion moves with it.
+          That experiment is not in this lab.
         </p>
         <p className="muted">
           Published work on looped language models reports the same failure mode
@@ -432,14 +442,17 @@ function AggregationAblation({ ablation }) {
       <div className={`verdict-bar ${separated ? "good" : "wait"}`}>
         <strong>
           {separated
-            ? `At R = ${depth}, ${best.name} is separated from the others.`
+            ? `At R = ${depth}, ${best.name} leads on a crude interval screen.`
             : `At R = ${depth}, this experiment does not separate them.`}
         </strong>
         <p>
           {separated ? (
             <>
-              The intervals do not overlap the leader's mean, so the ordering
-              here is not just seed noise.
+              No other interval covers the leader's mean. That is a crude
+              screen, not a significance test: with{" "}
+              {ablation.comparedOnSeeds?.length ?? 2} seeds the intervals are
+              wide and this comparison is unpaired, so read the ordering as
+              suggestive and worth more seeds, not as established.
             </>
           ) : (
             <>

@@ -21,8 +21,8 @@ const CHECKS = [
     objective: "Predict the threshold before moving anything",
     prompt: "A graph has a shortest source-to-target path of 7 edges. At R = 5, is the model wrong?",
     answer:
-      "No. At R = 5 the target node's state cannot yet have been influenced by the source, so the answer is not available to it. Returning roughly one half is the correct behaviour; committing to an answer would be the error.",
-    trap: "Treating chance-level output at insufficient depth as a failure is the commonest misreading of the curves in section 5.",
+      "Wrong is the wrong word for it. At R = 5 no path of 7 edges has been traversed, so the source cannot yet have influenced the target's state and the answer is not present in the state being read. What the model does with that absence is a separate question: it is not obliged to report uncertainty, and this one does not. The shipped seed-1 checkpoint, on a distance-7 graph at R = 5, returns 0.000014 for reachable — confidently wrong, not undecided. It recovers to 0.999 at R = 7, the first depth at which the path fits.",
+    trap: "Accuracy near 0.5 on a balanced set of unreachable-at-this-depth cases is an average over many confident answers that happen to split evenly. It is not evidence that any single prediction is calibrated. Section 5's flat orange curve is the aggregate; the per-graph sweep in section 4 is where you see what one prediction actually looks like.",
     section: 4,
   },
   {

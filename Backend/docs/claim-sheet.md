@@ -30,7 +30,7 @@ line, and sections 5 and 7 show where it stops holding.
 
 | # | Sub-claim | Evidence | Label |
 |---|---|---|---|
-| 1 | The exact recurrence activates the target exactly when `d(s,q) ≤ R` | 10,000 stratified seeded cases, checked against an independent BFS oracle | Synthetic data |
+| 1 | The exact recurrence activates the target exactly when `d(s,q) ≤ R`, whenever `α^R > ε` | 10,000 stratified seeded cases, checked against an independent BFS oracle; the condition is enforced by both engines and covered by a regression test | Synthetic data |
 | 2 | The update rule does not change with `r` | `core/recurrent.py`: one function, no step index | Live computation |
 | 3 | The learned model shares parameters across steps | `learned/model.py`: one `RecurrentBlock`; 11,169 parameters at any depth | Live computation |
 | 4 | Depth increases learned accuracy | Mean accuracy 0.552 at `R=1` rising to 0.991 at `R=10`, five seeds | Precomputed result |
@@ -49,6 +49,15 @@ line, and sections 5 and 7 show where it stops holding.
 - That more recurrence always improves reasoning.
 - That this toy is BDH, BDH-CQ, or predictive of their behaviour.
 - That any architecture is universally superior.
+- That the learned model reports uncertainty when the answer has not reached
+  the target. It does not. Below the depth threshold it is confidently wrong:
+  0.000014 for reachable on a distance-7 graph at `R = 5`. The 0.5 in the
+  accuracy tables is an average over confident answers that split evenly, not
+  a calibration result.
+- That the state-norm plateau causes the accuracy erosion at large `R`. Both
+  are measured; the causal link is a hypothesis and is labelled as one.
+- That the aggregation ablation is a significance test. Two seeds cannot
+  support one.
 - That the aggregation ablation shows max is better. At two seeds it shows
   nothing, and the artifact says so.
 - Any wall-clock speed comparison. None was measured on matched hardware.

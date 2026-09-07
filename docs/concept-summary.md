@@ -80,36 +80,39 @@ budget recovers the missing association.
 |---|---|---|---|
 | Compute knob | tokens emitted | iterations `R` | latent effort level |
 | State growth | KV cache grows | fixed shape | fixed-shape recurrent memory |
-| Observability | readable trace | none | none |
+| Observability | readable trace | state inspectable, no language trace | same, and state is proprietary |
 
 ## Evidence, labelled
 
 BDH-CQ reports LOW 21%, MEDIUM 27%, HIGH 29.5% pass@2 on public ARC-AGI-1, at
 22%, 11% and 0% cost reduction relative to HIGH; the headline is 29.5% at a
-computed $0.00070 per task for 150M parameters, claimed to break the previously
-reported cost–accuracy Pareto frontier.
+computed $0.00070 per task for 150M parameters, claimed to break the reported
+cost–accuracy Pareto frontier.
 
-That is a **benchmark reported by the developers**, not a deployment. The
-report describes a black-box audit reproducing 29.5%, but by **co-authors**
-from Bielik and New York University — stronger than a self-report, weaker than
-an independent reproduction. Cost comparisons set measured hardware time for
-BDH-CQ against leaderboard costs for others that may be API prices, so they are
-not like-for-like. Dimensions and update rules are proprietary, so the
-mechanism is not externally auditable.
+That is a **benchmark reported by the developers**, not a deployment. A
+black-box audit reproduced 29.5%, but by **co-authors** from Bielik and New
+York University: stronger than a self-report, weaker than an independent
+reproduction. Cost comparisons set measured hardware time for
+BDH-CQ against leaderboard costs that may be API prices, so they are not
+like-for-like. Dimensions and update rules are proprietary, so the mechanism is
+not externally auditable.
 
 The most important open limitation is general: recurrent depth is reported to
 degrade past some depth in looped language models (Yang et al.,
 arXiv:2605.26733), the same erosion this lab measures at toy scale. How far
 latent depth scales before that ceiling binds is unresolved.
 
+**Maturity, 4/10.** One public benchmark, co-author audited, 150M parameters,
+proprietary internals, no released checkpoint. The gap is reproducibility and
+scale, not the idea.
+
 ## Scope
 
 Both models here are independent reimplementations written for teaching;
 neither is BDH or BDH-CQ, and no checkpoint of either was run. Every BDH and
-BDH-CQ figure is quoted and labelled *paper-reported*, never shown beside a
-measurement of ours. The learned model has ~11,000 parameters on one synthetic
-task, and graph reachability demonstrates computational depth, not semantic
-reasoning.
+BDH-CQ figure is quoted and labelled *paper-reported*. The learned model has
+~11,000 parameters on one synthetic task; graph reachability demonstrates
+computational depth, not semantic reasoning.
 
 **Continue with:** the Dragon Hatchling paper; the BDH-CQ report; Geiping et
-al. (arXiv:2502.05171) on recurrent depth in a language model.
+al. (arXiv:2502.05171).
