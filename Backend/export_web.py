@@ -117,7 +117,11 @@ def export_model(checkpoint_path: Path) -> Dict[str, Any]:
     """
     import torch
 
-    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    # weights_only=True refuses to unpickle arbitrary objects. These
+    # checkpoints hold tensors and plain scalars only, so nothing is lost, and
+    # a reader who clones this repository is never one torch.load away from
+    # executing whatever a downloaded .pt file happens to contain.
+    checkpoint = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
     state = checkpoint["model_state_dict"]
 
     weights = {name: _round_nested(tensor.tolist()) for name, tensor in state.items()}

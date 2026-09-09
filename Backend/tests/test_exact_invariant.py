@@ -68,7 +68,9 @@ class TestHandCases(unittest.TestCase):
         The invariant is stated for 0 < alpha <= 1, not only alpha = 1.
 
         A smaller alpha shrinks the activation but must never move the
-        threshold crossing, since epsilon is far below any reachable value.
+        threshold crossing, as long as the smallest activation the recurrence
+        can produce stays above epsilon. That is the condition alpha**R >
+        epsilon, checked separately below.
         """
         graph, source, target = make_line(4)
 
@@ -80,6 +82,32 @@ class TestHandCases(unittest.TestCase):
                     f"invariant failed at alpha={alpha}, R={R}",
                 )
                 self.assertEqual(result["estimate"], R >= 4)
+
+    def test_alpha_too_small_is_rejected_not_silently_wrong(self):
+        """
+        Below alpha**R > epsilon the threshold test is not decidable.
+
+        The activation of a reached node decays as alpha to the path length, so
+        a small enough alpha pushes a genuinely reachable target under epsilon
+        and the estimate underflows to a false negative. The mechanism is still
+        correct; the decision rule is not. Returning that answer would teach a
+        reader that the invariant is approximate, so both engines refuse the
+        input and name the condition instead.
+        """
+        graph, source, target = make_line(4)
+
+        # 1e-4 ** 4 == 1e-16, below the 1e-12 threshold.
+        with self.assertRaises(ValueError) as caught:
+            run_exact(graph, source, target, R=4, alpha=1e-4)
+        self.assertIn("alpha**R", str(caught.exception))
+
+        # The same alpha is fine at a depth where the bound still clears.
+        result = run_exact(graph, source, target, R=2, alpha=1e-4)
+        self.assertTrue(result["invariantPass"])
+
+        # And the boundary is the bound itself, not a hard-coded alpha floor.
+        boundary = run_exact(graph, source, target, R=3, alpha=1e-4)
+        self.assertTrue(boundary["invariantPass"])
 
 
 class TestGenerator(unittest.TestCase):

@@ -29,13 +29,21 @@ T_95 = {1: 12.706, 2: 4.303, 3: 3.182, 4: 2.776, 5: 2.571,
         6: 2.447, 7: 2.365, 8: 2.306, 9: 2.262, 10: 2.228}
 
 
-def mean_ci(values: List[float]) -> Dict[str, float]:
+def mean_ci(values: List[float],
+            bounds: Optional[tuple] = (0.0, 1.0)) -> Dict[str, float]:
     """
     Mean with a 95% confidence interval over seeds.
 
     With five seeds the normal approximation is too optimistic, so a Student t
     critical value is used. A single seed reports a zero-width interval, which
     the interface labels as such rather than drawing a misleading band.
+
+    `bounds` clips the interval to the range the metric can actually take,
+    as a (lower, upper) pair in which either side may be None for "unbounded".
+    It defaults to (0, 1) because most metrics here are proportions, and an
+    interval running past 0 or 1 would claim an impossible accuracy. A state
+    norm is bounded below by 0 and not above; clipping its upper side to 1
+    silently reports an upper bound below the norm's own mean.
     """
     n = len(values)
     if n == 0:
@@ -49,13 +57,15 @@ def mean_ci(values: List[float]) -> Dict[str, float]:
     std = math.sqrt(variance)
     half = T_95.get(n - 1, 2.228) * std / math.sqrt(n)
 
-    return {
-        "mean": mean,
-        "low": max(0.0, mean - half),
-        "high": min(1.0, mean + half),
-        "std": std,
-        "n": n,
-    }
+    low, high = mean - half, mean + half
+    if bounds is not None:
+        lower, upper = bounds
+        if lower is not None:
+            low = max(lower, low)
+        if upper is not None:
+            high = min(upper, high)
+
+    return {"mean": mean, "low": low, "high": high, "std": std, "n": n}
 
 
 def load(path: Path) -> Optional[dict]:
@@ -102,7 +112,8 @@ def aggregate_depth_curve(experiments: List[dict]) -> List[dict]:
             "accuracySeenDistances": mean_ci(seen),
             "accuracyUnseenDistances": mean_ci(unseen),
             "confidence": mean_ci(confidence),
-            "meanStateNorm": mean_ci(norms),
+            # An L2 norm is not a proportion: it has no upper bound to clip to.
+            "meanStateNorm": mean_ci(norms, bounds=(0.0, None)),
             "perDistance": {
                 key: mean_ci(values)
                 for key, values in sorted(

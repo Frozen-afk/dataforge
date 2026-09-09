@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
 """
-Render docs/concept-summary.md to a print-ready HTML page, then to PDF.
+Render a Markdown document in docs/ to a print-ready HTML page, then to PDF.
 
-The submission asks for the one-page concept summary as a PDF. The Markdown in
-concept-summary.md is the single source of text; this script only sets it, so
-editing the summary never means editing two files.
+The submission asks for two PDFs: the one-page concept summary and the blog
+post. Both are written as Markdown here and set by this script, so editing
+either one never means editing two files. They differ only in page furniture,
+which is what PROFILES holds: the summary is two columns on a single page, the
+blog is one flowing column across as many pages as it needs.
 
-    python docs/build-summary-pdf.py            # writes docs/concept-summary.html
-    python docs/build-summary-pdf.py --pdf      # also tries to produce the PDF
+    python docs/build-summary-pdf.py                    # summary HTML
+    python docs/build-summary-pdf.py --pdf              # summary HTML + PDF
+    python docs/build-summary-pdf.py --doc blog --pdf   # blog HTML + PDF
 
 PDF generation needs one of: weasyprint, or a headless Chromium/Chrome. If none
 is present the script says so and leaves the HTML, which any browser can print
@@ -25,12 +28,27 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-SOURCE = HERE / "concept-summary.md"
-HTML_OUT = HERE / "concept-summary.html"
-PDF_OUT = HERE / "concept-summary.pdf"
+
+# Each profile is one deliverable: its Markdown source, its output stem, the
+# browser title, and whether the body is set in columns. Everything else in the
+# stylesheet is shared, so the two PDFs read as one submission.
+PROFILES = {
+    "summary": {
+        "stem": "concept-summary",
+        "title": "Recurrent depth as an inference-time compute axis "
+                 "\u2014 Latent Loop Lab",
+        "columns": True,
+    },
+    "blog": {
+        "stem": "blog-post",
+        "title": "Coverage tells you what a model has not seen "
+                 "\u2014 Latent Loop Lab",
+        "columns": False,
+    },
+}
 
 STYLE = """
-@page { size: A4; margin: 12mm 13mm; }
+@page { size: A4; margin: 10mm 12mm; }
 :root { --ink: #14202b; --soft: #5a6b79; --rule: #ccd5dd; --mark: #0b6d7d; }
 * { box-sizing: border-box; }
 body {
@@ -50,7 +68,7 @@ h2 {
   padding-top: 3pt; border-top: 0.6pt solid var(--rule);
   break-after: avoid;
 }
-p { margin: 0 0 3.6pt; }
+p { margin: 0 0 3.2pt; }
 strong { font-weight: 600; }
 code {
   font-family: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -86,7 +104,28 @@ table.words td:not(:first-child), table.words th:not(:first-child) {
 }
 .cols { column-count: 2; column-gap: 7.5mm; column-rule: 0.4pt solid var(--rule); }
 .cols > h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+ul { margin: 0 0 4pt; padding-left: 11pt; }
+li { margin: 0 0 2pt; }
 blockquote, table { break-inside: avoid; }
+
+/*
+ * The blog runs long-form rather than as a single dense sheet, so it takes one
+ * wider measure, larger type and real leading. Only the furniture changes; the
+ * palette, the type families and the table rules stay shared so the two PDFs
+ * read as one submission.
+ */
+.flow { font-size: 10pt; line-height: 1.45; }
+.flow .sheet, .sheet.flow { max-width: 152mm; }
+.flow h1 { font-size: 19pt; margin-bottom: 4pt; }
+.flow h2 { font-size: 11pt; margin: 13pt 0 4pt; padding-top: 6pt; }
+.flow p { margin: 0 0 7pt; }
+.flow ul { margin: 0 0 8pt; padding-left: 14pt; }
+.flow li { margin: 0 0 4pt; }
+.flow code { font-size: 9pt; }
+.flow table { font-size: 9pt; margin: 8pt 0 11pt; }
+.flow th { font-size: 8.4pt; }
+.flow th, .flow td { padding: 3.4pt 7pt 3.4pt 0; }
+.flow .lede { font-size: 9.6pt; margin-bottom: 12pt; padding-bottom: 6pt; }
 """
 
 FONTS = (
@@ -176,9 +215,29 @@ def convert(markdown: str) -> str:
             )
             continue
 
+        if re.match(r"^[-*] ", stripped):
+            items = []
+            while index < len(lines) and re.match(r"^[-*] ", lines[index].strip()):
+                item = [lines[index].strip()[2:]]
+                index += 1
+                # A wrapped bullet continues on an indented line that does not
+                # itself start a new construct.
+                while (
+                    index < len(lines)
+                    and lines[index].startswith(("  ", "\t"))
+                    and lines[index].strip()
+                    and not re.match(r"^[-*] ", lines[index].strip())
+                ):
+                    item.append(lines[index].strip())
+                    index += 1
+                items.append(" ".join(item))
+            body = "".join(f"<li>{inline(item)}</li>" for item in items)
+            out.append(f"<ul>{body}</ul>")
+            continue
+
         paragraph = []
         while index < len(lines) and lines[index].strip() and not re.match(
-            r"^\s*([#>|])", lines[index]
+            r"^\s*([#>|]|[-*] )", lines[index]
         ):
             paragraph.append(lines[index].strip())
             index += 1
@@ -187,16 +246,17 @@ def convert(markdown: str) -> str:
     return "\n".join(out)
 
 
-def build_html() -> str:
-    if not SOURCE.exists():
-        raise SystemExit(f"Missing {SOURCE}")
+def build_html(profile: dict, source: Path) -> str:
+    if not source.exists():
+        raise SystemExit(f"Missing {source}")
 
-    body = convert(SOURCE.read_text())
+    body = convert(source.read_text())
 
-    # The title and the standfirst line stay full width; everything after them
-    # is set in two columns. That measure is what keeps a 950-word briefing on
-    # one page and still readable — a single 178mm line of 9.6pt serif would be
-    # roughly 130 characters, far past what anyone tracks comfortably.
+    # The title and the standfirst line stay full width in both profiles.
+    # For the summary everything after them is set in two columns, which is
+    # what keeps a 950-word briefing on one page and still readable: a single
+    # 178mm line of 9.6pt serif would run about 130 characters, far past what
+    # anyone tracks comfortably. The blog flows instead, on a narrower measure.
     title_html, standfirst, remainder = "", "", body
 
     if "<h1>" in body:
@@ -209,34 +269,39 @@ def build_html() -> str:
             standfirst = f'<p class="lede">{match.group(1)}</p>'
             remainder = remainder[match.end():]
 
+    if profile["columns"]:
+        sheet_class, body_open, body_close = "sheet", '<div class="cols">', "</div>"
+    else:
+        sheet_class, body_open, body_close = "sheet flow", "", ""
+
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Recurrent depth as an inference-time compute axis — Latent Loop Lab</title>
+<title>{html.escape(profile["title"])}</title>
 {FONTS}
 <style>{STYLE}</style>
 </head>
 <body>
-<div class="sheet">
+<div class="{sheet_class}">
 {title_html}
 {standfirst}
-<div class="cols">
+{body_open}
 {remainder}
-</div>
+{body_close}
 </div>
 </body>
 </html>
 """
 
 
-def to_pdf() -> bool:
+def to_pdf(html_out: Path, pdf_out: Path) -> bool:
     """Try the available renderers in order. Returns whether a PDF was made."""
     try:
         from weasyprint import HTML  # type: ignore
 
-        HTML(filename=str(HTML_OUT)).write_pdf(str(PDF_OUT))
-        print(f"Wrote {PDF_OUT} with weasyprint")
+        HTML(filename=str(html_out)).write_pdf(str(pdf_out))
+        print(f"Wrote {pdf_out} with weasyprint")
         return True
     except ImportError:
         pass
@@ -250,12 +315,12 @@ def to_pdf() -> bool:
             continue
         result = subprocess.run(
             [path, "--headless", "--disable-gpu", "--no-sandbox",
-             "--no-pdf-header-footer", f"--print-to-pdf={PDF_OUT}",
-             HTML_OUT.as_uri()],
+             "--no-pdf-header-footer", f"--print-to-pdf={pdf_out}",
+             html_out.as_uri()],
             capture_output=True,
         )
-        if result.returncode == 0 and PDF_OUT.exists():
-            print(f"Wrote {PDF_OUT} with {binary}")
+        if result.returncode == 0 and pdf_out.exists():
+            print(f"Wrote {pdf_out} with {binary}")
             return True
         print(f"{binary} failed: {result.stderr.decode()[-400:]}")
 
@@ -265,21 +330,37 @@ def to_pdf() -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pdf", action="store_true", help="also render a PDF")
+    parser.add_argument(
+        "--doc",
+        choices=sorted(PROFILES) + ["all"],
+        default="summary",
+        help="which deliverable to build (default: summary)",
+    )
     args = parser.parse_args()
 
-    HTML_OUT.write_text(build_html())
-    print(f"Wrote {HTML_OUT}")
+    names = sorted(PROFILES) if args.doc == "all" else [args.doc]
+    failed = False
 
-    if args.pdf and not to_pdf():
-        print(
-            "\nNo PDF renderer found. Either install one:\n"
-            "    pip install weasyprint\n"
-            "or open docs/concept-summary.html in a browser and print to PDF\n"
-            "at A4 with default margins. The page is styled for exactly that."
-        )
-        return 1
+    for name in names:
+        profile = PROFILES[name]
+        source = HERE / f"{profile['stem']}.md"
+        html_out = HERE / f"{profile['stem']}.html"
+        pdf_out = HERE / f"{profile['stem']}.pdf"
 
-    return 0
+        html_out.write_text(build_html(profile, source))
+        print(f"Wrote {html_out}")
+
+        if args.pdf and not to_pdf(html_out, pdf_out):
+            print(
+                f"\nNo PDF renderer found. Either install one:\n"
+                f"    pip install weasyprint\n"
+                f"or open {html_out.relative_to(HERE.parent)} in a browser and\n"
+                f"print to PDF at A4 with default margins. The page is styled\n"
+                f"for exactly that."
+            )
+            failed = True
+
+    return 1 if failed else 0
 
 
 if __name__ == "__main__":

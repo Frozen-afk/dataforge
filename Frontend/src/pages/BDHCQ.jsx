@@ -183,24 +183,26 @@ export default function BDHCQ({ onNext }) {
         title="Published latent-effort operating points"
         subtitle="Reported for BDH-CQ on the public ARC-AGI-1 evaluation set. Quoted, not measured here."
       >
-        <table>
-          <thead>
-            <tr>
-              <th>Reasoning effort</th>
-              <th className="num">ARC-AGI-1 pass@2</th>
-              <th className="num">Cost reduction</th>
-            </tr>
-          </thead>
-          <tbody>
-            {EFFORT.map((row) => (
-              <tr key={row.effort}>
-                <td>{row.effort}</td>
-                <td className="num">{row.arc}</td>
-                <td className="num">{row.cost}</td>
+        <div className="scroll-x">
+          <table>
+            <thead>
+              <tr>
+                <th>Reasoning effort</th>
+                <th className="num">ARC-AGI-1 pass@2</th>
+                <th className="num">Cost reduction</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {EFFORT.map((row) => (
+                <tr key={row.effort}>
+                  <td>{row.effort}</td>
+                  <td className="num">{row.arc}</td>
+                  <td className="num">{row.cost}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         <p style={{ marginTop: 16 }}>
           Cost reduction is measured against the HIGH setting, so HIGH is 0% by

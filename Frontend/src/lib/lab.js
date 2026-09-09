@@ -50,7 +50,7 @@ async function fetchJson(name) {
 export function loadLab() {
   if (bundlePromise) return bundlePromise;
 
-  bundlePromise = (async () => {
+  const pending = (async () => {
     const [cases, manifest] = await Promise.all([
       fetchJson("cases.json"),
       fetchJson("manifest.json").catch(() => ({ files: {} })),
@@ -95,6 +95,15 @@ export function loadLab() {
       },
     };
   })();
+
+  // Cache the success, never the failure. A rejected promise left in the cache
+  // would make one dropped request permanent: every later page would replay the
+  // same error and the only cure would be a full reload. Clearing it means the
+  // next section to ask for the bundle simply tries again.
+  bundlePromise = pending.catch((error) => {
+    bundlePromise = null;
+    throw error;
+  });
 
   return bundlePromise;
 }

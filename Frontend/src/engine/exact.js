@@ -12,6 +12,12 @@
 // every call:
 //
 //     h(R)[q] > epsilon   <=>   d(s, q) <= R
+//
+// That equivalence is exact in real arithmetic for every alpha in (0, 1]. The
+// epsilon threshold makes it a decision, and a decision needs the smallest
+// activation the recurrence can produce to stay above epsilon: alpha**R >
+// epsilon. Both engines reject inputs that break it rather than returning a
+// silent false negative.
 
 import { bfsDistance, incoming } from "./graph.js";
 
@@ -51,8 +57,33 @@ export function runExact({
   if (R < 0 || R > MAX_R) {
     throw new Error(`Recurrent depth R must be between 0 and ${MAX_R}.`);
   }
+  // Kept in step with Backend/core/recurrent.py, which rejects the same
+  // inputs. Without this an out-of-range target reads as undefined, and
+  // `undefined > epsilon` is false -- a confident "unreachable" for a node
+  // that does not exist, which is exactly the kind of quietly wrong answer
+  // the rest of this engine is built to avoid.
+  if (!Number.isInteger(source) || source < 0 || source >= graph.n) {
+    throw new Error(`Source node ${source} is outside graph range [0, ${graph.n}).`);
+  }
+  if (!Number.isInteger(target) || target < 0 || target >= graph.n) {
+    throw new Error(`Target node ${target} is outside graph range [0, ${graph.n}).`);
+  }
   if (!(alpha > 0 && alpha <= 1)) {
     throw new Error("Alpha must satisfy 0 < alpha <= 1.");
+  }
+  // Exact in real arithmetic for any alpha in (0, 1]: a node at distance d
+  // carries at least alpha**d, which is positive. The threshold turns that into
+  // a decision, so it is decidable only while the smallest activation the
+  // recurrence can produce stays above epsilon. A reached node is at distance
+  // at most R, so alpha**R is the lower bound and the condition below is the
+  // numerical limit of the invariant. Kept identical to
+  // Backend/core/recurrent.py so the two engines fail on the same inputs.
+  if (Math.pow(alpha, R) <= epsilon) {
+    throw new Error(
+      `alpha**R must exceed epsilon for the threshold test to be decidable: ` +
+        `alpha=${alpha}, R=${R} gives ${Math.pow(alpha, R).toExponential(3)}, ` +
+        `which is at or below epsilon=${epsilon.toExponential(3)}.`
+    );
   }
 
   const incomingAdjacency = incoming(graph.n, graph.edges);

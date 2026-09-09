@@ -10,6 +10,8 @@ sign-in: open the URL and the mechanism is already running.
 
 - **Artifact:** _add the public URL here after deploying (see §7)._
 - **One-page concept summary:** [`docs/concept-summary.pdf`](docs/concept-summary.pdf)
+- **Blog post:** [`docs/blog-post.pdf`](docs/blog-post.pdf) — topic 19,
+  demonstration coverage as a predictor of extrapolation success
 - **Claim sheet:** [`Backend/docs/claim-sheet.md`](Backend/docs/claim-sheet.md)
 - **Citation ledger:** [`Backend/docs/citation-ledger.md`](Backend/docs/citation-ledger.md)
 
@@ -44,7 +46,7 @@ Five seeds, frozen checkpoints, identical inputs. Only `R` changes.
 
 | R | learned mean | 95% CI | distances ≤4 | distances ≥5 | exact | mean ‖z‖ |
 |---|---|---|---|---|---|---|
-| 1 | 0.552 | [0.546, 0.558] | 0.621 | 0.506 | 0.550 | 3.37 |
+| 1 | 0.552 | [0.546, 0.558] | 0.621 | 0.506 | 0.550 | 3.36 |
 | 2 | 0.600 | [0.600, 0.600] | 0.750 | 0.500 | 0.600 | 3.89 |
 | 3 | 0.650 | [0.650, 0.650] | 0.875 | 0.500 | 0.650 | 4.28 |
 | 4 | 0.700 | [0.700, 0.700] | 1.000 | 0.500 | 0.700 | 4.79 |
@@ -59,7 +61,10 @@ Training saw distances 1 to 4 only. Read the table three ways:
 
 - **Distances ≥ 5 sit at chance until `R` exceeds 4.** That is not the model
   failing. At those depths the answer is not yet knowable from the target node,
-  so 0.5 is the correct score. Past `R = 4` the column climbs to 0.988 — the
+  so 0.5 is the correct score. Read it as an aggregate, not as a per-case
+  behaviour: the model is not reporting uncertainty below the threshold, it is
+  answering confidently and being right about half the time. The sweep below
+  shows one such case, at 0.0000 rather than near 0.5. Past `R = 4` the column climbs to 0.988 — the
   model solves paths longer than anything it trained on, purely by applying the
   same weights more times.
 - **The learned column tracks the exact column** to within 0.01 almost
@@ -205,6 +210,15 @@ h(r+1)[v] = max( h(r)[v],  1 - ∏_{u:(u,v)∈E} (1 - α·h(r)[u]) )
 Invariant, verified on 10,000 stratified seeded cases:
 `h(R)[q] > ε  ⟺  d(s,q) ≤ R`.
 
+The equivalence is exact in real arithmetic for every `α` in `(0, 1]`. The `ε`
+threshold turns it into a decision, and that decision is only well posed while
+the smallest activation the recurrence can produce stays above `ε`. A reached
+node sits at distance at most `R`, so `α^R` is the lower bound and `α^R > ε` is
+the condition. At the default `α = 1` it holds at every `R`; at `α = 1e-4` and
+`R = 4` it does not, and the target would underflow to a false negative. Both
+engines reject such inputs and name the condition rather than returning a
+quietly wrong answer.
+
 ### Learned model
 
 ```
@@ -271,8 +285,17 @@ Frontend/
 
 docs/
 ├── concept-summary.md          # source text for the one-page summary
-├── concept-summary.pdf         # the submitted PDF
-└── build-summary-pdf.py        # md -> print-ready HTML -> PDF
+├── concept-summary.pdf         # the submitted PDF, one page, 932 words
+├── blog-post.md                # source text for the blog post
+├── blog-post.pdf               # the submitted PDF, 701 words of body text
+└── build-summary-pdf.py        # md -> print-ready HTML -> PDF, both documents
+```
+
+Both PDFs are generated from their Markdown, never edited directly:
+
+```bash
+pip install weasyprint                              # or use headless Chrome
+python docs/build-summary-pdf.py --doc all --pdf    # rebuilds both
 ```
 
 ---
@@ -438,7 +461,7 @@ measurement. Mapping of every claim to its primary source:
 
 ## 12. Caps and approximations, stated rather than hidden
 
-- Exact engine: `n ≤ 24`, `R ≤ 12`, `ε = 1e-12`.
+- Exact engine: `n ≤ 24`, `R ≤ 12`, `ε = 1e-12`, and `α^R > ε` (see §5).
 - Learned experiment: distances 1–10, `R ≤ 10`, hidden dim 32, five seeds.
 - Training saw distances 1–4 only.
 - Negatives match positives on node and edge count exactly; target in-degree
@@ -507,24 +530,65 @@ and outside anyone else's. No BDH or BDH-CQ checkpoint was run.
 
 ## 16. AI assistance disclosure
 
-_The team must complete this section honestly before submission. The track rules
-require that AI-generated, reused, or forked work is disclosed, and that every
-component can be explained and defended by a team member._
+> **INCOMPLETE. The team must finish this section before submitting.** The track
+> rules require that AI-generated, reused, or forked work is disclosed in the
+> README, and that every component can be explained and defended by a team
+> member. The long form, with a row for every file and every source, is
+> [`submission/AI-DISCLOSURE.md`](submission/AI-DISCLOSURE.md); this section is
+> the summary that must stand on its own.
 
-Fill in, at minimum:
+### Tools used
 
-- Which AI tools were used, and for what: code generation, refactoring, prose
-  drafting, design, literature search, or review.
-- Which files or components were substantially AI-drafted, and which were written
-  by hand.
-- How each equation, experiment design, result, and claim was reviewed and
-  verified by the team — not merely accepted.
-- Which claims were checked against primary sources by a person reading the
-  source, and which sources were read in full.
+| Tool | Used for |
+|---|---|
+| _fill in_ | _fill in: code generation, refactoring, prose drafting, design, literature search, review_ |
+| Claude Code (Claude Opus 5), 2026-09-09 | Repository audit against the problem statement, running the test suites, four defect fixes (§16.1), and assembling `submission/`. Wrote no model, engine, or interface code. |
+
+### What was AI-drafted, and what was written by hand
+
+_Fill in per component: `Backend/core/`, `Backend/learned/`, `Backend/tests/`,
+`Frontend/src/engine/`, `Frontend/src/pages/`, the README, and the two
+documents in `docs/`. Name the reviewer for each._
+
+### How the team verified rather than accepted
+
+_Fill in: how each equation, experiment design, result and claim was checked.
+State who derived the recurrence invariant by hand, who reproduced the depth
+sweep, and who confirmed the parity result._
+
+### Primary sources read by a person
+
+_Fill in, per source in the citation ledger: who read it, and whether they read
+it in full or only the cited section. Every BDH-CQ number must be traceable to a
+section a team member can open during live defence._
+
+### Forks and reuse
+
+This repository is not a fork and contains no code copied from another project.
+Assets and licences are recorded in
+[`submission/SOURCES-AND-LICENSES.md`](submission/SOURCES-AND-LICENSES.md).
 
 Every number in this repository is reproducible with `python reproduce.py`, and
 every external claim is mapped to a primary source in the citation ledger. Those
 two facts make the disclosure checkable rather than a formality.
+
+### 16.1 Changes made during the 2026-09-09 audit
+
+Recorded here because the track asks which work was AI-assisted, and because
+two of these changed published numbers.
+
+| Change | Effect |
+|---|---|
+| `learned/export_results.py` — confidence intervals no longer clip an unbounded metric to 1.0 | The mean-‖z‖ upper bound was below its own mean at every depth, so the state-norm chart in section 5 rendered as a flat line pinned to the ceiling. It now shows the real curve. |
+| `learned/evaluate.py` — mean state norm weights by node, not by batch | Corrected a mean-of-means over unequal batches. Moved `R = 1` from 3.37 to 3.36; every other depth is unchanged to two decimals. |
+| `learned/evaluate.py`, `export_web.py` — `torch.load(..., weights_only=True)` | The reproduction path no longer unpickles arbitrary objects from a checkpoint file. |
+| `Frontend/src/engine/exact.js` — source and target bounds checked | Brings the browser engine in line with `core/recurrent.py`, which already rejected these. An out-of-range target used to read as a confident "unreachable". |
+| `Frontend/src/lib/lab.js` — a failed bundle load is no longer cached | One dropped request used to make the error permanent until a full reload. |
+| `Frontend/src/pages/LearnedBridge.jsx` — guard the distance-and-size pair | Removed a one-frame error banner when changing distance invalidated the node count. |
+| `Backend/server.py` — CORS no longer pairs a wildcard origin with credentials | The reference server carries no session or cookie, so it now says so. |
+
+No checkpoint was retrained. The shipped checkpoint hash is unchanged at
+`a58f090f344e3f8b`, and the accuracy table in §2 is identical to before.
 
 ---
 

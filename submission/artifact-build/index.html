@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Latent Loop Lab — can a model think longer without saying more?</title>
+
+    <meta
+      name="description"
+      content="An interactive lab for recurrent latent computation. Move one dial and watch a graph mechanism, then a trained recurrent network, gain reasoning depth without emitting a single token. Every number is labelled live, synthetic, precomputed, or paper-reported."
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="author" content="Latent Loop Lab" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Latent Loop Lab" />
+    <meta
+      property="og:description"
+      content="Repeated application of a shared state-update rule increases effective computational depth without generating intermediate language tokens. Move the dial and check it."
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- The document paints in the right theme before React mounts, so a
+         reader on a dark system never gets a white flash. -->
+    <script>
+      try {
+        var stored = localStorage.getItem("lll-theme");
+        if (stored === "light" || stored === "dark") {
+          document.documentElement.setAttribute("data-theme", stored);
+        }
+      } catch (error) {
+        /* A browser blocking storage still gets the system theme. */
+      }
+    </script>
+    <style>
+      :root { color-scheme: light dark; }
+      body { margin: 0; background: #eef1f4; }
+      @media (prefers-color-scheme: dark) {
+        body:not([data-theme="light"]) { background: #0c1218; }
+      }
+      html[data-theme="dark"] body { background: #0c1218; }
+      html[data-theme="light"] body { background: #eef1f4; }
+      /* Shown only if the bundle never executes. */
+      .noscript {
+        max-width: 34rem; margin: 12vh auto; padding: 0 1.5rem;
+        font: 16px/1.6 system-ui, sans-serif; color: #101a24;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-CMFO2c-e.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B8Fk0fd7.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div class="noscript">
+        <h1>Latent Loop Lab needs JavaScript</h1>
+        <p>
+          The lab computes a graph recurrence and a small trained network in
+          your browser rather than on a server, so there is nothing to show
+          without scripting enabled. The source and a full written account of
+          every result are in the repository.
+        </p>
+      </div>
+    </noscript>
+  </body>
+</html>

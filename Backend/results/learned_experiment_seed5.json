@@ -48,7 +48,7 @@
       "accuracy": 0.55,
       "confidence": 0.5806500688655797,
       "totalSamples": 800,
-      "meanStateNorm": 3.688407072654137,
+      "meanStateNorm": 3.6855767672179174,
       "accuracySeenDistances": 0.625,
       "accuracyUnseenDistances": 0.5,
       "perDistance": {
@@ -114,7 +114,7 @@
       "accuracy": 0.6,
       "confidence": 0.6336947822385628,
       "totalSamples": 800,
-      "meanStateNorm": 3.8866016131180983,
+      "meanStateNorm": 3.8824915026055007,
       "accuracySeenDistances": 0.75,
       "accuracyUnseenDistances": 0.5,
       "perDistance": {
@@ -180,7 +180,7 @@
       "accuracy": 0.65,
       "confidence": 0.8061037221998049,
       "totalSamples": 800,
-      "meanStateNorm": 4.324443670419546,
+      "meanStateNorm": 4.320620333562132,
       "accuracySeenDistances": 0.875,
       "accuracyUnseenDistances": 0.5,
       "perDistance": {
@@ -246,7 +246,7 @@
       "accuracy": 0.7,
       "confidence": 0.9997991415190518,
       "totalSamples": 800,
-      "meanStateNorm": 4.9258210475628195,
+      "meanStateNorm": 4.925656553174629,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 0.5,
       "perDistance": {
@@ -312,7 +312,7 @@
       "accuracy": 0.75,
       "confidence": 0.999857117722986,
       "totalSamples": 800,
-      "meanStateNorm": 5.051984053391677,
+      "meanStateNorm": 5.052952146269584,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 0.5833333333333334,
       "perDistance": {
@@ -379,7 +379,7 @@
       "accuracy": 0.8,
       "confidence": 0.9998736357446978,
       "totalSamples": 800,
-      "meanStateNorm": 5.08948722252479,
+      "meanStateNorm": 5.0907092276818116,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 0.6666666666666666,
       "perDistance": {
@@ -446,7 +446,7 @@
       "accuracy": 0.85,
       "confidence": 0.9998833556539103,
       "totalSamples": 800,
-      "meanStateNorm": 5.104057972247784,
+      "meanStateNorm": 5.105586588708429,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 0.75,
       "perDistance": {
@@ -513,7 +513,7 @@
       "accuracy": 0.9,
       "confidence": 0.9998909378508142,
       "totalSamples": 800,
-      "meanStateNorm": 5.107670087080735,
+      "meanStateNorm": 5.109409644955495,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 0.8333333333333334,
       "perDistance": {
@@ -580,7 +580,7 @@
       "accuracy": 0.95,
       "confidence": 0.999896797132833,
       "totalSamples": 800,
-      "meanStateNorm": 5.1018039630009575,
+      "meanStateNorm": 5.103796307506457,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 0.9166666666666666,
       "perDistance": {
@@ -647,7 +647,7 @@
       "accuracy": 1.0,
       "confidence": 0.9999013071886111,
       "totalSamples": 800,
-      "meanStateNorm": 5.089794562413142,
+      "meanStateNorm": 5.0921681096645,
       "accuracySeenDistances": 1.0,
       "accuracyUnseenDistances": 1.0,
       "perDistance": {

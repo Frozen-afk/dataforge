@@ -58,14 +58,24 @@ export default function LearnedBridge({ onNext }) {
 
   // One call returns the whole depth sweep for one fixed graph, so moving R
   // cannot change the input as well as the depth.
+  //
+  // Changing the distance invalidates the node count before the effect above
+  // has replaced it -- distance 1 is offered at 8 nodes, distance 6 is not --
+  // so the pair is checked here first. Without the guard that intermediate
+  // state reaches the bank as a real lookup, fails, and flashes an error
+  // banner over the whole section for one frame before correcting itself.
+  const sizeIsValid = sizes.includes(nodes);
+
   useEffect(() => {
+    if (!sizeIsValid) return undefined;
+
     let cancelled = false;
     setError("");
     learnedSweep({ distance, reachable, nodes, variant, maxR: MAX_R })
       .then((result) => !cancelled && setSweep(result))
       .catch((err) => !cancelled && setError(err.message));
     return () => { cancelled = true; };
-  }, [distance, reachable, nodes, variant]);
+  }, [distance, reachable, nodes, variant, sizeIsValid]);
 
   if (error) {
     return (

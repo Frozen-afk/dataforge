@@ -29,11 +29,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# This server carries no session, cookie or authentication of any kind, so it
+# asks for no credentials. The pairing of a wildcard origin with
+# allow_credentials=True is the combination browsers refuse outright, and it
+# would be claiming a trust relationship that does not exist here.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
