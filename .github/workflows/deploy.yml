@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies & Build
+      - name: Install & Build
         run: |
           cd Frontend
           npm ci
