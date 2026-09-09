@@ -57,6 +57,17 @@ export function runExact({
   if (R < 0 || R > MAX_R) {
     throw new Error(`Recurrent depth R must be between 0 and ${MAX_R}.`);
   }
+  // Kept in step with Backend/core/recurrent.py, which rejects the same
+  // inputs. Without this an out-of-range target reads as undefined, and
+  // `undefined > epsilon` is false -- a confident "unreachable" for a node
+  // that does not exist, which is exactly the kind of quietly wrong answer
+  // the rest of this engine is built to avoid.
+  if (!Number.isInteger(source) || source < 0 || source >= graph.n) {
+    throw new Error(`Source node ${source} is outside graph range [0, ${graph.n}).`);
+  }
+  if (!Number.isInteger(target) || target < 0 || target >= graph.n) {
+    throw new Error(`Target node ${target} is outside graph range [0, ${graph.n}).`);
+  }
   if (!(alpha > 0 && alpha <= 1)) {
     throw new Error("Alpha must satisfy 0 < alpha <= 1.");
   }

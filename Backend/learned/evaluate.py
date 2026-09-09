@@ -76,7 +76,10 @@ def file_hash(path: Path) -> str:
 
 def load_checkpoint(path: Path, device: torch.device):
     """Rebuild a frozen model exactly as it was trained."""
-    checkpoint = torch.load(path, map_location=device, weights_only=False)
+    # Tensors and plain scalars only, so the safe loader is sufficient. It
+    # refuses to unpickle arbitrary objects, which matters because this is the
+    # function anyone reproducing the results points at a .pt file.
+    checkpoint = torch.load(path, map_location=device, weights_only=True)
 
     model = build_model(
         shared=checkpoint.get("shared_weights", True),
@@ -184,7 +187,7 @@ def evaluate_at_depth(
     total = 0
     confidence_sum = 0.0
     norm_sum = 0.0
-    norm_batches = 0
+    norm_nodes = 0
 
     per_distance: Dict[str, Dict[str, float]] = defaultdict(
         lambda: {"correct": 0, "total": 0, "confidence": 0.0}
@@ -200,8 +203,12 @@ def evaluate_at_depth(
         probs = torch.sigmoid(logits)
         preds = (probs > 0.5).float()
 
-        norm_sum += trajectory[-1].norm(dim=-1).mean().item()
-        norm_batches += 1
+        # Summed, not averaged per batch. Graphs vary in node count and the
+        # last batch is usually short, so a mean of batch means would weight
+        # a node in a small batch more heavily than one in a full batch.
+        node_norms = trajectory[-1].norm(dim=-1)
+        norm_sum += node_norms.sum().item()
+        norm_nodes += node_norms.numel()
 
         for i in range(batch.num_graphs):
             label = batch.y[i].item()
@@ -239,7 +246,7 @@ def evaluate_at_depth(
         "accuracy": correct / max(total, 1),
         "confidence": confidence_sum / max(total, 1),
         "totalSamples": total,
-        "meanStateNorm": norm_sum / max(norm_batches, 1),
+        "meanStateNorm": norm_sum / max(norm_nodes, 1),
         "accuracySeenDistances": seen["correct"] / max(seen["total"], 1),
         "accuracyUnseenDistances": unseen["correct"] / max(unseen["total"], 1),
         "perDistance": {

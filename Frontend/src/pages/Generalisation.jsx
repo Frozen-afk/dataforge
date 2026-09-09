@@ -49,7 +49,10 @@ export default function Generalisation({ onNext }) {
       unseen: curve.map((e) => ({ x: e.R, y: e.accuracyUnseenDistances.mean })),
       exactLine: exact.map((e) => ({ x: e.R, y: e.accuracy.mean })),
       norm: curve.map((e) => ({ x: e.R, y: e.meanStateNorm.mean })),
-      maxNorm: Math.max(1, ...curve.map((e) => e.meanStateNorm.high)),
+      // A tenth of headroom above the widest interval. The point of this plot
+      // is that the norm climbs and then flattens, and a curve drawn flush
+      // against the ceiling reads as clipped rather than as saturating.
+      maxNorm: 1.1 * Math.max(1, ...curve.map((e) => e.meanStateNorm.high)),
     };
   }, [experiment]);
 
