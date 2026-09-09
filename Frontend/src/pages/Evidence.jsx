@@ -53,6 +53,8 @@ const LIMITATIONS = [
   "No wall-clock or cost comparison is made against any real system, because none was measured on matched hardware.",
 ];
 
+const REPO = "https://github.com/Frozen-afk/dataforge";
+
 const NEVER_CLAIMED = [
   "That graph reachability proves semantic reasoning.",
   "That more recurrence always improves reasoning.",
@@ -278,6 +280,60 @@ python -m tests.test_exact_invariant --large`}</pre>
           hashes are printed during training and shown in sections 4 and 5, so a
           number on screen can be traced to the exact weights that produced it.
         </p>
+      </Panel>
+
+      <Panel
+        title="Credits, source and licence"
+        subtitle="Who built this, what it is made of, and under what terms."
+      >
+        <ul className="plain">
+          <li>
+            <strong>Built by team VibeCoders</strong> — Aryan Sisodiya,
+            Abhishek Shahi, Farhan Alam, Ariyan Bhakat — for DataForge 2026,
+            Pathway Track.
+          </li>
+          <li>
+            <strong>Source:</strong>{" "}
+            <a href={REPO} target="_blank" rel="noreferrer">
+              github.com/Frozen-afk/dataforge
+            </a>
+            . Every model, engine and document in this lab is in that
+            repository, under the MIT Licence.
+          </li>
+          <li>
+            <strong>AI assistance:</strong> used substantially for writing code,
+            debugging, refining the architecture and drafting prose. The
+            concept, the claim, both computational layers and the lesson design
+            are the team's. The full disclosure is{" "}
+            <code>submission/AI-DISCLOSURE.md</code> in the repository.
+          </li>
+          <li>
+            <strong>Third-party code:</strong> React and React DOM only, both
+            MIT. Nothing is vendored, forked or copied from another project.
+          </li>
+          <li>
+            <strong>Data and weights:</strong> no external dataset and no
+            pretrained weights. Every graph is seeded synthetic output of this
+            project's generator; every checkpoint was trained from scratch here.
+          </li>
+          <li>
+            <strong>Typefaces:</strong> Space Grotesk, Source Serif 4 and IBM
+            Plex Mono, each under the SIL Open Font Licence 1.1, each with a
+            system fallback so this page reads correctly if the font host is
+            unreachable.
+          </li>
+          <li>
+            <strong>Graphics:</strong> every diagram, graph view and chart on
+            this site is inline SVG drawn by this project's own code. No stock
+            asset, icon set or screenshot is used.
+          </li>
+          <li>
+            <strong>Quoted results:</strong> all BDH and BDH-CQ figures are
+            quoted from arXiv:2509.26507 and arXiv:2608.09888 under fair-use
+            citation, labelled <em>Paper-reported result</em>, and never shown
+            as measurements of this project.
+          </li>
+        </ul>
       </Panel>
 
       <Takeaway>

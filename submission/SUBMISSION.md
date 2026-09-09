@@ -31,15 +31,19 @@ A learner falsifies or confirms it in under a minute by moving one control
 
 | # | Requirement | Where it is | Status |
 |---|---|---|---|
-| 1 | Public artifact URL, no sign-in | _FILL IN after enabling GitHub Pages_ | **BLOCKED** |
-| 2 | Public source repository | https://github.com/Frozen-afk/dataforge | **BLOCKED** — verify public, merge `dev` → `main` |
+| 1 | Public artifact URL, no sign-in | `PUBLIC_ARTIFACT_URL` — pending deployment | **Pending** — the one open item |
+| 2 | Public source repository | https://github.com/Frozen-afk/dataforge | Done — merge `dev` → `main` before judging |
 | 3 | Blog post as PDF | [`docs/blog-post.pdf`](docs/blog-post.pdf) | Done — 2 pages, 802 words |
-| 4 | One-page concept summary PDF | [`docs/concept-summary.pdf`](docs/concept-summary.pdf) | Done — 1 page, 918 words |
-| 5 | Complete README | [`../README.md`](../README.md) | Partial — §15 team names, §16 team's own AI rows |
+| 4 | One-page concept summary PDF | [`docs/concept-summary.pdf`](docs/concept-summary.pdf) | Done — 1 page, 918 words, inside the recommended 500–950 |
+| 5 | Complete README | [`../README.md`](../README.md) | Done |
 | 6 | Setup instructions for local components | [`../RUNNING.md`](../RUNNING.md), README §7 | Done — verified on a clean checkout |
-| 7 | ≥3 primary papers, 2022–2026, cited beside claims | [`evidence/citation-ledger.md`](evidence/citation-ledger.md), [`evidence/source-matrix.csv`](evidence/source-matrix.csv) | Done — 8 primary sources; **2 need re-verification** |
+| 7 | ≥3 primary papers, 2022–2026, cited beside claims | [`evidence/citation-ledger.md`](evidence/citation-ledger.md), [`evidence/source-matrix.csv`](evidence/source-matrix.csv) | Done — 8 primary sources, all re-verified against arXiv on 2026-09-09 |
 | 8 | Source and license record | [`SOURCES-AND-LICENSES.md`](SOURCES-AND-LICENSES.md) | Done |
-| 9 | AI assistance, code, data, asset, license disclosure | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | **BLOCKED** — template only, team must complete |
+| 9 | AI assistance, code, data, asset, license disclosure | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | Done |
+
+The artifact URL is the only outstanding item. When the deployment is live,
+replace `PUBLIC_ARTIFACT_URL` in row 1 above and in README line 11. Those are
+the only two places it appears.
 
 ---
 
@@ -48,24 +52,32 @@ A learner falsifies or confirms it in under a minute by moving one control
 ```
 submission/
 ├── SUBMISSION.md              this file — the package index
-├── CHECKLIST.md               done / not done, judged against the rubric
-├── AI-DISCLOSURE.md           TEMPLATE — the team must complete this
+├── AI-DISCLOSURE.md           AI assistance, tools, ownership, sources, mentorship
 ├── SOURCES-AND-LICENSES.md    code, data, weights, fonts, graphics, libraries
 ├── LICENSE                    MIT
 ├── docs/
 │   ├── concept-summary.pdf    the required one-page summary
 │   ├── concept-summary.md     its source text
 │   ├── blog-post.pdf          the required blog PDF
-│   └── blog-post.md           its source text
-├── evidence/
-│   ├── claim-sheet.md         the claim, how to falsify it, what is not claimed
-│   ├── citation-ledger.md     every external claim mapped to a primary source
-│   └── source-matrix.csv      per-page claim / source / evidence label
-└── artifact-build/            static build of the artifact, root-relative paths
+│   ├── blog-post.md           its source text
+│   └── build-summary-pdf.py   builds both PDFs from the Markdown
+└── evidence/
+    ├── claim-sheet.md         the claim, how to falsify it, what is not claimed
+    ├── citation-ledger.md     every external claim mapped to a primary source
+    └── source-matrix.csv      per-page claim / source / evidence label
 ```
 
-`artifact-build/` is a snapshot for offline review. The deployed artifact is
-rebuilt by CI from source on every push to `main`; see the checklist.
+This folder holds every judge-facing document. It is the only copy of each: the
+PDFs, their Markdown sources and the evidence files live here and nowhere else
+in the repository. The artifact itself is built from `Frontend/` and deployed by
+CI on every push to `main`.
+
+Both PDFs are generated from their Markdown, never edited directly:
+
+```bash
+pip install weasyprint
+python submission/docs/build-summary-pdf.py --doc all --pdf
+```
 
 ---
 
@@ -103,10 +115,23 @@ Verified on 2026-09-09, Python 3.14.7, torch 2.14.0+cpu, Node 22.23.1:
 | Frontend smoke | `npm run smoke` | All checks passed |
 | Production build | `npm run build` | 305 kB JS, 17 kB CSS |
 
-Nine defects were found and fixed during the 2026-09-09 audit; they are listed
-in [`CHECKLIST.md`](CHECKLIST.md) §B and summarised in README §16.1. No
-checkpoint was retrained, so the shipped hash is still `a58f090f344e3f8b` and
-the accuracy table in README §2 is unchanged.
+Nine defects were found and fixed during the 2026-09-09 audit against the
+problem statement; commit `c65eca3` carries all of them. Two changed a
+published number: the mean-‖z‖ confidence interval, and `R = 1`'s state norm
+moving from 3.37 to 3.36. No checkpoint was retrained, so the shipped hash is
+still `a58f090f344e3f8b` and the accuracy table in README §2 is otherwise
+unchanged.
+
+## Citation verification
+
+Every BDH and BDH-CQ figure quoted in the artifact was re-checked against the
+arXiv listings on 2026-09-09, section by section. Every quoted figure matches
+its primary source exactly, including the latent-effort table, the co-author
+audit's affiliations, and the MIN-versus-STANDARD comparison being
+statistically unresolved. One attribution was narrowed: reference 6 studies the
+capacity of a fixed-size recurrent memory, not instability with depth, and the
+ledger now cites it only for what it shows. The section-by-section results are
+in [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) §6.
 
 ## Scope boundary
 

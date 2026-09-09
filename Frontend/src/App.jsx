@@ -155,6 +155,14 @@ export default function App() {
           >
             {themeLabel}
           </button>
+          <a
+            className="rail-source"
+            href="https://github.com/Frozen-afk/dataforge"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Source and licence
+          </a>
         </div>
       </nav>
 

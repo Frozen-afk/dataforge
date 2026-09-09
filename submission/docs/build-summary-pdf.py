@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Render a Markdown document in docs/ to a print-ready HTML page, then to PDF.
+Render a Markdown document in submission/docs/ to a print-ready HTML page,
+then to PDF.
 
 The submission asks for two PDFs: the one-page concept summary and the blog
 post. Both are written as Markdown here and set by this script, so editing
@@ -8,9 +9,10 @@ either one never means editing two files. They differ only in page furniture,
 which is what PROFILES holds: the summary is two columns on a single page, the
 blog is one flowing column across as many pages as it needs.
 
-    python docs/build-summary-pdf.py                    # summary HTML
-    python docs/build-summary-pdf.py --pdf              # summary HTML + PDF
-    python docs/build-summary-pdf.py --doc blog --pdf   # blog HTML + PDF
+    python submission/docs/build-summary-pdf.py                  # summary HTML
+    python submission/docs/build-summary-pdf.py --pdf            # summary + PDF
+    python submission/docs/build-summary-pdf.py --doc blog --pdf # blog + PDF
+    python submission/docs/build-summary-pdf.py --doc all --pdf  # both
 
 PDF generation needs one of: weasyprint, or a headless Chromium/Chrome. If none
 is present the script says so and leaves the HTML, which any browser can print

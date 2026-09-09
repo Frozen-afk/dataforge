@@ -14,7 +14,7 @@ components.
 | Optional FastAPI reference server | `Backend/server.py`, `Backend/learned_api.py` | MIT |
 | Browser compute engines | `Frontend/src/engine/` | MIT |
 | Interface, nine lesson sections | `Frontend/src/` | MIT |
-| PDF build script | `docs/build-summary-pdf.py` | MIT |
+| PDF build script | `submission/docs/build-summary-pdf.py` | MIT |
 
 Licence text: [`LICENSE`](LICENSE) (MIT, Copyright 2026 Latent Loop Lab
 contributors). Nothing in this repository is a fork of another project. No code

@@ -8,12 +8,15 @@ compute axis**, built for the DataForge 2026 Pathway Track.
 Everything computes in the browser. There is no server, no install, and no
 sign-in: open the URL and the mechanism is already running.
 
-- **Artifact:** _add the public URL here after deploying (see §7)._
-- **One-page concept summary:** [`docs/concept-summary.pdf`](docs/concept-summary.pdf)
-- **Blog post:** [`docs/blog-post.pdf`](docs/blog-post.pdf) — topic 19,
+- **Artifact:** `PUBLIC_ARTIFACT_URL` — pending deployment (see §7)
+- **Submission package:** [`submission/`](submission/) — start at
+  [`submission/SUBMISSION.md`](submission/SUBMISSION.md)
+- **One-page concept summary:** [`submission/docs/concept-summary.pdf`](submission/docs/concept-summary.pdf)
+- **Blog post:** [`submission/docs/blog-post.pdf`](submission/docs/blog-post.pdf) — topic 19,
   demonstration coverage as a predictor of extrapolation success
-- **Claim sheet:** [`Backend/docs/claim-sheet.md`](Backend/docs/claim-sheet.md)
-- **Citation ledger:** [`Backend/docs/citation-ledger.md`](Backend/docs/citation-ledger.md)
+- **Claim sheet:** [`submission/evidence/claim-sheet.md`](submission/evidence/claim-sheet.md)
+- **Citation ledger:** [`submission/evidence/citation-ledger.md`](submission/evidence/citation-ledger.md)
+- **AI assistance disclosure:** [`submission/AI-DISCLOSURE.md`](submission/AI-DISCLOSURE.md)
 
 The lab has two computational layers that are never conflated: an exact,
 interpretable graph recurrence that acts as a scientific control, and a small
@@ -267,7 +270,6 @@ Backend/
 │   ├── test_exact_invariant.py # 10,000-case invariant + generator guarantees
 │   ├── test_js_parity.py       # browser engine vs PyTorch
 │   └── js_parity_runner.mjs    # runs the browser engine under Node
-├── docs/                       # claim-sheet, citation-ledger, source-matrix
 └── results/                    # checkpoints + JSON outputs
 
 Frontend/
@@ -283,19 +285,28 @@ Frontend/
                                 # LearnedBridge, Generalisation, BDHCQ,
                                 # Evidence, Recap
 
-docs/
-├── concept-summary.md          # source text for the one-page summary
-├── concept-summary.pdf         # the submitted PDF, one page, 932 words
-├── blog-post.md                # source text for the blog post
-├── blog-post.pdf               # the submitted PDF, 701 words of body text
-└── build-summary-pdf.py        # md -> print-ready HTML -> PDF, both documents
+submission/                     # every judge-facing document, single copy
+├── SUBMISSION.md               # package index and the judge's five-minute path
+├── AI-DISCLOSURE.md            # AI assistance, ownership, source verification
+├── SOURCES-AND-LICENSES.md     # code, data, weights, fonts, libraries
+├── LICENSE                     # MIT
+├── docs/
+│   ├── concept-summary.md      # source text for the one-page summary
+│   ├── concept-summary.pdf     # the submitted PDF, one page, 918 words
+│   ├── blog-post.md            # source text for the blog post
+│   ├── blog-post.pdf           # the submitted PDF, two pages, 802 words
+│   └── build-summary-pdf.py    # md -> print-ready HTML -> PDF, both documents
+└── evidence/
+    ├── claim-sheet.md          # the claim, how to falsify it, what is not claimed
+    ├── citation-ledger.md      # every external claim mapped to a primary source
+    └── source-matrix.csv       # per-page claim / source / evidence label
 ```
 
 Both PDFs are generated from their Markdown, never edited directly:
 
 ```bash
-pip install weasyprint                              # or use headless Chrome
-python docs/build-summary-pdf.py --doc all --pdf    # rebuilds both
+pip install weasyprint                                      # or use headless Chrome
+python submission/docs/build-summary-pdf.py --doc all --pdf # rebuilds both
 ```
 
 ---
@@ -332,6 +343,14 @@ BASE_PATH=/your-repo/ npm run build  # served from a subpath, e.g. GitHub Pages
 
 `dist/` is a plain static directory. Any static host serves it: GitHub Pages,
 Netlify, Vercel, Cloudflare Pages, S3. Nothing needs to run server-side.
+
+`.github/workflows/deploy.yml` does this on every push to `main`: it installs,
+runs the smoke suite, builds with `BASE_PATH` set to the repository name, and
+publishes to GitHub Pages. Enable it once under Settings → Pages → Source →
+GitHub Actions. When the deployment is live, replace `PUBLIC_ARTIFACT_URL` on
+line 11 of this file and in row 1 of
+[`submission/SUBMISSION.md`](submission/SUBMISSION.md). Those are the only two
+places the URL appears.
 
 ### Reproduce every number
 
@@ -439,8 +458,16 @@ anything else.
 
 No paper-reported number appears on the same visual footing as a live
 measurement. Mapping of every claim to its primary source:
-[`Backend/docs/citation-ledger.md`](Backend/docs/citation-ledger.md) and
-[`Backend/docs/source-matrix.csv`](Backend/docs/source-matrix.csv).
+[`submission/evidence/citation-ledger.md`](submission/evidence/citation-ledger.md)
+and
+[`submission/evidence/source-matrix.csv`](submission/evidence/source-matrix.csv).
+
+Every BDH and BDH-CQ figure quoted here was re-verified against the arXiv
+listings on 2026-09-09, section by section. Every quoted figure matches its
+primary source exactly. One attribution was narrowed in the process: reference
+6 studies the capacity of a fixed-size recurrent memory, not instability with
+depth, and the ledger now says so. The results are tabulated in
+[`submission/AI-DISCLOSURE.md`](submission/AI-DISCLOSURE.md) §6.
 
 ---
 
@@ -529,7 +556,35 @@ and outside anyone else's. No BDH or BDH-CQ checkpoint was run.
 ---
 
 ## 16. AI assistance disclosure
-Refer to `submission/AI-DISCLOSURE.md` for detailed disclosure
+
+The track rules require this in the README. The full record — tools, per
+component origin, source verification, mentorship, and the team's signed
+statement — is
+[`submission/AI-DISCLOSURE.md`](submission/AI-DISCLOSURE.md). The summary:
+
+**AI assistance was used substantially and throughout**, in four areas: writing
+code, debugging it, refining the architecture, and implementing the design.
+Prose was drafted the same way — the team decided what each document had to say,
+and the AI wrote it down. One tool was used, Claude Code running Claude Opus 5,
+between 2026-09-04 and 2026-09-09.
+
+**The team decided what this project is.** Reading the problem statement, the
+choice of concept, the one falsifiable sentence in §1, the design of both
+computational layers, the reachability task, the experimental design in §5 and
+the nine-section lesson structure are the team's work. The code was written to
+serve those decisions, and every component was read and accepted before it
+shipped.
+
+The blog post and the concept summary were planned and reviewed by the team;
+the AI wrote the planned content and the explanations down. Nothing here is
+generated content the team has not read.
+
+**No AI produced any number, weight, dataset or graphic.** Every measurement is
+output of `python reproduce.py` over frozen checkpoints. Every checkpoint was
+trained from scratch on this project's synthetic task. Every graph instance is
+seeded output of `Backend/core/generator.py`. Every graphic is inline SVG from
+this project's own code. Every external figure is quoted from a cited paper and
+labelled *Paper-reported result*.
 
 ### Forks and reuse
 
