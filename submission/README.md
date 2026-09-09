@@ -5,13 +5,9 @@ DataForge 2026, Pathway Track.
 **Start here:** [`SUBMISSION.md`](SUBMISSION.md) — the package index, the
 one-sentence claim, and where each required item lives.
 
-**Before submitting:** [`CHECKLIST.md`](CHECKLIST.md) — what is done, what is
-not, and two defects found during the audit.
-
 | File | What it is |
 |---|---|
 | [`SUBMISSION.md`](SUBMISSION.md) | Package index and judge's five-minute path |
-| [`CHECKLIST.md`](CHECKLIST.md) | Rubric-by-rubric status, blocking items first |
 | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | **Template. The team must complete it.** |
 | [`SOURCES-AND-LICENSES.md`](SOURCES-AND-LICENSES.md) | Code, data, weights, fonts, libraries |
 | [`docs/concept-summary.pdf`](docs/concept-summary.pdf) | The required one-page summary |

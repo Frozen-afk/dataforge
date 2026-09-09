@@ -1,7 +1,13 @@
 # Latent Loop Lab — DataForge 2026 Pathway Track submission
 
-**Team:** _FILL IN — registered team name_
-**Members:** _FILL IN — full names, one per line_
+**Team:** VibeCoders
+
+**Members:** 
+- Aryan Sisodiya
+- Abhishek Shahi
+- Farhan Alam
+- Ariyan Bhakat
+
 **Track topic:** Inference-Time Scaling (approved topic, "Reasoning and
 generalisation" group), taught through recurrent latent computation.
 
