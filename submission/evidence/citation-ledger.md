@@ -24,7 +24,8 @@ the page where it appears. Secondary summaries are not used as sources.
 | 2 | Reasoning can happen in a continuous state instead of emitted tokens | 1, 4 | Paper-reported result |
 | 5 | Test-time compute can be scaled through recurrent depth | 2 | Paper-reported result |
 | 5 | Reusing a block gives effective depth without per-layer parameters | 3 | Paper-reported result |
-| 5 | Recurrent systems can destabilise as depth grows | 6, 7 | Paper-reported result |
+| 5 | Recurrent depth peaks at some iteration count and then degrades in looped language models | 7, abstract | Paper-reported result |
+| 5 | A fixed-size recurrent memory has bounded capacity, and long context is underused because of it | 6, abstract | Paper-reported result |
 | 6 | BDH is a brain-inspired post-Transformer family with recurrent associative state | 5 | Paper-reported result |
 | 6 | BDH-GPU is a GPU-efficient formulation built from ReLU low-rank transformations with linear attention | 5 | Paper-reported result |
 | 6 | BDH-CQ combines in-context learning through evolving recurrent memory with latent iterative computation | 8, abstract and §3 | Paper-reported result |
@@ -36,7 +37,6 @@ the page where it appears. Secondary summaries are not used as sources.
 | 6 | MIN effort scored 111/400 against STANDARD's 118/400 at one third the cost | 8, §6.6 | Paper-reported result |
 | 6 | BDH-CQ's dimensions, exact update rules and implementation details are proprietary | 8, §3.3 | Paper-reported result |
 | 6 | BDH rivals GPT-2 at matched parameters from 10M to 1B; sparse positive activations; monosemanticity; heavy-tailed connectivity | 5, abstract | Paper-reported result |
-| 5 | Recurrent depth can degrade past a peak in looped language models | 7, abstract | Paper-reported result |
 
 ## Numbers this project measured itself
 

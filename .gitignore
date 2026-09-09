@@ -13,3 +13,6 @@ dist/
 .vscode/
 .idea/
 .DS_Store
+
+# Generated intermediates from the PDF build
+submission/docs/*.html
