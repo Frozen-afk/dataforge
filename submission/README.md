@@ -15,10 +15,7 @@ one-sentence claim, and where each required item lives.
 | [`evidence/`](evidence/) | Claim sheet, citation ledger, per-claim source matrix |
 
 ## This folder is the only copy
-
-Every judge-facing document lives here and nowhere else in the repository.
-There is no second copy under a root `docs/` or under `Backend/docs/` to drift
-out of step. The two PDFs are built from the Markdown beside them:
+The two PDFs are built from the Markdown beside them:
 
 ```bash
 pip install weasyprint                                     # or use headless Chrome

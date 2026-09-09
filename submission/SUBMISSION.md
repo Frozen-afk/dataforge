@@ -29,17 +29,17 @@ A learner falsifies or confirms it in under a minute by moving one control
 
 ## Required package contents
 
-| # | Requirement | Where it is | Status |
-|---|---|---|---|
-| 1 | Public artifact URL, no sign-in | `PUBLIC_ARTIFACT_URL` — pending deployment | **Pending** — the one open item |
-| 2 | Public source repository | https://github.com/Frozen-afk/dataforge | Done — merge `dev` → `main` before judging |
-| 3 | Blog post as PDF | [`docs/blog-post.pdf`](docs/blog-post.pdf) | Done — 2 pages, 802 words |
-| 4 | One-page concept summary PDF | [`docs/concept-summary.pdf`](docs/concept-summary.pdf) | Done — 1 page, 918 words, inside the recommended 500–950 |
-| 5 | Complete README | [`../README.md`](../README.md) | Done |
-| 6 | Setup instructions for local components | [`../RUNNING.md`](../RUNNING.md), README §7 | Done — verified on a clean checkout |
-| 7 | ≥3 primary papers, 2022–2026, cited beside claims | [`evidence/citation-ledger.md`](evidence/citation-ledger.md), [`evidence/source-matrix.csv`](evidence/source-matrix.csv) | Done — 8 primary sources, all re-verified against arXiv on 2026-09-09 |
-| 8 | Source and license record | [`SOURCES-AND-LICENSES.md`](SOURCES-AND-LICENSES.md) | Done |
-| 9 | AI assistance, code, data, asset, license disclosure | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) | Done |
+| # | Requirement | Where it is |
+|---|---|---|
+| 1 | Public artifact URL, no sign-in | https://frozen-afk.github.io/dataforge/#/start |
+| 2 | Public source repository | https://github.com/Frozen-afk/dataforge | 
+| 3 | Blog post as PDF | [`docs/blog-post.pdf`](docs/blog-post.pdf) |
+| 4 | One-page concept summary PDF | [`docs/concept-summary.pdf`](docs/concept-summary.pdf) |
+| 5 | Complete README | [`../README.md`](../README.md) |
+| 6 | Setup instructions for local components | [`../RUNNING.md`](../RUNNING.md) |
+| 7 | ≥3 primary papers, 2022–2026, cited beside claims | [`evidence/citation-ledger.md`](evidence/citation-ledger.md), [`evidence/source-matrix.csv`](evidence/source-matrix.csv) |
+| 8 | Source and license record | [`SOURCES-AND-LICENSES.md`](SOURCES-AND-LICENSES.md) | 
+| 9 | AI assistance, code, data, asset, license disclosure | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) |
 
 The artifact URL is the only outstanding item. When the deployment is live,
 replace `PUBLIC_ARTIFACT_URL` in row 1 above and in README line 11. Those are

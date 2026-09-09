@@ -1,5 +1,17 @@
 # Latent Loop Lab
 
+**Team:** VibeCoders
+
+**Members:** 
+- Aryan Sisodiya
+- Abhishek Shahi
+- Farhan Alam
+- Ariyan Bhakat
+
+**Public Repository:** https://github.com/Frozen-afk/dataforge
+
+**Public URL:** ...
+
 **Can a model think longer without saying more?**
 
 An interactive lab for **recurrent latent computation as an inference-time
