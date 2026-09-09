@@ -41,9 +41,6 @@ A learner falsifies or confirms it in under a minute by moving one control
 | 8 | Source and license record | [`SOURCES-AND-LICENSES.md`](SOURCES-AND-LICENSES.md) | 
 | 9 | AI assistance, code, data, asset, license disclosure | [`AI-DISCLOSURE.md`](AI-DISCLOSURE.md) |
 
-The artifact URL is the only outstanding item. When the deployment is live,
-replace `PUBLIC_ARTIFACT_URL` in row 1 above and in README line 11. Those are
-the only two places it appears.
 
 ---
 
