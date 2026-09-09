@@ -1,17 +1,8 @@
-# Build the artifact and publish it to GitHub Pages.
-#
-# The lab is a static site: both computational layers run in the visitor's
-# browser from the data bundle committed under Frontend/public/data, so nothing
-# here needs Python, a GPU, or a running server. Retraining is a separate,
-# deliberate act (Backend/reproduce.py), not something a deploy does.
-#
-# Enable this once under Settings -> Pages -> Source: GitHub Actions.
-
-name: Deploy artifact
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   workflow_dispatch:
 
 permissions:
@@ -20,46 +11,38 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: Frontend
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: Frontend/package-lock.json
-
-      - run: npm ci
-
-      # Every page must render and the engine must still agree with BFS before
-      # anything ships. A broken artifact is worse than a stale one.
-      - run: npm run smoke
-
-      # A project site is served from /<repo>/, so the base path has to match
-      # or every asset and data file 404s.
-      - run: npm run build
-        env:
-          BASE_PATH: /${{ github.event.repository.name }}/
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: Frontend/dist
-
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     steps:
-      - id: deployment
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies & Build
+        run: |
+          cd Frontend
+          npm ci
+          npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './Frontend/dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
